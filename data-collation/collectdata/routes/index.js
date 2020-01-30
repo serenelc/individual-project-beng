@@ -12,20 +12,6 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/collect2', function(req, res, next) {
-  fetch(`http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1`)
-  // .then(res => res.json())
-  .then(res => {
-    const d = new Date();
-    const currentTime = d.getTime();
-
-    // console.log(res.headers)
-  })
-  .catch(function(err) {
-    console.log('Fetch Error :', err);
-  })
-})
-
 router.get('/collect', function(req, res, next) {
   // const stopId = req.query.stopId
   // const busId = req.query.busId
