@@ -1,34 +1,48 @@
 import urllib.request
+from urllib.error import HTTPError, URLError
 import json 
-import sched
 import time
+import datetime as dt
+from socket import timeout
 
-s = sched.scheduler(time.time, time.sleep)
 bus_information = []
 
 def main():
 
-    bus_route_id = "452"
-    # s.enter(30, 1, call_countdown_api, argument=(bus_route_id))
-    s.enter(5, 1, print_time, argument=(0))
-    s.run()
-    # call_countdown_api(bus_route_id) 
+    bus_452 = "452"
+    bus_9 = "9"
+    york_house_place = '490010536K'
+    high_street_ken = '490000110F'
 
-def print_time(count):
-    current_time = time.asctime(time.gmtime(time.time()))
-    count += 1
-    print("From print_time", current_time)
-    s.enter(5, 1, print_time, count)
-    
-    if count == 5:
-        exit
+    # repeat_call_api(5, bus_9, high_street_ken)
+    # call_countdown_api(bus_9, high_street_ken)
+    # time.sleep(30)
+    # call_countdown_api(bus_9, high_street_ken) 
+    convert_time_to_seconds_after_epoch('2020-01-30T20:53:25Z')
 
-def call_countdown_api(route_id):
-    with urllib.request.urlopen("https://api.tfl.gov.uk/StopPoint/490010536K/arrivals") as api:
-        data = json.loads(api.read().decode())
-        arrival_times = get_relevant_info(data, route_id, bus_information)
-        print(arrival_times)
+def repeat_call_api(num_calls, bus_route_id, bus_stop_id):
+    for i in range (0, num_calls):
+        i += 1
 
+        print(dt.datetime.now())
+        print("tick")
+        # call_countdown_api(bus_route_id, bus_stop_id)
+        time.sleep(30)
+
+
+def call_countdown_api(route_id, stop_id):
+
+    try:
+        with urllib.request.urlopen("https://api.tfl.gov.uk/StopPoint/" + stop_id + "/arrivals") as api:
+            data = json.loads(api.read().decode())
+            arrival_times = get_relevant_info(data, route_id, bus_information)
+            # check_if_bus_has_arrived(arrival_times)
+            print(arrival_times)
+
+    except (HTTPError, URLError) as error:
+        print("error: ", error)
+    except timeout:
+        print("timeout error")
 
 def get_relevant_info(data, route_id, bus_info):
 
@@ -36,23 +50,28 @@ def get_relevant_info(data, route_id, bus_info):
         if info.get("lineId") == route_id:
             vehicle_id = info.get("vehicleId")
             expected_arrival = info.get("expectedArrival")
+            # timestamp is when countdown last updates the predicted arrival times
+            timestamp = info.get("timestamp")
 
             vehicle_info = {
                 "vehicle_id": vehicle_id,  
                 "direction": info.get("direction"),
-                "timestamp": info.get("timestamp"),
-                "expected_arrival": expected_arrival ,
-                "arrived": False
+                "timestamp": timestamp,
+                "expected_arrival": expected_arrival,
+                "arrived": "False"
             }
             
             found, index = vehicle_already_found(vehicle_id, bus_info)
             if found:
                 # If this vehicle is already in the dictionary, update the estimated arrival time
                 vehicle_info = bus_info[index]
+                print("New expected arrival time: ", expected_arrival)
                 vehicle_info["expected_arrival"] = expected_arrival 
+                vehicle_info["timestamp"] = timestamp
                 bus_info[index] = vehicle_info
             else:
-                # If this vehicle is not yet in the directionary, add it to the dictionary
+                print("New bus")
+                # If this vehicle is not in the dictionary, then add it to the dictionary.
                 bus_info.append(vehicle_info)
 
     return bus_info
@@ -68,5 +87,24 @@ def vehicle_already_found(vehicle_id, dictionary):
             break 
     
     return found, j
+
+def check_if_bus_has_arrived(arrival_times):
+    time_now = time.time()
+
+def convert_time_to_datetime(given_time):
+    year = int(given_time[:4])
+    month = int(given_time[5:7])
+    day = int(given_time[8:10])
+    hour = int(given_time[11:13])
+    minute = int(given_time[14:16])
+    second = int(given_time[17:19])
+
+    date_time = dt.datetime(year, month, day, hour, minute, second)
+    return date_time
+    # now = dt.datetime.now()
+    # print(now, date_time)
+    # difference = now - date_time
+    # print(difference)
+
 
 main()
