@@ -15,10 +15,9 @@ def main():
     high_street_ken = '490000110F'
 
     # repeat_call_api(5, bus_9, high_street_ken)
-    # call_countdown_api(bus_9, high_street_ken)
+    call_countdown_api(bus_9, high_street_ken)
     # time.sleep(30)
     # call_countdown_api(bus_9, high_street_ken) 
-    convert_time_to_seconds_after_epoch('2020-01-30T20:53:25Z')
 
 def repeat_call_api(num_calls, bus_route_id, bus_stop_id):
     for i in range (0, num_calls):
@@ -31,12 +30,11 @@ def repeat_call_api(num_calls, bus_route_id, bus_stop_id):
 
 
 def call_countdown_api(route_id, stop_id):
-
     try:
         with urllib.request.urlopen("https://api.tfl.gov.uk/StopPoint/" + stop_id + "/arrivals") as api:
             data = json.loads(api.read().decode())
             arrival_times = get_relevant_info(data, route_id, bus_information)
-            # check_if_bus_has_arrived(arrival_times)
+            check_if_bus_has_arrived(arrival_times)
             print(arrival_times)
 
     except (HTTPError, URLError) as error:
@@ -45,7 +43,6 @@ def call_countdown_api(route_id, stop_id):
         print("timeout error")
 
 def get_relevant_info(data, route_id, bus_info):
-
     for info in data:
         if info.get("lineId") == route_id:
             vehicle_id = info.get("vehicleId")
@@ -88,8 +85,16 @@ def vehicle_already_found(vehicle_id, dictionary):
     
     return found, j
 
-def check_if_bus_has_arrived(arrival_times):
-    time_now = time.time()
+def check_if_bus_has_arrived(buses):
+    now = dt.datetime.now()
+    for bus in buses:
+        eta = bus.get("expected_arrival")
+        eta_as_dt = convert_time_to_datetime(eta)
+        if now < eta_as_dt:
+            print("Vehicle hasn't arrived yet: ", bus.get("vehicle_id"))
+        else:
+            print("Vehicle is due to arrive: ", bus.get("vehicle_id"))
+
 
 def convert_time_to_datetime(given_time):
     year = int(given_time[:4])
@@ -101,10 +106,5 @@ def convert_time_to_datetime(given_time):
 
     date_time = dt.datetime(year, month, day, hour, minute, second)
     return date_time
-    # now = dt.datetime.now()
-    # print(now, date_time)
-    # difference = now - date_time
-    # print(difference)
-
 
 main()
