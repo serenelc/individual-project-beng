@@ -4,6 +4,7 @@ import json
 import time
 import datetime as dt
 from socket import timeout
+import csv
 
 bus_information = []
 
@@ -14,19 +15,31 @@ def main():
     york_house_place = '490010536K'
     high_street_ken = '490000110F'
 
-    # repeat_call_api(5, bus_9, high_street_ken)
-    call_countdown_api(bus_9, high_street_ken)
-    # time.sleep(30)
-    # call_countdown_api(bus_9, high_street_ken) 
+    repeat_call_api(1, bus_9, high_street_ken)
 
 def repeat_call_api(num_calls, bus_route_id, bus_stop_id):
+    arrival_info = call_countdown_api(bus_route_id, bus_stop_id)
     for i in range (0, num_calls):
         i += 1
-
-        print(dt.datetime.now())
-        print("tick")
-        # call_countdown_api(bus_route_id, bus_stop_id)
         time.sleep(30)
+
+        print("======================================================")
+        print(dt.datetime.now())
+        arrival_info = call_countdown_api(bus_route_id, bus_stop_id)
+        
+    write_to_csv(arrival_info)
+
+def write_to_csv(arrival_array):
+    csv_columns = ['vehicle_id', 'direction', 'timestamp', 'expected_arrival', 'arrived']
+    csv = "bus_arrivals.csv"
+    try:
+        with open(csv, 'w') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames = csv_columns)
+            writer.writeheader()
+            for data in arrival_array:
+                writer.writerow(data)
+    except IOError:
+        print("I/O error")
 
 
 def call_countdown_api(route_id, stop_id):
@@ -35,7 +48,7 @@ def call_countdown_api(route_id, stop_id):
             data = json.loads(api.read().decode())
             arrival_times = get_relevant_info(data, route_id, bus_information)
             check_if_bus_has_arrived(arrival_times)
-            print(arrival_times)
+            return arrival_times
 
     except (HTTPError, URLError) as error:
         print("error: ", error)
