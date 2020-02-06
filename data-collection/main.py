@@ -6,8 +6,6 @@ import datetime as dt
 from socket import timeout
 import csv
 
-bus_information = []
-
 def main():
 
     bus_452 = "452"
@@ -15,45 +13,81 @@ def main():
     york_house_place = '490010536K'
     high_street_ken = '490000110F'
 
-    repeat_call_api(1, bus_9, high_street_ken)
+    # Get all current bus arrival time information
+    bus_information = load_bus_information()
+    print(bus_information)
 
-def repeat_call_api(num_calls, bus_route_id, bus_stop_id):
-    arrival_info = call_countdown_api(bus_route_id, bus_stop_id)
+    repeat_call_api(1, bus_9, high_street_ken, bus_information)
+
+
+def repeat_call_api(num_calls: int, bus_route_id: str, bus_stop_id: str, info):
+    arrival_info = call_countdown_api(bus_route_id, bus_stop_id, info)
     for i in range (0, num_calls):
         i += 1
         time.sleep(30)
 
         print("======================================================")
         print(dt.datetime.now())
-        arrival_info = call_countdown_api(bus_route_id, bus_stop_id)
+        arrival_info = call_countdown_api(bus_route_id, bus_stop_id, info)
         
     write_to_csv(arrival_info)
 
+
+def load_bus_information():
+    bus_information = []
+
+    try:
+        with open('bus_arrivals.csv') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter = ',')
+            line_count = 0
+            for row in csv_reader:
+                if line_count != 0:
+                    vehicle_id = row[0]
+                    direction = row[1]
+                    timestamp = row[2]
+                    expected_arrival = row[3]
+                    arrived = row[4]
+                    vehicle_info = {
+                        "vehicle_id": vehicle_id,  
+                        "direction": direction,
+                        "timestamp": timestamp,
+                        "expected_arrival": expected_arrival,
+                        "arrived": arrived
+                    }
+                    bus_information.append(vehicle_info)
+                line_count += 1
+    except IOError:
+        print("I/O error in loading information from csv file")
+    
+    return bus_information
+
+
 def write_to_csv(arrival_array):
     csv_columns = ['vehicle_id', 'direction', 'timestamp', 'expected_arrival', 'arrived']
-    csv = "bus_arrivals.csv"
+    csv_file = "bus_arrivals.csv"
     try:
-        with open(csv, 'w') as csvfile:
+        with open(csv_file, 'w') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames = csv_columns)
             writer.writeheader()
             for data in arrival_array:
                 writer.writerow(data)
     except IOError:
-        print("I/O error")
+        print("I/O error in loading information into csv file")
 
 
-def call_countdown_api(route_id, stop_id):
+def call_countdown_api(route_id: str, stop_id: str, info):
     try:
         with urllib.request.urlopen("https://api.tfl.gov.uk/StopPoint/" + stop_id + "/arrivals") as api:
             data = json.loads(api.read().decode())
-            arrival_times = get_relevant_info(data, route_id, bus_information)
-            check_if_bus_has_arrived(arrival_times)
+            arrival_times = get_relevant_info(data, route_id, info)
+            bus_info = check_if_bus_is_due(arrival_times, info)
             return arrival_times
 
     except (HTTPError, URLError) as error:
         print("error: ", error)
     except timeout:
         print("timeout error")
+
 
 def get_relevant_info(data, route_id, bus_info):
     for info in data:
@@ -75,12 +109,12 @@ def get_relevant_info(data, route_id, bus_info):
             if found:
                 # If this vehicle is already in the dictionary, update the estimated arrival time
                 vehicle_info = bus_info[index]
-                print("New expected arrival time: ", expected_arrival)
+                print("New expected arrival time for bus {}: ".format(vehicle_id), expected_arrival)
                 vehicle_info["expected_arrival"] = expected_arrival 
                 vehicle_info["timestamp"] = timestamp
                 bus_info[index] = vehicle_info
             else:
-                print("New bus")
+                print("New bus id: ", vehicle_id)
                 # If this vehicle is not in the dictionary, then add it to the dictionary.
                 bus_info.append(vehicle_info)
 
@@ -98,15 +132,22 @@ def vehicle_already_found(vehicle_id, dictionary):
     
     return found, j
 
-def check_if_bus_has_arrived(buses):
+def check_if_bus_is_due(buses, info):
     now = dt.datetime.now()
     for bus in buses:
         eta = bus.get("expected_arrival")
         eta_as_dt = convert_time_to_datetime(eta)
+        vehicle_id = bus.get("vehicle_id")
         if now < eta_as_dt:
-            print("Vehicle hasn't arrived yet: ", bus.get("vehicle_id"))
+            print("Vehicle hasn't arrived yet: ", vehicle_id)
         else:
-            print("Vehicle is due to arrive: ", bus.get("vehicle_id"))
+            print("Vehicle is due to arrive: ", vehicle_id)
+            check_if_bus_has_arrived(vehicle_id, info, bow, eta_as_dt)
+    return info
+
+
+def check_if_bus_has_arrived(vehicle_id, info, time_now, time_due):
+    
 
 
 def convert_time_to_datetime(given_time):
