@@ -15,9 +15,46 @@ def main():
     high_street_ken = '490000110F'
 
     # Get all current bus arrival time information
-    bus_information = load_bus_information(bus_9, high_street_ken)
+    # bus_information = load_bus_information(bus_9, high_street_ken)
 
-    repeat_call_api(1, bus_9, high_street_ken, bus_information)
+    # repeat_call_api(1, bus_9, high_street_ken, bus_information)
+
+    bus_452_stop_info = get_stop_info("9")
+    ids = [stop.get("stopID") for stop in bus_452_stop_info]
+    # print(len(ids))
+
+
+def get_stop_info(bus_route_id: str):
+    bus_stop_info = []
+
+    try:
+        with urllib.request.urlopen("https://api.tfl.gov.uk/line/"+ bus_route_id +"/stoppoints") as api:
+            data = json.loads(api.read().decode())
+            for stop in data:
+                info = {
+                    "stopName": stop.get("commonName"),
+                    "stopID": stop.get("naptanId")
+                }
+                bus_stop_info.append(info)
+
+            return bus_stop_info
+    except (HTTPError, URLError) as error:
+        print("error: ", error)
+    except timeout:
+        print("timeout error")
+
+
+def get_expected_arrival_times(stop_ids):
+
+    try:
+        with urllib.request.urlopen("https://api.tfl.gov.uk/line/"+ bus_route_id +"/stoppoints") as api:
+            data = json.loads(api.read().decode())
+
+            # http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Stopcode2=490000093PB,490000110B&LineName=9&ReturnList=StopPointName,LineName,DestinationText,EstimatedTime,ExpireTime,VehicleID,DirectionID
+    except (HTTPError, URLError) as error:
+        print("error: ", error)
+    except timeout:
+        print("timeout error")
 
 
 def repeat_call_api(num_calls: int, bus_route_id: str, bus_stop_id: str, info):
