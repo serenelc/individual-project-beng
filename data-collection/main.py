@@ -29,14 +29,9 @@ def main():
             bus_information.append(expected_arrival_times)
     
     evaluated_info = evaluate_bus_data(bus_information, current_info)
+    check_if_bus_is_due(evaluated_info)
 
     write_to_csv(evaluated_info, bus_9)
-
-    # x = get_expected_arrival_times("490007705F")
-    # time_of_request = int(x[0][2])
-    # print(time_of_request)
-    # time_of_request = dt.datetime.fromtimestamp(time_of_request/1000.0)
-    # print(time_of_request)
 
 
 def load_bus_information(bus_id, date):
@@ -112,7 +107,6 @@ def get_stop_info(bus_route_id: str):
 
 
 def get_expected_arrival_times(stop_code: str):
-
     url =  "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Stopcode2=" + stop_code + "&LineName=9&ReturnList=StopPointName,LineName,DestinationText,EstimatedTime,ExpireTime,VehicleID,DirectionID"
     bus_information = []
 
@@ -160,7 +154,7 @@ def evaluate_bus_data(new_data, old_data):
             if found:
                 # If this vehicle is already in the dictionary, update the estimated arrival time
                 # print("New expected arrival time for bus {}: ".format(vehicle_id), expected_arrival)
-                vehicle_info = bus_info[index]
+                vehicle_info = bus_stop[index]
                 vehicle_info["expected_arrival"] = eta 
                 vehicle_info["timestamp"] = time_of_request
                 bus_info[index] = vehicle_info
@@ -185,22 +179,23 @@ def vehicle_already_found(vehicle_id, dictionary):
     return found, j
 
 
-def check_if_bus_is_due(buses, info):
+def check_if_bus_is_due(bus_information):
+
     now = dt.datetime.now()
-    for index, bus in enumerate(buses):
+    for index, bus in enumerate(bus_information):
         eta = bus.get("expected_arrival")
         eta_as_dt = convert_time_to_datetime(eta)
         vehicle_id = bus.get("vehicle_id")
-        if now < eta_as_dt:
-            print("Vehicle hasn't arrived yet: ", vehicle_id)
-        else:
-            print("Vehicle is due to arrive: ", vehicle_id)
 
-            # wait for 3 minutes after the bus is due to arrive
-            if eta_as_dt < now.replace(minute = now.minute - 3):
-                print("3 minutes after bus is due to arrive")
-                info = check_if_bus_has_arrived(vehicle_id, info, now, eta_as_dt, index)
-    return info
+        # if now < eta_as_dt:
+        #     print("Vehicle {} hasn't arrived yet: ".format(vehicle_id))
+        # else:
+        #     print("Vehicle {} is due to arrive: ".format(vehicle_id))
+        #     # wait for 3 minutes after the bus is due to arrive
+        #     if eta_as_dt < now.replace(minute = now.minute - 3):
+        #         print("It is now 3 minutes after bus is due to arrive")
+        #         # info = check_if_bus_has_arrived(vehicle_id, info, now, eta_as_dt, index)
+    return bus_information
 
 
 def check_if_bus_has_arrived(vehicle_id, info, time_now, time_due, index):
@@ -225,6 +220,7 @@ def check_if_bus_has_arrived(vehicle_id, info, time_now, time_due, index):
 
 
 def convert_time_to_datetime(given_time):
+    print(given_time)
     year = int(given_time[:4])
     month = int(given_time[5:7])
     day = int(given_time[8:10])
