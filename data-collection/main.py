@@ -11,22 +11,84 @@ def main():
 
     bus_452 = "452"
     bus_9 = "9"
+    today = dt.datetime.today().strftime('%Y-%m-%d')
 
     bus_stop_info = get_stop_info(bus_9)
+    print("Getting list of all bus stop IDs on route {}".format(bus_9))
     ids = [stop.get("stopID") for stop in bus_stop_info]
+
+    current_info = load_bus_information(bus_9, today)
     
+    print("Getting expected arrival time of buses on route {}".format(bus_9))
     bus_information = []
     for bus_stop_id in ids:
         expected_arrival_times = get_expected_arrival_times(bus_stop_id)
         if len(expected_arrival_times) == 0:
-            print("invalid ID")
             ids.remove(bus_stop_id)
         else:
             bus_information.append(expected_arrival_times)
     
-    print(bus_information)
+    evaluated_info = evaluate_bus_data(bus_information, current_info)
 
-    # get_expected_arrival_times("490007705F")
+    write_to_csv(evaluated_info, bus_9)
+
+    # x = get_expected_arrival_times("490007705F")
+    # time_of_request = int(x[0][2])
+    # print(time_of_request)
+    # time_of_request = dt.datetime.fromtimestamp(time_of_request/1000.0)
+    # print(time_of_request)
+
+
+def load_bus_information(bus_id, date):
+    bus_information = []
+    file_name = 'bus_arrivals_' + bus_id + '_' + date + '.csv'
+    bus_file = Path.cwd() / file_name
+   
+    if bus_file.is_file():
+        try:
+            with open(file_name) as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter = ',')
+                line_count = 0
+                for row in csv_reader:
+                    if line_count != 0:
+                        vehicle_id = row[0]
+                        bus_stop_name = row[1]
+                        direction = row[2]
+                        eta = row[3]
+                        timestamp = row[4]
+                        arrived = row[5]
+
+                        vehicle_info = {
+                            "vehicle_id": vehicle_id,
+                            "bus_stop_name": bus_stop_name,
+                            "direction": direction,
+                            "expected_arrival": eta,
+                            "timestamp": timestamp,
+                            "arrived": arrived
+                        }
+
+                        bus_information.append(vehicle_info)
+                    line_count += 1
+        except IOError:
+            print("I/O error in loading information from csv file")
+    
+    return bus_information
+
+
+def write_to_csv(arrival_array, bus_route_id):
+    today = dt.datetime.today().strftime('%Y-%m-%d')
+
+    csv_columns = ['vehicle_id', 'bus_stop_name', 'direction', 'expected_arrival', 'timestamp', 'arrived']
+    csv_file = 'bus_arrivals_' + bus_route_id + '_' + today + '.csv'
+
+    try:
+        with open(csv_file, 'w') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames = csv_columns)
+            writer.writeheader()
+            for data in arrival_array:
+                writer.writerow(data)
+    except IOError:
+        print("I/O error in loading information into csv file")
 
 
 def get_stop_info(bus_route_id: str):
@@ -71,37 +133,43 @@ def get_expected_arrival_times(stop_code: str):
         print("timeout error")
 
 
-def evaluate_data(data, route_id):
+def evaluate_bus_data(new_data, old_data):
+    print("Evaluating new bus arrival information")
+    for bus_stop in new_data:
 
-    for info in data:
-        if info.get("lineId") == route_id:
-            vehicle_id = info.get("vehicleId")
-            expected_arrival = info.get("expectedArrival")
-            # timestamp is when countdown last updates the predicted arrival times
-            timestamp = info.get("timestamp")
+        ura_array = bus_stop[0]
+        time_of_req = int(ura_array[2])
+        time_of_request = dt.datetime.fromtimestamp(time_of_req/1000.0)
+
+        for info in bus_stop[1:]:
+            vehicle_id = info[5] + "_" + ura_array[2]
+            direction = "outbound" if info[3] == '2' else "inbound"
+            eta = dt.datetime.fromtimestamp(int(info[6])/1000.0)
+            bus_stop_name = info[1]
 
             vehicle_info = {
-                "vehicle_id": vehicle_id,  
-                "direction": info.get("direction"),
-                "timestamp": timestamp,
-                "expected_arrival": expected_arrival,
+                "vehicle_id": vehicle_id,
+                "bus_stop_name": bus_stop_name,
+                "direction": direction,
+                "expected_arrival": eta,
+                "timestamp": time_of_request,
                 "arrived": "False"
             }
-            
-            found, index = vehicle_already_found(vehicle_id, bus_info)
+
+            found, index = vehicle_already_found(vehicle_id, old_data)
             if found:
                 # If this vehicle is already in the dictionary, update the estimated arrival time
+                # print("New expected arrival time for bus {}: ".format(vehicle_id), expected_arrival)
                 vehicle_info = bus_info[index]
-                print("New expected arrival time for bus {}: ".format(vehicle_id), expected_arrival)
-                vehicle_info["expected_arrival"] = expected_arrival 
-                vehicle_info["timestamp"] = timestamp
+                vehicle_info["expected_arrival"] = eta 
+                vehicle_info["timestamp"] = time_of_request
                 bus_info[index] = vehicle_info
             else:
-                print("New bus id: ", vehicle_id)
+                # print("New bus id: ", vehicle_id)
                 # If this vehicle is not in the dictionary, then add it to the dictionary.
-                bus_info.append(vehicle_info)
+                old_data.append(vehicle_info)
 
-    return bus_info
+    return old_data
 
 
 def vehicle_already_found(vehicle_id, dictionary):

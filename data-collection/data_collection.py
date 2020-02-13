@@ -44,18 +44,7 @@ def load_bus_information(bus_id, station):
     return bus_information
 
 
-def write_to_csv(arrival_array, bus_id, station):
-    csv_columns = ['vehicle_id', 'direction', 'timestamp', 'expected_arrival', 'arrived']
-    # csv_file = 'bus_arrivals_' + bus_id + '_' + station + '.csv'
-    csv_file = 'bus_arrivals.csv'
-    try:
-        with open(csv_file, 'w') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames = csv_columns)
-            writer.writeheader()
-            for data in arrival_array:
-                writer.writerow(data)
-    except IOError:
-        print("I/O error in loading information into csv file")
+
 
 
 def call_countdown_api(route_id: str, stop_id: str, info):
