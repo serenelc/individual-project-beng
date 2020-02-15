@@ -59,7 +59,14 @@ class Data_Collection(object):
             print("timeout error")
 
 
-    def evaluate_bus_data(self, new_data, old_data):
+    def get_stop_code(self, bus_stop_name, all_stops):
+        for stop in all_stops:
+            if bus_stop_name == stop.get("stopName"):
+                return stop.get("stopID")
+        return "NOT_FOUND"
+
+
+    def evaluate_bus_data(self, new_data, old_data, stop_info):
         print("Evaluating new bus arrival information")
         for bus_stop in new_data:
 
@@ -68,10 +75,11 @@ class Data_Collection(object):
             time_of_request = dt.datetime.fromtimestamp(time_of_req/1000.0)
 
             for info in bus_stop[1:]:
-                vehicle_id = info[5] + "_0"
+                bus_stop_name = info[1]
+                stop_code = self.get_stop_code(bus_stop_name, stop_info)
+                vehicle_id = info[5] + "_" + stop_code + "_0"
                 direction = "outbound" if info[3] == '2' else "inbound"
                 eta = dt.datetime.fromtimestamp(int(info[6])/1000.0)
-                bus_stop_name = info[1]
 
                 # incoming vehicle info
                 new_vehicle_info = {
@@ -83,27 +91,27 @@ class Data_Collection(object):
                     "arrived": "False"
                 }
 
-                # found, first_journey, index = self.vehicle_already_found(new_vehicle_info, old_data)
+                found, first_journey, index = self.vehicle_already_found(new_vehicle_info, old_data)
 
-                # # if this vehicle is already in the dictionary
-                # if found:
-                #     # old vehicle already in dictionary
-                #     found_vehicle = old_data[index]
-                #     # if this is the first journey update the eta
-                #     if first_journey:
-                #         found_vehicle["expected_arrival"] = eta 
-                #         found_vehicle["timestamp"] = time_of_request
-                #         old_data[index] = found_vehicle
-                #     # if this is not the first journey, change vehicle ID to indicate trip number
-                #     else:
-                #         trip_num = int(new_vehicle_info.get("vehicle_id")[-1]) + 1
-                #         new_id = new_vehicle_info.get("vehicle_id")[:-1] + str(trip_num)
-                #         new_vehicle_info["vehicle_id"] = new_id
-                #         old_data.append(new_vehicle_info)
+                # if this vehicle is already in the dictionary
+                if found:
+                    # old vehicle already in dictionary
+                    found_vehicle = old_data[index]
+                    # if this is the first journey update the eta
+                    if first_journey:
+                        found_vehicle["expected_arrival"] = eta 
+                        found_vehicle["timestamp"] = time_of_request
+                        old_data[index] = found_vehicle
+                    # if this is not the first journey, change vehicle ID to indicate trip number
+                    else:
+                        trip_num = int(new_vehicle_info.get("vehicle_id")[-1]) + 1
+                        new_id = new_vehicle_info.get("vehicle_id")[:-1] + str(trip_num)
+                        new_vehicle_info["vehicle_id"] = new_id
+                        old_data.append(new_vehicle_info)
 
-                # else:
-                #     # If this vehicle is not in the dictionary, then add it to the dictionary.
-                #     old_data.append(new_vehicle_info)
+                else:
+                    # If this vehicle is not in the dictionary, then add it to the dictionary.
+                    old_data.append(new_vehicle_info)
 
         return old_data
 
