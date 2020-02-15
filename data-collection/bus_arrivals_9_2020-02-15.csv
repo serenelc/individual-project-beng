@@ -1,9 +1,5 @@
 vehicle_id,bus_stop_name,direction,expected_arrival,timestamp,arrived
-14558_0,Green Park Station,outbound,2020-02-15 12:34:25,2020-02-15 10:18:26.114000,False
-15453_0,Green Park Station,outbound,2020-02-15 12:37:43,2020-02-15 10:18:26.114000,False
-14510_0,Green Park Station,outbound,2020-02-15 12:45:10,2020-02-15 10:18:26.114000,False
-14544_0,Green Park Station,outbound,2020-02-15 12:45:09,2020-02-15 10:18:25.858000,False
-15459_0,Green Park Station,outbound,2020-02-15 12:32:32,2020-02-15 12:18:26.114000,False
-14552_0,Green Park Station,inbound,2020-02-15 12:30:30,2020-02-15 12:18:25.329000,False
-14462_0,Green Park Station,inbound,2020-02-15 12:24:04,2020-02-15 12:18:26.011000,False
-15457_0,Green Park Station,inbound,2020-02-15 12:31:31,2020-02-15 12:18:26.011000,False
+14530_0,Green Park Station,outbound,2020-02-15 10:07:18,2020-02-15 10:48:01,False
+15551_0,Green Park Station,outbound,2020-02-15 10:15:46,2020-02-15 10:48:01,False
+14523_0,Green Park Station,outbound,2020-02-15 10:17:17,2020-02-15 10:48:01,False
+15447_0,Green Park Station,outbound,2020-02-15 10:01:17,2020-02-15 10:48:00,False

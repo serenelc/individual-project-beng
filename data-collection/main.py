@@ -27,13 +27,14 @@ def main():
         else:
             bus_information.append(expected_arrival_times)
     
+    print(bus_information)
     evaluated_info = data.evaluate_bus_data(bus_information, current_info)
 
     # evaluated_info = helper.read_bus_info_from_csv(bus_9, today)
 
     # evaluated_info = data.check_if_bus_is_due(evaluated_info)
 
-    print("Writing new information to CSV")
-    helper.write_to_csv(evaluated_info, bus_9)
+    # print("Writing new information to CSV")
+    # helper.write_to_csv(evaluated_info, bus_9)
 
 main()

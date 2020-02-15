@@ -19,8 +19,8 @@ class Helper(object):
                             vehicle_id = row[0]
                             bus_stop_name = row[1]
                             direction = row[2]
-                            eta = row[3]
-                            timestamp = row[4]
+                            eta = self.convert_time_to_datetime(row[3])
+                            timestamp = self.convert_time_to_datetime(row[4])
                             arrived = row[5]
 
                             vehicle_info = {
@@ -57,7 +57,6 @@ class Helper(object):
 
 
     def convert_time_to_datetime(self, given_time):
-        print(given_time)
         year = int(given_time[:4])
         month = int(given_time[5:7])
         day = int(given_time[8:10])
