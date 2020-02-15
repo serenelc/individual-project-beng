@@ -148,19 +148,19 @@ class Data_Collection(object):
                 three_minutes_ago = now - dt.timedelta(minutes = 3)
                 if eta < three_minutes_ago:
                     print("It is now 3 minutes after bus is due to arrive")
-                    bus_information = self.check_if_bus_has_arrived(vehicle_id, bus_information, now, index)
+                    bus_information = self.check_if_bus_has_arrived(bus_information, now, index)
 
         return bus_information
 
 
-    def check_if_bus_has_arrived(self, vehicle_id, info, time_now, index):
+    def check_if_bus_has_arrived(self, bus_info, time_now, index):
         """ 
         wait for 3 minutes after the bus is due to arrive. If the id shows back up in the 
         API call, this implies that it hasn't arrived yet. If the id does not show back up
         in the the API call, this implies that the bus arrived at the predicted time.
         """
 
-        this_bus = info[index]
+        this_bus = bus_info[index]
         timestamp = this_bus.get("timestamp")
 
         # check that the eta for this bus was last updated more than 3 minutes ago, i.e. it wasn't returned
@@ -169,6 +169,6 @@ class Data_Collection(object):
         if timestamp < three_minutes_ago:
             print("Bus has arrived at predicted time")
             this_bus["arrived"] = True
-            info[index] = this_bus
+            bus_info[index] = this_bus
 
-        return info
+        return bus_info
