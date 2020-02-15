@@ -10,20 +10,6 @@
         
 #     write_to_csv(arrival_info, bus_route_id, bus_stop_id)
 
-
-# def call_countdown_api(route_id: str, stop_id: str, info):
-#     try:
-#         with urllib.request.urlopen("https://api.tfl.gov.uk/StopPoint/" + stop_id + "/arrivals") as api:
-#             data = json.loads(api.read().decode())
-#             arrival_times = get_relevant_info(data, route_id, info)
-#             bus_info = check_if_bus_is_due(arrival_times, info)
-#             return arrival_times
-
-#     except (HTTPError, URLError) as error:
-#         print("error: ", error)
-#     except timeout:
-#         print("timeout error")
-
 import urllib.request
 from urllib.error import HTTPError, URLError
 import json
@@ -32,7 +18,6 @@ import datetime as dt
 from helper import Helper
 
 class Data_Collection(object):
-
 
     def get_stop_info(self, bus_route_id: str):
         bus_stop_info = []
@@ -54,8 +39,8 @@ class Data_Collection(object):
             print("timeout error")
 
 
-    def get_expected_arrival_times(self, stop_code: str):
-        url =  "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Stopcode2=" + stop_code + "&LineName=9&ReturnList=StopPointName,LineName,DestinationText,EstimatedTime,ExpireTime,VehicleID,DirectionID"
+    def get_expected_arrival_times(self, stop_code: str, route_id: str):
+        url =  "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Stopcode2=" + stop_code + "&LineName=" + route_id + "&ReturnList=StopPointName,LineName,DestinationText,EstimatedTime,ExpireTime,VehicleID,DirectionID"
         bus_information = []
 
         try:
@@ -69,7 +54,7 @@ class Data_Collection(object):
                     bus_information.append(line_info)
                 return bus_information
         except (HTTPError, URLError) as error:
-            # print("error: ", error)
+            # Invalid bus ID, so ignore error
             return bus_information
         except timeout:
             print("timeout error")
@@ -85,6 +70,7 @@ class Data_Collection(object):
 
             for info in bus_stop[1:]:
                 vehicle_id = info[5] + "_" + ura_array[2]
+                # 2 == 'outbound', 1 == 'inbound'
                 direction = "outbound" if info[3] == '2' else "inbound"
                 eta = dt.datetime.fromtimestamp(int(info[6])/1000.0)
                 bus_stop_name = info[1]
@@ -98,16 +84,16 @@ class Data_Collection(object):
                     "arrived": "False"
                 }
 
-                found, index = vehicle_already_found(vehicle_id, old_data)
+                found, index = self.vehicle_already_found(vehicle_id, old_data)
                 if found:
                     # If this vehicle is already in the dictionary, update the estimated arrival time
                     # print("New expected arrival time for bus {}: ".format(vehicle_id), expected_arrival)
                     vehicle_info = bus_stop[index]
                     vehicle_info["expected_arrival"] = eta 
                     vehicle_info["timestamp"] = time_of_request
-                    bus_info[index] = vehicle_info
+                    old_data[index] = vehicle_info
+
                 else:
-                    # print("New bus id: ", vehicle_id)
                     # If this vehicle is not in the dictionary, then add it to the dictionary.
                     old_data.append(vehicle_info)
 

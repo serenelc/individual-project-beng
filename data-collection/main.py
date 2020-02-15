@@ -21,14 +21,14 @@ def main():
     print("Getting expected arrival time of buses on route {}".format(bus_9))
     bus_information = []
     for bus_stop_id in stop_ids:
-        expected_arrival_times = get_expected_arrival_times(bus_stop_id)
+        expected_arrival_times = data.get_expected_arrival_times(bus_stop_id, bus_9)
         if len(expected_arrival_times) == 0:
             stop_ids.remove(bus_stop_id)
         else:
             bus_information.append(expected_arrival_times)
     
-    evaluated_info = evaluate_bus_data(bus_information, current_info)
-    check_if_bus_is_due(evaluated_info)
+    evaluated_info = data.evaluate_bus_data(bus_information, current_info)
+    # data.check_if_bus_is_due(evaluated_info)
 
     helper.write_to_csv(evaluated_info, bus_9)
 
