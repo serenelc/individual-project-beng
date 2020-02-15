@@ -18,10 +18,10 @@ class Helper(object):
                         if line_count != 0:
                             vehicle_id = row[0]
                             bus_stop_name = row[1]
-                            direction = row[2]
+                            direction = int(row[2])
                             eta = self.convert_time_to_datetime(row[3])
                             timestamp = self.convert_time_to_datetime(row[4])
-                            arrived = row[5]
+                            arrived = True if row[5] == 'True' else False
 
                             vehicle_info = {
                                 "vehicle_id": vehicle_id,

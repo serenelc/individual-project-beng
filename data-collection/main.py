@@ -1,7 +1,8 @@
 import datetime as dt
+import time
 from helper import Helper
 from data_collection import Data_Collection
-
+from urllib.error import HTTPError, URLError
 
 def main():
 
@@ -31,9 +32,16 @@ def main():
 
     # evaluated_info = helper.read_bus_info_from_csv(bus_9, today)
 
-    # evaluated_info = data.check_if_bus_is_due(evaluated_info)
+    evaluated_info = data.check_if_bus_is_due(evaluated_info)
 
     print("Writing new information to CSV")
     helper.write_to_csv(evaluated_info, bus_9)
+
+    # while True:
+    #     try:
+    #         # Do the data collection
+    #         time.sleep(30)
+    #     except (HTTPError, URLError) as error:
+    #         # Send me a notification so I can fix it and keep it running.
 
 main()

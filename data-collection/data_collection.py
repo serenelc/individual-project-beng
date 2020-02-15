@@ -1,15 +1,3 @@
-# def repeat_call_api(num_calls: int, bus_route_id: str, bus_stop_id: str, info):
-#     arrival_info = call_countdown_api(bus_route_id, bus_stop_id, info)
-#     for i in range (0, num_calls):
-#         i += 1
-#         time.sleep(30)
-
-#         print("======================================================")
-#         print(dt.datetime.now())
-#         arrival_info = call_countdown_api(bus_route_id, bus_stop_id, info)
-        
-#     write_to_csv(arrival_info, bus_route_id, bus_stop_id)
-
 import urllib.request
 from urllib.error import HTTPError, URLError
 import json
@@ -78,7 +66,7 @@ class Data_Collection(object):
                 bus_stop_name = info[1]
                 stop_code = self.get_stop_code(bus_stop_name, stop_info)
                 vehicle_id = info[5] + "_" + stop_code + "_0"
-                direction = "outbound" if info[3] == '2' else "inbound"
+                direction = 1 if info[3] == '2' else 0
                 eta = dt.datetime.fromtimestamp(int(info[6])/1000.0)
 
                 # incoming vehicle info
@@ -88,20 +76,22 @@ class Data_Collection(object):
                     "direction": direction,
                     "expected_arrival": eta,
                     "timestamp": time_of_request,
-                    "arrived": "False"
+                    "arrived": False
                 }
 
                 found, first_journey, index = self.vehicle_already_found(new_vehicle_info, old_data)
 
                 # if this vehicle is already in the dictionary
                 if found:
-                    # old vehicle already in dictionary
+                    # old vehicle found already in dictionary
                     found_vehicle = old_data[index]
+
                     # if this is the first journey update the eta
                     if first_journey:
                         found_vehicle["expected_arrival"] = eta 
                         found_vehicle["timestamp"] = time_of_request
                         old_data[index] = found_vehicle
+
                     # if this is not the first journey, change vehicle ID to indicate trip number
                     else:
                         trip_num = int(new_vehicle_info.get("vehicle_id")[-1]) + 1
@@ -123,8 +113,11 @@ class Data_Collection(object):
 
         for i, old_vehicle in enumerate(dictionary):
             # check if that vehicle is already in the dictionary
-            if old_vehicle.get("vehicle_id") == current_vehicle.get("vehicle_id"):
+            same_vehicle = old_vehicle.get("vehicle_id") == current_vehicle.get("vehicle_id")
+            same_direction = old_vehicle.get("direction") == current_vehicle.get("direction")
+            if same_vehicle & same_direction:
                 print("Found the same vehicle id in the csv file!")
+                # print("OLD: {}, NEW: {}".format(old_vehicle, current_vehicle))
                 # check that this isn't the 1st trip of the day for that vehicle
                 # assume that a bus takes 2 hours to run its full route
                 two_hours_before = current_vehicle.get("timestamp") - dt.timedelta(hours = 2)
@@ -175,7 +168,7 @@ class Data_Collection(object):
         three_minutes_ago = time_now - dt.timedelta(minutes = 3)
         if timestamp < three_minutes_ago:
             print("Bus has arrived at predicted time")
-            this_bus["arrived"] = "True"
+            this_bus["arrived"] = True
             info[index] = this_bus
 
         return info
