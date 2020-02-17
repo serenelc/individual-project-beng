@@ -56,6 +56,8 @@ class Data_Collection(object):
 
     def evaluate_bus_data(self, new_data, old_data, stop_info):
         print("Evaluating new bus arrival information")
+        today = dt.datetime.today().strftime('%Y-%m-%d')
+
         for bus_stop in new_data:
 
             ura_array = bus_stop[0]
@@ -65,7 +67,7 @@ class Data_Collection(object):
             for info in bus_stop[1:]:
                 bus_stop_name = info[1]
                 stop_code = self.get_stop_code(bus_stop_name, stop_info)
-                vehicle_id = info[5] + "_" + stop_code + "_0"
+                vehicle_id = info[5] + "_" + stop_code + "_" + today + "_0"
                 direction = 1 if info[3] == '2' else 0
                 eta = dt.datetime.fromtimestamp(int(info[6])/1000.0)
 
