@@ -119,7 +119,6 @@ class Data_Collection(object):
             same_direction = old_vehicle.get("direction") == current_vehicle.get("direction")
             if same_vehicle & same_direction:
                 print("Found the same vehicle id in the csv file!")
-                # print("OLD: {}, NEW: {}".format(old_vehicle, current_vehicle))
                 # check that this isn't the 1st trip of the day for that vehicle
                 # assume that a bus takes 2 hours to run its full route
                 two_hours_before = current_vehicle.get("timestamp") - dt.timedelta(hours = 2)
