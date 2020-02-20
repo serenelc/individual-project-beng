@@ -67,8 +67,8 @@ class Data_Collection(object):
             for info in bus_stop[1:]:
                 bus_stop_name = info[1]
                 stop_code = self.get_stop_code(bus_stop_name, stop_info)
-                vehicle_id = info[5] + "_" + stop_code + "_" + today + "_0"
                 direction = 1 if info[3] == '2' else 0
+                vehicle_id = info[5] + "_" + stop_code + "_" + today + "_" + str(direction) + "_0"
                 eta = dt.datetime.fromtimestamp(int(info[6])/1000.0)
 
                 # incoming vehicle info
