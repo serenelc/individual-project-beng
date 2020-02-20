@@ -117,9 +117,13 @@ class Data_Collection(object):
             # check if that vehicle is already in the dictionary
             same_vehicle = old_vehicle.get("vehicle_id") == current_vehicle.get("vehicle_id")
             same_direction = old_vehicle.get("direction") == current_vehicle.get("direction")
-            if same_vehicle & same_direction:
+            if same_vehicle:
                 print("Found the same vehicle id in the csv file!")
                 # check that this isn't the 1st trip of the day for that vehicle
+                
+                if not same_direction:
+                    first_journey = False
+                
                 # assume that a bus takes 2 hours to run its full route
                 two_hours_before = current_vehicle.get("timestamp") - dt.timedelta(hours = 2)
                 if old_vehicle.get("timestamp") < two_hours_before:
