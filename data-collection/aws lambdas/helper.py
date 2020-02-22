@@ -50,7 +50,29 @@ class Helper(object):
                             }
                             
             return vehicle_info
+
+
+    def update_dynamo(self, tablename, info_to_update):
+        dynamodb = boto3.client('dynamodb')
+        vehicle_id = info_to_update.get("vehicle_id")
+        eta = info_to_update.get("expected_arrival")
+        timestamp = info_to_update.get("timestamp")
         
+        try:
+            response = dynamodb.update_item(
+                TableName=tablename,
+                Key={'vehicle_id': {'S': vehicle_id}},
+                UpdateExpression="set expected_arrival = :eta, timestamp = :t",
+                ExpressionAttributeValues={
+                    ':eta': {'S': eta},
+                    ':t': {'S': timestamp}
+                }
+            )
+        except ClientError as e:
+            print(e.response['Error']['Message'])
+            
+        else:
+            print("Update succeeded:")
         
 
     def write_to_db(self, table_name, arrival_array, bus_route_id):
@@ -78,4 +100,25 @@ class Helper(object):
     
         except IOError:
             print("I/O error in loading information from csv file into dynamodb")
+
+    
+    def check_if_vehicle_exists(self, tablename, vehicle_id):
+        dynamodb = boto3.client('dynamodb')
+
+        try:
+            response = dynamodb.query(
+                TableName=tablename,
+                ExpressionAttributeValues={
+                    ':v': {
+                        'S': vehicle_id,
+                    },
+                },
+                KeyConditionExpression='vehicle_id = :v',
+            )
+        except ClientError as e:
+            print(e.response['Error']['Message'])
+            
+        else:
+            #len = 0 if the vehicle doesn't exist in the table
+            return len(response['Items'])
 
