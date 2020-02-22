@@ -1,7 +1,7 @@
 import datetime as dt
 import time
-from helper import Helper
-from data_collection import Data_Collection
+from local_helper import Helper
+from local_data_collection import Data_Collection
 from urllib.error import HTTPError, URLError
 
 def main():

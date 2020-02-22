@@ -52,9 +52,8 @@ class Helper(object):
             return vehicle_info
 
 
-    def update_dynamo(self, tablename, info_to_update):
+    def update_dynamo(self, tablename, vehicle_id, info_to_update):
         dynamodb = boto3.client('dynamodb')
-        vehicle_id = info_to_update.get("vehicle_id")
         eta = info_to_update.get("expected_arrival")
         timestamp = info_to_update.get("timestamp")
         
@@ -75,31 +74,25 @@ class Helper(object):
             print("Update succeeded:")
         
 
-    def write_to_db(self, table_name, arrival_array, bus_route_id):
+    def write_to_db(self, table_name, bus_information):
         dynamodb = boto3.client('dynamodb')
-        today = dt.datetime.today().strftime('%Y-%m-%d')
-    
-        file_name = 'bus_data.csv'
-        bus_file = Path.cwd() / file_name
 
         try:
-            for data in arrival_array:
-                vehicle_id = data[0]
-                bus_stop_name = data[1]
-                direction = str(data[2])
-                expected_arrival = data[3]
-                timestamp = data[4]
-                arrived = data[5]
-                dynamodb.put_item(TableName=table_name, Item={'vehicle_id': {'S': vehicle_id},
+            vehicle_id = bus_information.get("vehicle_id")
+            bus_stop_name = bus_information.get("bus_stop_name")
+            direction = str(bus_information.get("direction"))
+            eta = str(bus_information.get("expected_arrival"))
+            timestamp = str(bus_information.get("expected_arrival"))
+            arrived = "True" if bus_information.get("arrived") else "False"
+            dynamodb.put_item(TableName=table_name, Item={'vehicle_id': {'S': vehicle_id},
                                                               'bus_stop_name': {'S': bus_stop_name},
                                                               'direction': {'N': direction},
                                                               'expected_arrival': {'S': eta},
                                                               'timestamp': {'S': timestamp},
                                                               'arrived': {'S': arrived}})
-        
     
         except IOError:
-            print("I/O error in loading information from csv file into dynamodb")
+            print("I/O error in writing information into dynamodb")
 
     
     def check_if_vehicle_exists(self, tablename, vehicle_id):
@@ -119,6 +112,6 @@ class Helper(object):
             print(e.response['Error']['Message'])
             
         else:
-            #len = 0 if the vehicle doesn't exist in the table
-            return len(response['Items'])
+            #response = [] if the vehicle doesn't exist in the table
+            return response['Items']
 

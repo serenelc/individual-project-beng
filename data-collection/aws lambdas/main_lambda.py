@@ -27,9 +27,9 @@ def lambda_handler(event, context):
                 expected_arrival_times = data.get_expected_arrival_times(bus_stop_id, bus_routes[1])
                 bus_information.append(expected_arrival_times)
 
-            evaluated_info = data.evaluate_bus_data(bus_information, valid_stops)
+            data.evaluate_bus_data(bus_information, valid_stops, bus_routes[1])
 
-            evaluated_info = data.check_if_bus_is_due(evaluated_info)
+            data.check_if_bus_is_due()
 
             helper.write_to_csv(evaluated_info, bus_routes[1])
 

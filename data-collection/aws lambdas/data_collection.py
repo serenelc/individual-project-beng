@@ -3,7 +3,7 @@ from urllib.error import HTTPError, URLError
 import json
 from socket import timeout
 import datetime as dt
-import helper as Helper
+from helper import Helper
 
 class Data_Collection(object):
 
@@ -55,9 +55,10 @@ class Data_Collection(object):
         return "NOT_FOUND"
 
 
-    def evaluate_bus_data(self, new_data, stop_info):
+    def evaluate_bus_data(self, new_data, stop_info, route):
         print("Evaluating new bus arrival information")
         today = dt.datetime.today().strftime('%Y-%m-%d')
+        helper = Helper()
 
         for bus_stop in new_data:
 
@@ -82,65 +83,68 @@ class Data_Collection(object):
                     "arrived": False
                 }
 
-                found, first_journey, index = self.vehicle_already_found(new_vehicle_info)
+                found, first_journey = self.vehicle_already_found(new_vehicle_info, route)
+                table_name = "bus_arrivals_" + route
 
                 # if this vehicle is already in the dictionary
                 if found:
                     # old vehicle found already in dictionary
-                    found_vehicle = old_data[index]
+                    current_id = new_vehicle_info.get("vehicle_id")
 
                     # if this is the first journey update the eta
                     if first_journey:
-                        found_vehicle["expected_arrival"] = eta 
-                        found_vehicle["timestamp"] = time_of_request
-                        old_data[index] = found_vehicle
+                        updated_info = {"expected_arrival": eta, "timestamp": time_of_request}
+                        helper.update_dynamo(table_name, current_id, updated_info)
 
                     # if this is not the first journey, change vehicle ID to indicate trip number
                     else:
                         trip_num = int(new_vehicle_info.get("vehicle_id")[-1]) + 1
                         new_id = new_vehicle_info.get("vehicle_id")[:-1] + str(trip_num)
                         new_vehicle_info["vehicle_id"] = new_id
-                        old_data.append(new_vehicle_info)
+                        helper.write_to_db(table_name, new_vehicle_info)
 
                 else:
                     # If this vehicle is not in the dictionary, then add it to the dictionary.
-                    old_data.append(new_vehicle_info)
+                    print("New vehicle, add to dictionary")
+                    helper.write_to_db(table_name, new_vehicle_info)
 
-        return old_data
 
+    def vehicle_already_found(self, current_vehicle, route):
+        helper = Helper()
 
-    def vehicle_already_found(self, current_vehicle, dictionary):
         found = False
         first_journey = True
-        j = -1
+        current_id = current_vehicle.get("vehicle_id")
+        table_name = "bus_arrivals_" + route
 
-        for i, old_vehicle in enumerate(dictionary):
-            # check if that vehicle is already in the dictionary
-            same_vehicle = old_vehicle.get("vehicle_id") == current_vehicle.get("vehicle_id")
-            same_direction = old_vehicle.get("direction") == current_vehicle.get("direction")
-            if same_vehicle:
-                print("Found the same vehicle id in the csv file!")
-                # check that this isn't the 1st trip of the day for that vehicle
-                
-                if not same_direction:
-                    first_journey = False
-                
-                # assume that a bus takes 2 hours to run its full route
-                two_hours_before = current_vehicle.get("timestamp") - dt.timedelta(hours = 2)
-                if old_vehicle.get("timestamp") < two_hours_before:
-                    print("This vehicle has already done at least 1 journey today!")
-                    first_journey = False
-                
-                found = True 
-                j = i
-                break 
+        response = helper.check_if_vehicle_exists(table_name, current_id)
+
+        if (len(response) > 0):
+            print("Found the same vehicle id in the database")
+
+            found_vehicle = response[0]
+            same_direction = found_vehicle.get("direction").get("N") == current_vehicle.get("direction")
+
+            # check that this isn't the 1st trip of the day for that vehicle
+            if not same_direction:
+                first_journey = False
+
+            # assume that a bus takes 2 hours to run its full route
+            two_hours_before = current_vehicle.get("timestamp") - dt.timedelta(hours = 2)
+            found_timestamp = helper.convert_time_to_datetime(found_vehicle.get("timestamp").get("S"))
+            if found_timestamp < two_hours_before:
+                print("This vehicle has already done at least 1 journey today!")
+                first_journey = False
+            
+            found = True
         
-        return found, first_journey, j
+        return found, first_journey
 
 
-    def check_if_bus_is_due(self, bus_information):
+    def check_if_bus_is_due(self):
 
         now = dt.datetime.now()
+        # Scan database for every item where arrival = False
         for index, bus in enumerate(bus_information):
             eta = bus.get("expected_arrival")
             vehicle_id = bus.get("vehicle_id")
