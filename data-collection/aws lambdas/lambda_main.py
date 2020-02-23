@@ -5,7 +5,7 @@ from helper import Helper
 from data_collection import Data_Collection
 from urllib.error import HTTPError, URLError
 
-def lambda_handler(event, context):
+def handler(event, context):
     helper = Helper()
     data = Data_Collection()
 
@@ -20,16 +20,16 @@ def lambda_handler(event, context):
             # Want this to happen concurrently, but not sure how threads work in Python
             # for bus_route in bus_routes:
             
-            print("Getting expected arrival time of buses on route {}".format(bus_routes[1]))
+            print("Getting expected arrival time of buses on route {}".format(bus_routes[0]))
             bus_information = []
             for bus_stop in valid_stops:
                 bus_stop_id = bus_stop.get("stopID")
-                expected_arrival_times = data.get_expected_arrival_times(bus_stop_id, bus_routes[1])
-                bus_information.append(expected_arrival_times)
+                new_arrival_info = data.get_expected_arrival_times(bus_stop_id, bus_routes[0])
+                bus_information.append(new_arrival_info)
 
-            data.evaluate_bus_data(bus_information, valid_stops, bus_routes[1])
+            data.evaluate_bus_data(bus_information, valid_stops, bus_routes[0])
 
-            data.check_if_bus_is_due(bus_routes[1])
+            data.check_if_bus_is_due(bus_routes[0])
 
             time.sleep(30)
         except (HTTPError, URLError) as error:

@@ -3,6 +3,7 @@ import boto3
 import csv
 import datetime as dt
 from pathlib import Path
+from data_collection import Data_Collection
 
 class Helper(object):
 
@@ -80,6 +81,9 @@ class Helper(object):
         
 
     def write_to_db(self, table_name, bus_information):
+        # If an item that has the same primary key as the new item already exists 
+        # in the specified table, the new item completely replaces the existing item.
+
         dynamodb = boto3.client('dynamodb')
 
         try:
@@ -167,4 +171,21 @@ class Helper(object):
                                 }
                 buses_not_arrived.append(vehicle_info)
             return buses_not_arrived
+
+
+    def get_valid_bus_stop_ids(self, bus_route):
+        data = Data_Collection()
+
+        bus_stop_info = data.get_stop_info(bus_route)
+        print("Getting list of all bus stop IDs on route {}".format(bus_route))
+        print(len(bus_stop_info))
+        
+        for i, bus_stop in enumerate(bus_stop_info):
+            bus_stop_id = bus_stop.get("stopID")
+            expected_arrival_times = data.get_expected_arrival_times(bus_stop_id, bus_route)
+            if len(expected_arrival_times) == 0:
+                bus_stop_info.remove(bus_stop)
+
+        print(len(bus_stop_info))
+        return bus_stop_info
 
