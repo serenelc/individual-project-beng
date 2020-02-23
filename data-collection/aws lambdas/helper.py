@@ -16,6 +16,16 @@ class Helper(object):
 
         date_time = dt.datetime(year, month, day, hour, minute, second)
         return date_time
+
+
+    def convert_types_db(self, bus):
+        vehicle_id = bus.get("vehicle_id").get("S")
+        bus_stop_name = bus.get("bus_stop_name").get("S")
+        direction = bus.get("direction").get("N")
+        eta = convert_time_to_datetime(bus.get("expected_arrival").get("S"))
+        timestamp = convert_time_to_datetime(bus.get("timestamp").get("S"))
+        arrived = True if bus.get("arrived").get("S") else False
+        return vehicle_id, bus_stop_name, direction, eta, timestamp, arrived
         
         
     def read_from_db(self, table_name, vehicle_id):
@@ -33,12 +43,7 @@ class Helper(object):
         
         else:
             item = response['Item']
-            vehicle_id = vehicle_id
-            bus_stop_name = item.get("bus_stop_name").get("S")
-            direction = item.get("direction").get("N")
-            eta = convert_time_to_datetime(item.get("expected_arrival").get("S"))
-            timestamp = convert_time_to_datetime(item.get("timestamp").get("S"))
-            arrived = True if item.get("arrived").get("S") else False
+            vehicle_id, bus_stop_name, direction, eta, timestamp, arrived = self.convert_types_db(item)
             
             vehicle_info = {
                             "vehicle_id": vehicle_id,
@@ -114,4 +119,52 @@ class Helper(object):
         else:
             #response = [] if the vehicle doesn't exist in the table
             return response['Items']
+
+
+    def get_all_buses_not_arrived(self, tablename):
+        dynamodb = boto3.client('dynamodb')
+        results = []
+        
+        try:
+            filter_expression = 'arrived = :a'
+            express_attr_val = {':a': {'S': 'False'}}
+            
+            response = dynamodb.scan(
+                TableName = tablename,
+                ExpressionAttributeValues = express_attr_val,
+                FilterExpression = filter_expression
+            )
+            
+            for i in response['Items']:
+                results.append(i)
+            
+            # Can only scan up to 1MB at a time.
+            while 'LastEvaluatedKey' in response:
+                response = dynamodb.scan(
+                    TableName = tablename,
+                    ExpressionAttributeValues = express_attr_val,
+                    FilterExpression = filter_expression,
+                    ExclusiveStartKey=response['LastEvaluatedKey']
+                )
+                for i in response['Items']:
+                    results.append(i)
+
+        except ClientError as e:
+            print(e.response['Error']['Message'])
+            
+        else:
+            buses_not_arrived = []
+            for bus in results:
+                vehicle_id, bus_stop_name, direction, eta, timestamp, arrived = self.convert_types_db(bus)
+            
+                vehicle_info = {
+                                "vehicle_id": vehicle_id,
+                                "bus_stop_name": bus_stop_name,
+                                "direction": direction,
+                                "expected_arrival": eta,
+                                "timestamp": timestamp,
+                                "arrived": arrived
+                                }
+                buses_not_arrived.append(vehicle_info)
+            return buses_not_arrived
 

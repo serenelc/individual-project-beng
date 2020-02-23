@@ -29,9 +29,7 @@ def lambda_handler(event, context):
 
             data.evaluate_bus_data(bus_information, valid_stops, bus_routes[1])
 
-            data.check_if_bus_is_due()
-
-            helper.write_to_csv(evaluated_info, bus_routes[1])
+            data.check_if_bus_is_due(bus_routes[1])
 
             time.sleep(30)
         except (HTTPError, URLError) as error:

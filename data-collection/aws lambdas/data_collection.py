@@ -141,10 +141,14 @@ class Data_Collection(object):
         return found, first_journey
 
 
-    def check_if_bus_is_due(self):
+    def check_if_bus_is_due(self, route):
+        helper = Helper()
+        
+        table_name = "bus_arrivals_" + route
+        bus_information = helper.get_all_buses_not_arrived(table_name)
 
         now = dt.datetime.now()
-        # Scan database for every item where arrival = False
+
         for index, bus in enumerate(bus_information):
             eta = bus.get("expected_arrival")
             vehicle_id = bus.get("vehicle_id")
@@ -158,27 +162,17 @@ class Data_Collection(object):
                 three_minutes_ago = now - dt.timedelta(minutes = 3)
                 if eta < three_minutes_ago:
                     print("It is now 3 minutes after bus is due to arrive")
-                    bus_information = self.check_if_bus_has_arrived(bus_information, now, index)
-
-        return bus_information
+                    self.check_if_bus_has_arrived(now, bus, table_name)
 
 
-    def check_if_bus_has_arrived(self, bus_info, time_now, index):
-        """ 
-        wait for 3 minutes after the bus is due to arrive. If the id shows back up in the 
-        API call, this implies that it hasn't arrived yet. If the id does not show back up
-        in the the API call, this implies that the bus arrived at the predicted time.
-        """
-
-        this_bus = bus_info[index]
-        timestamp = this_bus.get("timestamp")
+    def check_if_bus_has_arrived(self, time_now, bus, table_name):
+        helper = Helper()
+        timestamp = bus.get("timestamp")
 
         # check that the eta for this bus was last updated more than 3 minutes ago, i.e. it wasn't returned
         # in the most recent API call
         three_minutes_ago = time_now - dt.timedelta(minutes = 3)
         if timestamp < three_minutes_ago:
             print("Bus has arrived at predicted time")
-            this_bus["arrived"] = True
-            bus_info[index] = this_bus
-
-        return bus_info
+            bus["arrived"] = True
+            helper.write_to_db(table_name, bus)
