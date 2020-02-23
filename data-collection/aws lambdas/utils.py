@@ -3,9 +3,8 @@ import boto3
 import csv
 import datetime as dt
 from pathlib import Path
-from data_collection import Data_Collection
 
-class Helper(object):
+class Utilities(object):
 
     def convert_time_to_datetime(self, given_time):
         year = int(given_time[:4])
@@ -23,13 +22,14 @@ class Helper(object):
         vehicle_id = bus.get("vehicle_id").get("S")
         bus_stop_name = bus.get("bus_stop_name").get("S")
         direction = bus.get("direction").get("N")
-        eta = convert_time_to_datetime(bus.get("expected_arrival").get("S"))
-        timestamp = convert_time_to_datetime(bus.get("timestamp").get("S"))
+        eta = self.convert_time_to_datetime(bus.get("expected_arrival").get("S"))
+        time_of_req = self.convert_time_to_datetime(bus.get("time_of_req").get("S"))
         arrived = True if bus.get("arrived").get("S") else False
-        return vehicle_id, bus_stop_name, direction, eta, timestamp, arrived
+        return vehicle_id, bus_stop_name, direction, eta, time_of_req, arrived
         
         
     def read_from_db(self, table_name, vehicle_id):
+        print("Reading from dynamo")
         dynamodb = boto3.client('dynamodb')
         try:
             response = dynamo.get_item(
@@ -44,14 +44,14 @@ class Helper(object):
         
         else:
             item = response['Item']
-            vehicle_id, bus_stop_name, direction, eta, timestamp, arrived = self.convert_types_db(item)
+            vehicle_id, bus_stop_name, direction, eta, time_of_req, arrived = self.convert_types_db(item)
             
             vehicle_info = {
                             "vehicle_id": vehicle_id,
                             "bus_stop_name": bus_stop_name,
                             "direction": direction,
                             "expected_arrival": eta,
-                            "timestamp": timestamp,
+                            "time_of_req": time_of_req,
                             "arrived": arrived
                             }
                             
@@ -61,16 +61,16 @@ class Helper(object):
     def update_dynamo(self, tablename, vehicle_id, info_to_update):
         dynamodb = boto3.client('dynamodb')
         eta = info_to_update.get("expected_arrival")
-        timestamp = info_to_update.get("timestamp")
+        time_of_req = info_to_update.get("time_of_req")
         
         try:
             response = dynamodb.update_item(
                 TableName=tablename,
                 Key={'vehicle_id': {'S': vehicle_id}},
-                UpdateExpression="set expected_arrival = :eta, timestamp = :t",
+                UpdateExpression="set expected_arrival = :eta, time_of_req = :t",
                 ExpressionAttributeValues={
                     ':eta': {'S': eta},
-                    ':t': {'S': timestamp}
+                    ':t': {'S': time_of_req}
                 }
             )
         except ClientError as e:
@@ -91,13 +91,13 @@ class Helper(object):
             bus_stop_name = bus_information.get("bus_stop_name")
             direction = str(bus_information.get("direction"))
             eta = str(bus_information.get("expected_arrival"))
-            timestamp = str(bus_information.get("expected_arrival"))
+            time_of_req = str(bus_information.get("time_of_req"))
             arrived = "True" if bus_information.get("arrived") else "False"
             dynamodb.put_item(TableName=table_name, Item={'vehicle_id': {'S': vehicle_id},
                                                               'bus_stop_name': {'S': bus_stop_name},
                                                               'direction': {'N': direction},
                                                               'expected_arrival': {'S': eta},
-                                                              'timestamp': {'S': timestamp},
+                                                              'time_of_req': {'S': time_of_req},
                                                               'arrived': {'S': arrived}})
     
         except IOError:
@@ -159,33 +159,16 @@ class Helper(object):
         else:
             buses_not_arrived = []
             for bus in results:
-                vehicle_id, bus_stop_name, direction, eta, timestamp, arrived = self.convert_types_db(bus)
+                vehicle_id, bus_stop_name, direction, eta, time_of_req, arrived = self.convert_types_db(bus)
             
                 vehicle_info = {
                                 "vehicle_id": vehicle_id,
                                 "bus_stop_name": bus_stop_name,
                                 "direction": direction,
                                 "expected_arrival": eta,
-                                "timestamp": timestamp,
+                                "time_of_req": time_of_req,
                                 "arrived": arrived
                                 }
                 buses_not_arrived.append(vehicle_info)
             return buses_not_arrived
-
-
-    def get_valid_bus_stop_ids(self, bus_route):
-        data = Data_Collection()
-
-        bus_stop_info = data.get_stop_info(bus_route)
-        print("Getting list of all bus stop IDs on route {}".format(bus_route))
-        print(len(bus_stop_info))
-        
-        for i, bus_stop in enumerate(bus_stop_info):
-            bus_stop_id = bus_stop.get("stopID")
-            expected_arrival_times = data.get_expected_arrival_times(bus_stop_id, bus_route)
-            if len(expected_arrival_times) == 0:
-                bus_stop_info.remove(bus_stop)
-
-        print(len(bus_stop_info))
-        return bus_stop_info
 

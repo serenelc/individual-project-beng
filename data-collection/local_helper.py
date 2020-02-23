@@ -1,7 +1,7 @@
 import csv
 import datetime as dt
 from pathlib import Path
-from data_collection import Data_Collection
+from local_data_collection import Data_Collection
 
 class Helper(object):
 

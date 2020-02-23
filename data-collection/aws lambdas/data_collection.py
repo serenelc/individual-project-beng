@@ -3,7 +3,7 @@ from urllib.error import HTTPError, URLError
 import json
 from socket import timeout
 import datetime as dt
-from helper import Helper
+from utils import Utilities
 
 class Data_Collection(object):
 
@@ -25,6 +25,21 @@ class Data_Collection(object):
             print("error: ", error)
         except timeout:
             print("timeout error")
+            
+    
+    def get_valid_bus_stop_ids(self, bus_route):
+        bus_stop_info = self.get_stop_info(bus_route)
+        print("Getting list of all bus stop IDs on route {}".format(bus_route))
+        print("All stop id count: ", len(bus_stop_info))
+        
+        for i, bus_stop in enumerate(bus_stop_info):
+            bus_stop_id = bus_stop.get("stopID")
+            expected_arrival_times = self.get_expected_arrival_times(bus_stop_id, bus_route)
+            if len(expected_arrival_times) == 0:
+                bus_stop_info.remove(bus_stop)
+
+        print("Valid stop id count: ", len(bus_stop_info))
+        return bus_stop_info
 
 
     def get_expected_arrival_times(self, stop_code: str, route_id: str):
@@ -58,9 +73,11 @@ class Data_Collection(object):
     def evaluate_bus_data(self, new_data, stop_info, route):
         print("Evaluating new bus arrival information")
         today = dt.datetime.today().strftime('%Y-%m-%d')
-        helper = Helper()
+        helper = Utilities()
 
         for bus_stop in new_data:
+            if len(bus_stop) <= 1:
+                continue
 
             ura_array = bus_stop[0]
             time_of_req = int(ura_array[2])
@@ -82,7 +99,7 @@ class Data_Collection(object):
                     "bus_stop_name": bus_stop_name,
                     "direction": direction,
                     "expected_arrival": eta,
-                    "timestamp": time_of_request,
+                    "time_of_req": time_of_request,
                     "arrived": False
                 }
 
@@ -96,7 +113,7 @@ class Data_Collection(object):
 
                     # if this is the first journey update the eta
                     if first_journey:
-                        updated_info = {"expected_arrival": eta, "timestamp": time_of_request}
+                        updated_info = {"expected_arrival": eta, "time_of_req": time_of_request}
                         helper.update_dynamo(table_name, current_id, updated_info)
 
                     # if this is not the first journey, change vehicle ID to indicate trip number
@@ -108,12 +125,12 @@ class Data_Collection(object):
 
                 else:
                     # If this vehicle is not in the dictionary, then add it to the dictionary.
-                    print("New vehicle, add to dictionary")
+                    # print("New vehicle, add to dictionary")
                     helper.write_to_db(table_name, new_vehicle_info)
 
 
     def vehicle_already_found(self, current_vehicle, route):
-        helper = Helper()
+        helper = Utilities()
 
         found = False
         first_journey = True
@@ -123,7 +140,7 @@ class Data_Collection(object):
         response = helper.check_if_vehicle_exists(table_name, current_id)
 
         if (len(response) > 0):
-            print("Found the same vehicle id in the database")
+            # print("Found the same vehicle id in the database")
 
             found_vehicle = response[0]
             same_direction = found_vehicle.get("direction").get("N") == current_vehicle.get("direction")
@@ -133,10 +150,10 @@ class Data_Collection(object):
                 first_journey = False
 
             # assume that a bus takes 2 hours to run its full route
-            two_hours_before = current_vehicle.get("timestamp") - dt.timedelta(hours = 2)
-            found_timestamp = helper.convert_time_to_datetime(found_vehicle.get("timestamp").get("S"))
-            if found_timestamp < two_hours_before:
-                print("This vehicle has already done at least 1 journey today!")
+            two_hours_before = current_vehicle.get("time_of_req") - dt.timedelta(hours = 2)
+            found_time_of_req = helper.convert_time_to_datetime(found_vehicle.get("time_of_req").get("S"))
+            if found_time_of_req < two_hours_before:
+                # print("This vehicle has already done at least 1 journey today!")
                 first_journey = False
             
             found = True
@@ -145,7 +162,7 @@ class Data_Collection(object):
 
 
     def check_if_bus_is_due(self, route):
-        helper = Helper()
+        helper = Utilities()
         
         table_name = "bus_arrivals_" + route
         bus_information = helper.get_all_buses_not_arrived(table_name)
@@ -169,13 +186,13 @@ class Data_Collection(object):
 
 
     def check_if_bus_has_arrived(self, time_now, bus, table_name):
-        helper = Helper()
-        timestamp = bus.get("timestamp")
+        helper = Utilities()
+        time_of_req = bus.get("time_of_req")
 
         # check that the eta for this bus was last updated more than 3 minutes ago, i.e. it wasn't returned
         # in the most recent API call
         three_minutes_ago = time_now - dt.timedelta(minutes = 3)
-        if timestamp < three_minutes_ago:
+        if time_of_req < three_minutes_ago:
             print("Bus has arrived at predicted time")
             bus["arrived"] = True
             helper.write_to_db(table_name, bus)
