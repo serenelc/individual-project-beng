@@ -3,6 +3,8 @@ import boto3
 import csv
 import datetime as dt
 from pathlib import Path
+from boto3.dynamodb.conditions import Key, Attr
+from botocore.exceptions import ClientError
 
 class Utilities(object):
 
@@ -28,8 +30,39 @@ class Utilities(object):
         return vehicle_id, bus_stop_name, direction, eta, time_of_req, arrived
         
         
+    def get_valid_stop_ids(self, route):
+        print("Reading stop IDs from dynamo")
+        dynamodb = boto3.client('dynamodb')
+        tablename = "valid_stop_ids_" + route
+        
+        results = []
+        
+        try:
+            response = dynamodb.scan(
+                TableName = tablename
+            )
+            
+            for i in response['Items']:
+                results.append(i)
+            
+            # Can only scan up to 1MB at a time.
+            while 'LastEvaluatedKey' in response:
+                response = dynamodb.scan(
+                    TableName = tablename,
+                    ExclusiveStartKey=response['LastEvaluatedKey']
+                )
+                for i in response['Items']:
+                    results.append(i)
+    
+        except ClientError as e:
+            print(e.response['Error']['Message'])
+            
+        else:
+            return results
+        
+        
     def read_from_db(self, table_name, vehicle_id):
-        print("Reading from dynamo")
+        print("Reading vehicle info from dynamo")
         dynamodb = boto3.client('dynamodb')
         try:
             response = dynamo.get_item(
@@ -60,8 +93,8 @@ class Utilities(object):
 
     def update_dynamo(self, tablename, vehicle_id, info_to_update):
         dynamodb = boto3.client('dynamodb')
-        eta = info_to_update.get("expected_arrival")
-        time_of_req = info_to_update.get("time_of_req")
+        eta = str(info_to_update.get("expected_arrival"))
+        time_of_req = str(info_to_update.get("time_of_req"))
         
         try:
             response = dynamodb.update_item(
@@ -76,8 +109,8 @@ class Utilities(object):
         except ClientError as e:
             print(e.response['Error']['Message'])
             
-        else:
-            print("Update succeeded:")
+        # else:
+            # print("Update succeeded:")
         
 
     def write_to_db(self, table_name, bus_information):

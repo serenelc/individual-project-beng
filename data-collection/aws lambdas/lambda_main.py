@@ -12,7 +12,8 @@ def handler(event, context):
     bus_routes = ["9", "452", "52", "328", "277", "267", "7", "14"]
 
     today = dt.datetime.today().strftime('%Y-%m-%d')
-    valid_stops = data.get_valid_bus_stop_ids(bus_routes[1])
+    
+    valid_stops = helper.get_valid_stop_ids(bus_routes[0])
 
     try:
         # Do the data collection
@@ -22,7 +23,7 @@ def handler(event, context):
         print("Getting expected arrival time of buses on route {}".format(bus_routes[0]))
         bus_information = []
         for bus_stop in valid_stops:
-            bus_stop_id = bus_stop.get("stopID")
+            bus_stop_id = bus_stop.get("stop_id").get("S")
             new_arrival_info = data.get_expected_arrival_times(bus_stop_id, bus_routes[0])
             bus_information.append(new_arrival_info)
 

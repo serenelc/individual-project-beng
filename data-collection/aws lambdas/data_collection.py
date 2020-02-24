@@ -6,42 +6,7 @@ import datetime as dt
 from utils import Utilities
 
 class Data_Collection(object):
-
-    def get_stop_info(self, bus_route_id: str):
-        bus_stop_info = []
-
-        try:
-            with urllib.request.urlopen("https://api.tfl.gov.uk/line/"+ bus_route_id +"/stoppoints") as api:
-                data = json.loads(api.read().decode())
-                for stop in data:
-                    info = {
-                        "stopName": stop.get("commonName"),
-                        "stopID": stop.get("naptanId")
-                    }
-                    bus_stop_info.append(info)
-
-                return bus_stop_info
-        except (HTTPError, URLError) as error:
-            print("error: ", error)
-        except timeout:
-            print("timeout error")
             
-    
-    def get_valid_bus_stop_ids(self, bus_route):
-        bus_stop_info = self.get_stop_info(bus_route)
-        print("Getting list of all bus stop IDs on route {}".format(bus_route))
-        print("All stop id count: ", len(bus_stop_info))
-        
-        for i, bus_stop in enumerate(bus_stop_info):
-            bus_stop_id = bus_stop.get("stopID")
-            expected_arrival_times = self.get_expected_arrival_times(bus_stop_id, bus_route)
-            if len(expected_arrival_times) == 0:
-                bus_stop_info.remove(bus_stop)
-
-        print("Valid stop id count: ", len(bus_stop_info))
-        return bus_stop_info
-
-
     def get_expected_arrival_times(self, stop_code: str, route_id: str):
         url =  "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Stopcode2=" + stop_code + "&LineName=" + route_id + "&ReturnList=StopPointName,LineName,DestinationText,EstimatedTime,ExpireTime,VehicleID,DirectionID"
         bus_information = []
@@ -60,13 +25,13 @@ class Data_Collection(object):
             # Invalid bus ID, so ignore error
             return bus_information
         except timeout:
-            print("timeout error")
+            print("timeout error when getting expected arrival times")
 
 
     def get_stop_code(self, bus_stop_name, all_stops):
         for stop in all_stops:
-            if bus_stop_name == stop.get("stopName"):
-                return stop.get("stopID")
+            if bus_stop_name == stop.get("stop_name").get("S"):
+                return stop.get("stop_id").get("S")
         return "NOT_FOUND"
 
 
@@ -143,15 +108,17 @@ class Data_Collection(object):
             # print("Found the same vehicle id in the database")
 
             found_vehicle = response[0]
-            same_direction = found_vehicle.get("direction").get("N") == current_vehicle.get("direction")
+            same_direction = int(found_vehicle.get("direction").get("N")) == current_vehicle.get("direction")
 
             # check that this isn't the 1st trip of the day for that vehicle
             if not same_direction:
+                # print("This vehicle is travelling in a new direction")
                 first_journey = False
 
             # assume that a bus takes 2 hours to run its full route
             two_hours_before = current_vehicle.get("time_of_req") - dt.timedelta(hours = 2)
             found_time_of_req = helper.convert_time_to_datetime(found_vehicle.get("time_of_req").get("S"))
+            
             if found_time_of_req < two_hours_before:
                 # print("This vehicle has already done at least 1 journey today!")
                 first_journey = False
