@@ -34,8 +34,8 @@ def handler(event, context):
         evaluated_data = data.check_if_bus_is_due(bus_routes[0], evaluated_data)
         
         table_name = "bus_arrivals_" + bus_routes[0]
-        for bus in evaluated_data:
-            helper.write_to_db(table_name, bus)
+
+        helper.write_to_db(table_name, evaluated_data)
             
         comp_time = time.time() - start
         print("Entire function: ", comp_time)

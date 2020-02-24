@@ -71,7 +71,7 @@ class Utilities(object):
             return results
         
 
-    def write_to_db(self, table_name, bus_information):
+    def write_to_db(self, table_name, bus_info_to_write):
         # If an item that has the same primary key as the new item already exists 
         # in the specified table, the new item completely replaces the existing item.
         start = time.time()
@@ -79,21 +79,23 @@ class Utilities(object):
         dynamodb = boto3.client('dynamodb')
 
         try:
-            vehicle_id = bus_information.get("vehicle_id")
-            bus_stop_name = bus_information.get("bus_stop_name")
-            direction = str(bus_information.get("direction"))
-            eta = str(bus_information.get("expected_arrival"))
-            time_of_req = str(bus_information.get("time_of_req"))
-            arrived = "True" if bus_information.get("arrived") else "False"
-            dynamodb.put_item(TableName=table_name, Item={'vehicle_id': {'S': vehicle_id},
-                                                              'bus_stop_name': {'S': bus_stop_name},
-                                                              'direction': {'N': direction},
-                                                              'expected_arrival': {'S': eta},
-                                                              'time_of_req': {'S': time_of_req},
-                                                              'arrived': {'S': arrived}})
+            for bus_information in bus_info_to_write:
+                vehicle_id = bus_information.get("vehicle_id")
+                bus_stop_name = bus_information.get("bus_stop_name")
+                direction = str(bus_information.get("direction"))
+                eta = str(bus_information.get("expected_arrival"))
+                time_of_req = str(bus_information.get("time_of_req"))
+                arrived = "True" if bus_information.get("arrived") else "False"
+                dynamodb.put_item(TableName=table_name, Item={'vehicle_id': {'S': vehicle_id},
+                                                                  'bus_stop_name': {'S': bus_stop_name},
+                                                                  'direction': {'N': direction},
+                                                                  'expected_arrival': {'S': eta},
+                                                                  'time_of_req': {'S': time_of_req},
+                                                                  'arrived': {'S': arrived}})
     
         except IOError:
             print("I/O error in writing information into dynamodb")
+        
         else:
             comp_time = time.time() - start
             print("Write to db: ", comp_time)

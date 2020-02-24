@@ -121,9 +121,10 @@ class Data_Collection(object):
         for i, old_bus in enumerate(old_data):
             old_id = old_bus.get("vehicle_id")
             old_direction = old_bus.get("direction")
+            same_vehicle = current_id == old_id
             
-            if current_id == old_id:
-                found_vehicle = old_id
+            if same_vehicle:
+                found_vehicle = old_bus
                 same_direction = old_direction == current_vehicle.get("direction")
                 
                 # check that this isn't the 1st trip of the day for that vehicle
@@ -172,15 +173,17 @@ class Data_Collection(object):
         print("Check if bus is due: ", comp_time)
         return bus_information
 
+
     def check_if_bus_has_arrived(self, time_now, bus_info, index):
         start = time.time()
         
         this_bus = bus_info[index]
-        timestamp = this_bus.get("timestamp")
+        time_of_req = this_bus.get("time_of_req")
 
         # check that the eta for this bus was last updated more than 3 minutes ago, i.e. it wasn't returned
         # in the most recent API call
         three_minutes_ago = time_now - dt.timedelta(minutes = 3)
+        
         if time_of_req < three_minutes_ago:
             print("Bus has arrived at predicted time")
             this_bus["arrived"] = True
