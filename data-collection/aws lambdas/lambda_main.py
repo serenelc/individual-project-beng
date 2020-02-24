@@ -14,12 +14,14 @@ def handler(event, context):
     today = dt.datetime.today().strftime('%Y-%m-%d')
     
     valid_stops = helper.get_valid_stop_ids(bus_routes[0])
+    old_info = helper.get_old_info(bus_routes[0])
 
     try:
         # Do the data collection
         # Want this to happen concurrently, but not sure how threads work in Python
         # for bus_route in bus_routes:
         
+        start = time.time()
         print("Getting expected arrival time of buses on route {}".format(bus_routes[0]))
         bus_information = []
         for bus_stop in valid_stops:
@@ -27,9 +29,16 @@ def handler(event, context):
             new_arrival_info = data.get_expected_arrival_times(bus_stop_id, bus_routes[0])
             bus_information.append(new_arrival_info)
 
-        data.evaluate_bus_data(bus_information, valid_stops, bus_routes[0])
+        evaluated_data = data.evaluate_bus_data(bus_information, old_info, valid_stops, bus_routes[0])
 
-        data.check_if_bus_is_due(bus_routes[0])
+        evaluated_data = data.check_if_bus_is_due(bus_routes[0], evaluated_data)
+        
+        table_name = "bus_arrivals_" + bus_routes[0]
+        for bus in evaluated_data:
+            helper.write_to_db(table_name, bus)
+            
+        comp_time = time.time() - start
+        print("Entire function: ", comp_time)
 
     except (HTTPError, URLError) as error:
         # Send me a notification so I can fix it and keep it running.
