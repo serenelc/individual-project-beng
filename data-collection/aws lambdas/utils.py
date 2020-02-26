@@ -10,7 +10,6 @@ import time
 class Utilities(object):
 
     def convert_time_to_datetime(self, given_time):
-        start = time.time()
         year = int(given_time[:4])
         month = int(given_time[5:7])
         day = int(given_time[8:10])
@@ -19,21 +18,16 @@ class Utilities(object):
         second = int(given_time[17:19])
 
         date_time = dt.datetime(year, month, day, hour, minute, second)
-        comp_time = time.time() - start
-        print("Convert time to datetime: ", comp_time)
         return date_time
 
 
     def convert_types_db(self, bus):
-        start = time.time()
         vehicle_id = bus.get("vehicle_id").get("S")
         bus_stop_name = bus.get("bus_stop_name").get("S")
         direction = bus.get("direction").get("N")
         eta = self.convert_time_to_datetime(bus.get("expected_arrival").get("S"))
         time_of_req = self.convert_time_to_datetime(bus.get("time_of_req").get("S"))
         arrived = True if bus.get("arrived").get("S") else False
-        comp_time = time.time() - start
-        print("Convert types db: ", comp_time)
         return vehicle_id, bus_stop_name, direction, eta, time_of_req, arrived
         
         

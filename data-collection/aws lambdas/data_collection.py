@@ -158,15 +158,13 @@ class Data_Collection(object):
             eta = bus.get("expected_arrival")
             vehicle_id = bus.get("vehicle_id")
 
-            if now < eta:
-                print("Vehicle {} hasn't arrived yet: ".format(vehicle_id))
-            else:
-                print("Vehicle {} is due to arrive: ".format(vehicle_id))
+            if now >= eta:
+                # print("Vehicle {} is due to arrive: ".format(vehicle_id))
 
                 # wait for 3 minutes after the bus is due to arrive
                 three_minutes_ago = now - dt.timedelta(minutes = 3)
                 if eta < three_minutes_ago:
-                    print("It is now 3 minutes after bus is due to arrive")
+                    # print("It is now 3 minutes after bus is due to arrive")
                     self.check_if_bus_has_arrived(now, bus_information, index)
 
         comp_time = time.time() - start
@@ -185,7 +183,7 @@ class Data_Collection(object):
         three_minutes_ago = time_now - dt.timedelta(minutes = 3)
         
         if time_of_req < three_minutes_ago:
-            print("Bus has arrived at predicted time")
+            # print("Bus has arrived at predicted time")
             this_bus["arrived"] = True
             bus_info[index] = this_bus
 
