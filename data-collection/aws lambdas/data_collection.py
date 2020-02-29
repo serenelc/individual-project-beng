@@ -34,12 +34,9 @@ class Data_Collection(object):
 
 
     def get_stop_code(self, bus_stop_name, all_stops):
-        start = time.time()
         for stop in all_stops:
             if bus_stop_name == stop.get("stop_name"):
                 return stop.get("stop_id")
-        comp_time = time.time() - start
-        print("Get stop code: ", comp_time)
         return "NOT_FOUND"
 
 

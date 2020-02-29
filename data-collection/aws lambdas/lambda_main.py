@@ -9,7 +9,7 @@ def handler(event, context):
     helper = Utilities()
     data = Data_Collection()
 
-    bus_routes = ["9", "452", "52", "328", "277", "267", "7", "14"]
+    bus_routes = ["452", "9", "52", "328", "277", "267", "7", "14"]
 
     today = dt.datetime.today().strftime('%Y-%m-%d')
     
