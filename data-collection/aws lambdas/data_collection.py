@@ -34,14 +34,17 @@ class Data_Collection(object):
 
 
     def get_stop_code(self, bus_stop_name, all_stops):
+        start = time.time()
         for stop in all_stops:
-            if bus_stop_name == stop.get("stop_name"):
-                return stop.get("stop_id")
+            if bus_stop_name == stop.get("stop_name").get("S"):
+                return stop.get("stop_id").get("S")
+        comp_time = time.time() - start
+        print("Get stop code: ", comp_time)
         return "NOT_FOUND"
 
 
     def evaluate_bus_data(self, new_data, old_data, stop_info, route):
-        # start = time.time()
+        start = time.time()
         print("Evaluating new bus arrival information")
         today = dt.datetime.today().strftime('%Y-%m-%d')
         helper = Utilities()
@@ -83,11 +86,12 @@ class Data_Collection(object):
                     
                     current_id = new_vehicle_info.get("vehicle_id")
 
-                    # if this is the first journey update the eta
+                    # if this is the first journey update the eta if it has changed
                     if first_journey:
-                        found_vehicle["expected_arrival"] = eta 
-                        found_vehicle["time_of_req"] = time_of_request
-                        old_data[index] = found_vehicle
+                        if found_vehicle["expected_arrival"] != eta:
+                            found_vehicle["expected_arrival"] = eta 
+                            found_vehicle["time_of_req"] = time_of_request
+                            old_data[index] = found_vehicle
 
                     # if this is not the first journey, change vehicle ID to indicate trip number
                     else:
@@ -98,16 +102,15 @@ class Data_Collection(object):
 
                 else:
                     # If this vehicle is not in the dictionary, then add it to the dictionary.
-                    # print("New vehicle, add to dictionary")
                     old_data.append(new_vehicle_info)
         
-        # comp_time = time.time() - start
-        # print("Evaluate bus data: ", comp_time)
+        comp_time = time.time() - start
+        print("Evaluate bus data: ", comp_time)
         return old_data
 
 
     def vehicle_already_found(self, current_vehicle, old_data):
-        # start = time.time()
+        start = time.time()
         helper = Utilities()
 
         found = False
@@ -118,9 +121,8 @@ class Data_Collection(object):
         for i, old_bus in enumerate(old_data):
             old_id = old_bus.get("vehicle_id")
             old_direction = old_bus.get("direction")
-            same_vehicle = current_id == old_id
             
-            if same_vehicle:
+            if current_id == old_id:
                 found_vehicle = old_bus
                 same_direction = old_direction == current_vehicle.get("direction")
                 
@@ -141,7 +143,7 @@ class Data_Collection(object):
                 index = i
                 break
         
-        # comp_time = time.time() - start
+        comp_time = time.time() - start
         # print("Vehicle already found: ", comp_time)
         return found, first_journey, index
 
@@ -153,22 +155,22 @@ class Data_Collection(object):
         buses_not_arrived = []
         buses_arrived = []
 
-        for index, bus in enumerate(bus_information):
-            eta = bus.get("expected_arrival")
-            vehicle_id = bus.get("vehicle_id")
+        for index, this_bus in enumerate(bus_information):
+            eta = this_bus.get("expected_arrival")
+            vehicle_id = this_bus.get("vehicle_id")
 
             if now >= eta:
                 # wait for 3 minutes after the bus is due to arrive
                 three_minutes_ago = now - dt.timedelta(minutes = 3)
                 
                 if eta < three_minutes_ago:
-                    this_bus = bus_information[index]
                     this_bus, arrived = self.check_if_bus_has_arrived(now, this_bus)
                     
                     if arrived:
                         buses_arrived.append(this_bus)
-                    else:
-                        buses_not_arrived.append(this_bus)
+                        continue
+                    
+            buses_not_arrived.append(this_bus)
 
         comp_time = time.time() - start
         print("Check if bus is due: ", comp_time)
@@ -176,7 +178,6 @@ class Data_Collection(object):
 
 
     def check_if_bus_has_arrived(self, time_now, this_bus):
-        
         time_of_req = this_bus.get("time_of_req")
         arrived = False
 
