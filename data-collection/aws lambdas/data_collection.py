@@ -24,7 +24,7 @@ class Data_Collection(object):
                     bus_information.append(line_info)
                 return bus_information
         except (HTTPError, URLError) as error:
-            # Invalid bus ID, so ignore error
+            # Invalid stop code, so ignore error. 
             return bus_information
         except timeout:
             print("timeout error when getting expected arrival times")
@@ -43,13 +43,15 @@ class Data_Collection(object):
         return "NOT_FOUND"
 
 
-    def evaluate_bus_data(self, new_data, old_data, stop_info, route):
+    def evaluate_bus_data(self, new_data, old_data, stop_info):
         start = time.time()
         print("Evaluating new bus arrival information")
         today = dt.datetime.today().strftime('%Y-%m-%d')
         helper = Utilities()
 
         for bus_stop in new_data:
+
+            # no eta returned so skip
             if len(bus_stop) <= 1:
                 continue
 
@@ -63,8 +65,8 @@ class Data_Collection(object):
                 if stop_code == "NOT_FOUND":
                     break
                 
-                direction = 1 if info[3] == '2' else 0
-                vehicle_id = info[5] + "_" + stop_code + "_" + today + "_" + str(direction) + "_0"
+                direction = "out" if info[3] == '2' else "in"
+                vehicle_id = info[5] + "_" + stop_code + "_" + today + "_" + direction + "_0"
                 eta = dt.datetime.fromtimestamp(int(info[6])/1000.0)
 
                 # incoming vehicle info
@@ -128,15 +130,13 @@ class Data_Collection(object):
                 
                 # check that this isn't the 1st trip of the day for that vehicle
                 if not same_direction:
-                    # print("This vehicle is travelling in a new direction")
                     first_journey = False
     
                 # assume that a bus takes 2 hours to run its full route
                 two_hours_before = current_vehicle.get("time_of_req") - dt.timedelta(hours = 2)
                 found_time_of_req = found_vehicle.get("time_of_req")
-                
+                # if time of req of old bus was more than 2 hours ago, then it's likely to be on its 2nd or more trip of the day
                 if found_time_of_req < two_hours_before:
-                    # print("This vehicle has already done at least 1 journey today!")
                     first_journey = False
                 
                 found = True

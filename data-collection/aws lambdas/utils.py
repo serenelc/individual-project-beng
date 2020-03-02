@@ -24,7 +24,7 @@ class Utilities(object):
     def convert_types_db(self, bus):
         vehicle_id = bus.get("vehicle_id").get("S")
         bus_stop_name = bus.get("bus_stop_name").get("S")
-        direction = bus.get("direction").get("N")
+        direction = bus.get("direction").get("S")
         eta = self.convert_time_to_datetime(bus.get("expected_arrival").get("S"))
         time_of_req = self.convert_time_to_datetime(bus.get("time_of_req").get("S"))
         arrived = True if bus.get("arrived").get("S") else False
@@ -78,7 +78,7 @@ class Utilities(object):
                 for bus_information in bus_info_to_write:
                     vehicle_id = bus_information.get("vehicle_id")
                     bus_stop_name = bus_information.get("bus_stop_name")
-                    direction = str(bus_information.get("direction"))
+                    direction = bus_information.get("direction")
                     eta = str(bus_information.get("expected_arrival"))
                     time_of_req = str(bus_information.get("time_of_req"))
                     arrived = "True"
@@ -86,24 +86,24 @@ class Utilities(object):
                     item = {
                         'PutRequest': {
                             'Item': {
-                                            'vehicle_id': {
-                                                'S': vehicle_id
-                                            },
-                                            'bus_stop_name': {
-                                                'S': bus_stop_name
-                                            },
-                                            'direction': {
-                                                'N': direction
-                                            },
-                                            'expected_arrival': {
-                                                'S': eta
-                                            },
-                                            'time_of_req': {
-                                                'S': time_of_req
-                                            },
-                                            'arrived': {
-                                                'S': arrived
-                                            }
+                                        'vehicle_id': {
+                                            'S': vehicle_id
+                                        },
+                                        'bus_stop_name': {
+                                            'S': bus_stop_name
+                                        },
+                                        'direction': {
+                                            'S': direction
+                                        },
+                                        'expected_arrival': {
+                                            'S': eta
+                                        },
+                                        'time_of_req': {
+                                            'S': time_of_req
+                                        },
+                                        'arrived': {
+                                            'S': arrived
+                                        }
                                     }
                                 }
                             }
@@ -132,13 +132,13 @@ class Utilities(object):
                 for bus_information in bus_info_to_write:
                     vehicle_id = bus_information.get("vehicle_id")
                     bus_stop_name = bus_information.get("bus_stop_name")
-                    direction = str(bus_information.get("direction"))
+                    direction = bus_information.get("direction")
                     eta = str(bus_information.get("expected_arrival"))
                     time_of_req = str(bus_information.get("time_of_req"))
                     arrived = "True" if bus_information.get("arrived") else "False"
                     dynamodb.put_item(TableName=table_name, Item={'vehicle_id': {'S': vehicle_id},
                                                                       'bus_stop_name': {'S': bus_stop_name},
-                                                                      'direction': {'N': direction},
+                                                                      'direction': {'S': direction},
                                                                       'expected_arrival': {'S': eta},
                                                                       'time_of_req': {'S': time_of_req},
                                                                       'arrived': {'S': arrived}})

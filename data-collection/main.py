@@ -7,18 +7,16 @@ from urllib.error import HTTPError, URLError
 
 def main():
 
-    csv_columns = ['vehicle_id', 'bus_stop_name', 'direction', 'expected_arrival', 'time_of_req', 'arrived']
-    csv_file = 'bus_arrivals_test.csv'
-    
-    try:
-        with open(csv_file, 'a') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames = csv_columns)
-            writer.writeheader()
-                
-    except IOError:
-        print("I/O error in loading information into csv file")
+    helper = Helper()
+    now = dt.datetime.now()
+    eta = helper.convert_time_to_datetime("2020-03-02 11:02:40")
+    if now >= eta:
+        print('true')
+    three_minutes_ago = now - dt.timedelta(minutes = 3)
+    if eta < three_minutes_ago:
+        print('hi')
+    print("True" if False else "False")
 
-    # helper = Helper()
     # data = Data_Collection()
 
     # bus_routes = ["9", "452", "277", "267", "7", "14"]
