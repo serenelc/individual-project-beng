@@ -109,7 +109,21 @@ class Utilities(object):
                             }
                     items_to_write.append(item)
                     
-                dynamodb.batch_write_item(RequestItems={table_name:items_to_write})
+                if len(items_to_write) > 25:
+                    # Can only batch write items in groups of 25 or fewer.
+                    batches = []
+                    batch = []
+                    for item in items_to_write:
+                        batch.append(item)
+                        if len(batch) == 25:
+                            batches.append(batch)
+                            batch = []
+                            
+                    for batch in batches:
+                        dynamodb.batch_write_item(RequestItems={table_name:batch})
+                
+                else:
+                    dynamodb.batch_write_item(RequestItems={table_name:items_to_write})
                
             except IOError:
                     print("I/O error in writing information into dynamodb")

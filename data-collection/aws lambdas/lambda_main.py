@@ -33,13 +33,10 @@ def handler(event, context):
 
         # Evaluate the new data with respect to the old gathered data
         evaluated_data = data.evaluate_bus_data(new_bus_info, old_bus_info, valid_stops)
-        print("##################################################")
-        print(evaluated_data)
-        print("##################################################")
 
         # Check which buses have arrived
         not_arrived, arrived = data.check_if_bus_is_due(evaluated_data)
-        
+
         table_name_arrived = "bus_arrivals_" + bus_routes[0]
         table_name_gathering = "bus_information_" + bus_routes[0]
         

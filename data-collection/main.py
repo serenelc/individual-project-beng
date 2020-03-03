@@ -9,13 +9,12 @@ def main():
 
     helper = Helper()
     now = dt.datetime.now()
-    eta = helper.convert_time_to_datetime("2020-03-02 11:02:40")
+    eta = helper.convert_time_to_datetime("2020-03-02 11:25:07")
     if now >= eta:
         print('true')
     three_minutes_ago = now - dt.timedelta(minutes = 3)
     if eta < three_minutes_ago:
         print('hi')
-    print("True" if False else "False")
 
     # data = Data_Collection()
 

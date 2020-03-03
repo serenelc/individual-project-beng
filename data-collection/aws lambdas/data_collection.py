@@ -159,34 +159,21 @@ class Data_Collection(object):
             eta = this_bus.get("expected_arrival")
             vehicle_id = this_bus.get("vehicle_id")
 
+            # if the current time is after the expected arrival time of the bus, then it is due
             if now >= eta:
-                # wait for 3 minutes after the bus is due to arrive
                 three_minutes_ago = now - dt.timedelta(minutes = 3)
-                
+                # wait for 3 minutes after the bus is due to arrive
                 if eta < three_minutes_ago:
-                    this_bus, arrived = self.check_if_bus_has_arrived(now, this_bus)
-                    
-                    if arrived:
-                        buses_arrived.append(this_bus)
-                        continue
-                    
-            buses_not_arrived.append(this_bus)
+                    # print("Now: {}, Three Minutes Ago: {}, ETA: {}".format(now, three_minutes_ago, eta))
+                    this_bus["arrived"] = True
+                    buses_arrived.append(this_bus)
+                else:
+                    this_bus["arrived"] = False
+                    buses_not_arrived.append(this_bus)
+            else:
+                this_bus["arrived"] = False
+                buses_not_arrived.append(this_bus)
 
         comp_time = time.time() - start
         print("Check if bus is due: ", comp_time)
         return buses_not_arrived, buses_arrived
-
-
-    def check_if_bus_has_arrived(self, time_now, this_bus):
-        time_of_req = this_bus.get("time_of_req")
-        arrived = False
-
-        # check that the eta for this bus was last updated more than 3 minutes ago, i.e. it wasn't returned
-        # in the most recent API call
-        three_minutes_ago = time_now - dt.timedelta(minutes = 3)
-        if time_of_req < three_minutes_ago:
-            # print("Bus has arrived at predicted time")
-            arrived = True
-            this_bus["arrived"] = arrived
-        
-        return this_bus, arrived
