@@ -43,7 +43,7 @@ def handler(event, context):
         # Write/delete the relevant data to the relevant tables
         print(len(not_arrived), len(arrived))
         a = time.time()
-        helper.write_to_db(table_name_gathering, not_arrived)
+        helper.batch_write_to_db(table_name_gathering, not_arrived)
         helper.batch_write_to_db(table_name_arrived, arrived)
         helper.delete_arrived_items(table_name_gathering, arrived)
         b = time.time()

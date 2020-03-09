@@ -71,6 +71,7 @@ class Utilities(object):
         if len(bus_info_to_write) == 0:
             print("Nothing to write to {}".format(table_name))
         else:
+            print("Number of arrived items to batch write {}".format(len(bus_info_to_write)))
             try:
                 dynamodb = boto3.client('dynamodb')
                 
@@ -81,7 +82,7 @@ class Utilities(object):
                     direction = bus_information.get("direction")
                     eta = str(bus_information.get("expected_arrival"))
                     time_of_req = str(bus_information.get("time_of_req"))
-                    arrived = "True"
+                    arrived = "True" if bus_information.get("arrived") else "False"
                     
                     item = {
                         'PutRequest': {
@@ -109,6 +110,7 @@ class Utilities(object):
                             }
                     items_to_write.append(item)
                     
+                resp = {}
                 if len(items_to_write) > 25:
                     # Can only batch write items in groups of 25 or fewer.
                     batches = []
@@ -120,48 +122,24 @@ class Utilities(object):
                             batch = []
                             
                     for batch in batches:
-                        dynamodb.batch_write_item(RequestItems={table_name:batch})
+                        resp = dynamodb.batch_write_item(RequestItems={table_name:batch})
+                        if (len(resp.get('UnprocessedItems'))):
+                            print("Unprocessed items: ", resp.get('UnprocessedItems'))
                 
                 else:
-                    dynamodb.batch_write_item(RequestItems={table_name:items_to_write})
+                    resp = dynamodb.batch_write_item(RequestItems={table_name:items_to_write})
+                
+                # don't automatically retry
+                if (len(resp.get('UnprocessedItems'))):
+                    print("Unprocessed items: ", resp.get('UnprocessedItems'))
                
             except IOError:
-                    print("I/O error in writing information into dynamodb")
+                print("I/O error in writing information into dynamodb")
+            except ProvisionedThroughputExceededException as p:
+                print("provisioned throughput exceeded exception: ", p)
             
             comp_time = time.time() - start
             print("Batch write to db: ", comp_time)
-        
-
-    def write_to_db(self, table_name, bus_info_to_write):
-        # If an item that has the same primary key as the new item already exists 
-        # in the specified table, the new item completely replaces the existing item.
-        start = time.time()
-        
-        if len(bus_info_to_write) == 0:
-            print("Nothing to write to {}".format(table_name))
-        else:
-            try:
-                dynamodb = boto3.client('dynamodb')
-                
-                for bus_information in bus_info_to_write:
-                    vehicle_id = bus_information.get("vehicle_id")
-                    bus_stop_name = bus_information.get("bus_stop_name")
-                    direction = bus_information.get("direction")
-                    eta = str(bus_information.get("expected_arrival"))
-                    time_of_req = str(bus_information.get("time_of_req"))
-                    arrived = "True" if bus_information.get("arrived") else "False"
-                    dynamodb.put_item(TableName=table_name, Item={'vehicle_id': {'S': vehicle_id},
-                                                                      'bus_stop_name': {'S': bus_stop_name},
-                                                                      'direction': {'S': direction},
-                                                                      'expected_arrival': {'S': eta},
-                                                                      'time_of_req': {'S': time_of_req},
-                                                                      'arrived': {'S': arrived}})
-            
-            except IOError:
-                    print("I/O error in writing information into dynamodb")
-            
-            comp_time = time.time() - start
-            print("Write to db: ", comp_time)
             
             
     def delete_arrived_items(self, table_name, arrived_items):
@@ -170,6 +148,7 @@ class Utilities(object):
         if len(arrived_items) == 0:
             print("Nothing to delete in {}".format(table_name))
         else:
+            print("Number of arrived items to delete {}".format(len(arrived_items)))
             try:
                 dynamodb = boto3.client('dynamodb')
                 
