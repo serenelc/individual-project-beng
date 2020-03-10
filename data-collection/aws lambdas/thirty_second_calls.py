@@ -4,20 +4,34 @@ import boto3
 
 def lambda_handler(event, context):
     client = boto3.client('lambda')
+    # bus_routes = ["452", "9", "52", "328", "277", "267", "7", "14"]
+    bus_routes = ["452", "9"]
     
-    print("Calling lambda 1st time")
-    response = client.invoke(
-        FunctionName= 'get_bus_arrival_times',
-        InvocationType='Event'
-    )
+    for route in bus_routes:
+        #Pass in bus route
+        json_bus = json.dumps(route)
+        
+        print("Calling lambda 1st time for bus route {}".format(route))
+        response = client.invoke(
+            FunctionName= 'get_bus_arrival_times',
+            InvocationType='Event',
+            Payload= json_bus
+        )
+        print(response.get("StatusCode"))
     
     print("SLEEP")
     time.sleep(30)
-    print("Calling lambda 2nd time")
-    response = client.invoke(
-        FunctionName='get_bus_arrival_times',
-        InvocationType='Event'
-    )
+    
+    for route in bus_routes:
+        #Pass in bus route
+        json_bus = json.dumps(route)
+        print("Calling lambda 2nd time for bus route {}".format(route))
+        response = client.invoke(
+            FunctionName='get_bus_arrival_times',
+            InvocationType='Event',
+            Payload= json_bus
+        )
+        print(response.get("StatusCode"))
     
     return {
         'statusCode': 200,
