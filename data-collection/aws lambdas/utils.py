@@ -137,6 +137,7 @@ class Utilities(object):
                 print("I/O error in writing information into dynamodb")
             except ProvisionedThroughputExceededException as p:
                 print("provisioned throughput exceeded exception: ", p)
+                return p
             
             comp_time = time.time() - start
             print("Batch write to db: ", comp_time)

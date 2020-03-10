@@ -4,8 +4,7 @@ import boto3
 
 def lambda_handler(event, context):
     client = boto3.client('lambda')
-    # bus_routes = ["452", "9", "52", "328", "277", "267", "7", "14"]
-    bus_routes = ["452", "9"]
+    bus_routes = ["452", "9", "52", "328", "277", "267", "7"]
     
     for route in bus_routes:
         #Pass in bus route
@@ -17,7 +16,8 @@ def lambda_handler(event, context):
             InvocationType='Event',
             Payload= json_bus
         )
-        print(response.get("StatusCode"))
+        if response.get("StatusCode") != 202:
+            print("Error in get bus arrival times lambda. Stop Running")
     
     print("SLEEP")
     time.sleep(30)
@@ -31,7 +31,8 @@ def lambda_handler(event, context):
             InvocationType='Event',
             Payload= json_bus
         )
-        print(response.get("StatusCode"))
+        if response.get("StatusCode") != 202:
+            print("Error in get bus arrival times lambda. Stop Running")
     
     return {
         'statusCode': 200,
