@@ -10,6 +10,8 @@ def handler(event, context):
     data = Data_Collection()
     bus_route = event
 
+    #Note a bug with a vehicle doing its 2nd or more journey of the day, the times are not updating correctly.
+
     today = dt.datetime.today().strftime('%Y-%m-%d')
     
     # Get valid stops for this bus route
