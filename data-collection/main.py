@@ -49,7 +49,7 @@ def main(bus_route):
         print(len(not_arrived), len(arrived))
         a = time.time()
         helper.write_to_csv(csv_name_gathering, not_arrived)
-        helper.write_to_csv(csv_name_arrived, arrived)
+        helper.append_to_csv(csv_name_arrived, arrived)
         helper.delete_arrived_items(csv_name_gathering, arrived)
         b = time.time()
         print("Total time to write and delete from csvs: ", (b - a))

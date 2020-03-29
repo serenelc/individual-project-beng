@@ -73,6 +73,27 @@ class Helper(object):
         return route_information
 
 
+    def append_to_csv(self, csv_name, bus_info_to_append):
+        start = time.time()
+        
+        if len(bus_info_to_append) == 0:
+            print("Nothing to write to {}".format(csv_name))
+        else:
+            print("Writing {} items to {}".format(len(bus_info_to_append), csv_name))
+
+            try:
+                csv_columns = ['vehicle_id', 'bus_stop_name', 'direction', 'expected_arrival', 'time_of_req', 'arrived']
+                with open(csv_name, 'a+') as csv_file:
+                    writer = csv.DictWriter(csv_file, fieldnames = csv_columns)
+                    for data in bus_info_to_append:
+                        writer.writerow(data)
+            except IOError:
+                print("I/O error in appending information to csv file")
+
+        comp_time = time.time() - start
+        print("Appending to csv: ", comp_time)
+
+
     def write_to_csv(self, csv_name, bus_info_to_write):
         start = time.time()
         
@@ -103,17 +124,17 @@ class Helper(object):
         else:
             print("Number of arrived items to delete {}".format(len(arrived_items)))
             try:
-                items = list()
+                items = []
                 with open(csv_file, 'r') as read_file:
                     csv_reader = csv.reader(read_file)
                     for row in csv_reader:
-                        items.append(row)
                         for arrived in arrived_items:
-                            if row[0] != arrived.get("vehicle_id"):
+                            items.append(arrived)
+                            if row[0] == arrived.get("vehicle_id"):
                                 items.pop()
-                with open(csv_file, 'w') as write_file:
-                    csv_writer = csv.writer(write_file)
-                    csv_writer.writerows(row)
+                print("before issue")
+                self.write_to_csv(csv_file, items)
+                print("after issue")
             except IOError:
                     print("I/O error in deleting information from csv")
             
