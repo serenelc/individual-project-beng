@@ -1,7 +1,10 @@
 ## TO DO
 
-- Get the different bus routes to run the data collection functions concurrently
-- Set up a server to host the code so that I can keep the script running in the background for a minimum of a month
+- Bug in the code. When a bus' estimated arrival time is updated, the vehicle_id gets updated, the old one in the archive should get deleted, but currently, if it is the 2nd or more journey of the day, i.e. the vehicle_id ends in 1 instead of 0, when the bus gets the updated time, it doesn't see the old vehicle in the archive and makes it a new one, so then we end up having 2 vehicles one with BLAH_BLAH_BLAH_0 with the new updated arrival time and BLAH_BLAH_BLAH_1 with the old arrival time.
+- Need to update the README with instructions that are valid
+- Set up code so that locally can run the csv version while the AWS is dying from 'too many writes per minute' and then can use the batch write to write the stuff from the csv onto the database -> need to make sure the number of journeys doesn't clash though. 
+- Investigate moving everything to a relational database in case it makes the data analytics easier.
+
 
 ## Overview
 

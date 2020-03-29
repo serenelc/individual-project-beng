@@ -40,6 +40,42 @@ class Helper(object):
         
         return bus_information
 
+    
+    def get_valid_bus_stop_ids(self, bus_route):
+        bus_information = []
+        file_name = 'valid_stop_ids_' + bus_route + '.csv'
+        bus_file = Path.cwd() / file_name
+    
+        if bus_file.is_file():
+            try:
+                with open(file_name) as csv_file:
+                    csv_reader = csv.reader(csv_file, delimiter = ',')
+                    line_count = 0
+                    for row in csv_reader:
+                        if line_count != 0:
+                            vehicle_id = row[0]
+                            bus_stop_name = row[1]
+                            direction = int(row[2])
+                            eta = self.convert_time_to_datetime(row[3])
+                            timestamp = self.convert_time_to_datetime(row[4])
+                            arrived = True if row[5] == 'True' else False
+
+                            vehicle_info = {
+                                "vehicle_id": vehicle_id,
+                                "bus_stop_name": bus_stop_name,
+                                "direction": direction,
+                                "expected_arrival": eta,
+                                "timestamp": timestamp,
+                                "arrived": arrived
+                            }
+
+                            bus_information.append(vehicle_info)
+                        line_count += 1
+            except IOError:
+                print("I/O error in loading information from csv file")
+        
+        return bus_information
+
 
     def write_to_csv(self, arrival_array, bus_route_id):
         today = dt.datetime.today().strftime('%Y-%m-%d')
