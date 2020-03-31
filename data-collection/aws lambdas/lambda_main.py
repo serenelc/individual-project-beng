@@ -10,8 +10,6 @@ def handler(event, context):
     data = Data_Collection()
     bus_route = event
 
-    #Note a bug with a vehicle doing its 2nd or more journey of the day, the times are not updating correctly.
-
     today = dt.datetime.today().strftime('%Y-%m-%d')
     
     # Get valid stops for this bus route
@@ -26,16 +24,19 @@ def handler(event, context):
         start = time.time()
         print("Getting expected arrival time of buses on route {}".format(bus_route))
         new_bus_info = []
+        
         # Get expected arrival times for each stop on the route
+        start_1 = time.time()
         for bus_stop in valid_stops:
             bus_stop_id = bus_stop.get("stop_id").get("S")
             new_arrival_info = data.get_expected_arrival_times(bus_stop_id, bus_route)
             new_bus_info.append(new_arrival_info)
+        end = time.time() - start_1
+        print("Get expected arrival times: ", end)
 
         # Evaluate the new data with respect to the old gathered data
         evaluated_data = data.evaluate_bus_data(new_bus_info, old_bus_info, valid_stops)
 
-        # Check which buses have arrived
         not_arrived, arrived = data.check_if_bus_is_due(evaluated_data)
 
         table_name_arrived = "bus_arrivals_" + bus_route

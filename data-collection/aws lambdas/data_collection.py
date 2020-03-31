@@ -96,10 +96,15 @@ class Data_Collection(object):
                             old_data[index] = found_vehicle
 
                     # if this is not the first journey, change vehicle ID to indicate trip number
+                    # don't think I can actually figure out whether it was a first journey from here.
+                    # need to do it when I'm trying to write to 'bus_arrivals' and then change the 
+                    # vehicle id then.
                     else:
                         trip_num = int(new_vehicle_info.get("vehicle_id")[-1]) + 1
                         new_id = new_vehicle_info.get("vehicle_id")[:-1] + str(trip_num)
                         new_vehicle_info["vehicle_id"] = new_id
+                        print("Found vehicle: ", found_vehicle)
+                        print("New vehicle: ", new_vehicle_info)
                         old_data.append(new_vehicle_info)
 
                 else:
@@ -118,10 +123,10 @@ class Data_Collection(object):
         found = False
         first_journey = True
         index = -1
-        current_id = current_vehicle.get("vehicle_id")
+        current_id = current_vehicle.get("vehicle_id")[:-1]
         
         for i, old_bus in enumerate(old_data):
-            old_id = old_bus.get("vehicle_id")
+            old_id = old_bus.get("vehicle_id")[:-1]
             old_direction = old_bus.get("direction")
             
             if current_id == old_id:
@@ -137,6 +142,7 @@ class Data_Collection(object):
                 found_time_of_req = found_vehicle.get("time_of_req")
                 # if time of req of old bus was more than 2 hours ago, then it's likely to be on its 2nd or more trip of the day
                 if found_time_of_req < two_hours_before:
+                    print("NOT FIRST JOURNEY")
                     first_journey = False
                 
                 found = True

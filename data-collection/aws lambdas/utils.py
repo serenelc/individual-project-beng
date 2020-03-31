@@ -71,7 +71,7 @@ class Utilities(object):
         if len(bus_info_to_write) == 0:
             print("Nothing to write to {}".format(table_name))
         else:
-            print("Number of arrived items to batch write {}".format(len(bus_info_to_write)))
+            print("Batch writing {} items to {}".format(len(bus_info_to_write), table_name))
             try:
                 dynamodb = boto3.client('dynamodb')
                 
@@ -136,8 +136,9 @@ class Utilities(object):
             except IOError:
                 print("I/O error in writing information into dynamodb")
             except ProvisionedThroughputExceededException as p:
+                # Issue here: [ERROR] NameError: name 'ProvisionedThroughputExceededException' is not defined
                 print("provisioned throughput exceeded exception: ", p)
-                return p
+                return 
             
             comp_time = time.time() - start
             print("Batch write to db: ", comp_time)
