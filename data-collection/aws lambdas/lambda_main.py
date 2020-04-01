@@ -1,9 +1,12 @@
 import datetime as dt
 import time
 import json
+import boto3
 from utils import Utilities
 from data_collection import Data_Collection
 from urllib.error import HTTPError, URLError
+from boto3.dynamodb.conditions import Key, Attr
+from botocore.exceptions import ClientError
 
 def handler(event, context):
     helper = Utilities()
@@ -46,7 +49,13 @@ def handler(event, context):
         print(len(not_arrived), len(arrived))
         a = time.time()
         resp_not_arrived = helper.batch_write_to_db(table_name_gathering, not_arrived)
-        resp_arrived = helper.batch_write_to_db(table_name_arrived, arrived)
+        dynamodb = boto3.client('dynamodb')
+        c = time.time()
+        for arrived_bus in arrived:
+            helper.write_to_db(dynamodb, bus_route, arrived_bus, False)
+        d = time.time()
+        print("Time to write arrived items to db: ", (d - c))
+        # resp_arrived = helper.batch_write_to_db(table_name_arrived, arrived)
         helper.delete_arrived_items(table_name_gathering, arrived)
         b = time.time()
         print("Total time to write and delete from db: ", (b - a))

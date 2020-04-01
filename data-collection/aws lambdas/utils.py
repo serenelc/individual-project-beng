@@ -65,11 +65,55 @@ class Utilities(object):
             return results
             
             
+    def write_to_db(self, dynamodb, route, bus_information, retry):
+        start = time.time()
+        table_name = "bus_arrivals_" + route
+        
+        if retry:
+            try:
+                # print("Writing to {}".format(table_name))
+                dynamodb.put_item(TableName=table_name, Item=bus_information)
+            except IOError:
+                print("Error when retrying 2nd or more journey adding to table")
+        else:
+            vehicle_id = bus_information.get("vehicle_id")
+            bus_stop_name = bus_information.get("bus_stop_name")
+            direction = str(bus_information.get("direction"))
+            eta = str(bus_information.get("expected_arrival"))
+            time_of_req = str(bus_information.get("time_of_req"))
+            arrived = "True" if bus_information.get("arrived") else "False"
+            
+            item = {'vehicle_id': {'S': vehicle_id},
+                    'bus_stop_name': {'S': bus_stop_name},
+                    'direction': {'S': direction},
+                    'expected_arrival': {'S': eta},
+                    'time_of_req': {'S': time_of_req},
+                    'arrived': {'S': arrived}}
+            
+            try:
+                dynamodb.put_item(TableName=table_name, 
+                                  Item=item,
+                                  ConditionExpression='attribute_not_exists(vehicle_id)')
+                                  
+            except ClientError as e:
+                if e.response['Error']['Code'] != 'ConditionalCheckFailedException':
+                    raise
+                else: #ConditionalCheckFailedException i.e. key already exists -> 2nd journey of the day
+                    trip_num = int(vehicle_id[-1]) + 1
+                    new_id = vehicle_id[:-1] + str(trip_num)
+                    item["vehicle_id"]['S'] = new_id
+                    print("This is not the 1st journey of the day. Updated vehicle id: ", item)
+                    self.write_to_db(dynamodb, route, item, True)
+            
+            comp_time = time.time() - start
+            # print("Write arrived items to db: ", comp_time)
+                
+            
     def batch_write_to_db(self, table_name, bus_info_to_write):
         start = time.time()
         
         if len(bus_info_to_write) == 0:
-            print("Nothing to write to {}".format(table_name))
+            print("Nothing to batch write to {}".format(table_name))
         else:
             print("Batch writing {} items to {}".format(len(bus_info_to_write), table_name))
             try:
