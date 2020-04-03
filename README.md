@@ -10,6 +10,22 @@
 
 Functions to do with data processing are in the data_collection.py file. Utility functions (e.g. writing to CSVs) are in the helper.py file.
 
+
+### Timetable
+Mon - Friday/Monday - Thursday
+- 7: First bus 5.25, Last bus 23.40
+- 277: First bus 5.00, Last bus 00.06
+- 9: First bus 05.35, Last bus 23.50
+- 52: 24 hours
+- 452: First bus 05.05, Last bus 23.55
+- 328: First bus 04.50, Last bus 00.35
+- 267: First bus 05.50, Last bus 00.30
+- 35: First bus 03.55, Last bus 00.15
+- 37: 24 hours
+- 69: 24 hours
+- 6: 24 hours
+- 14: 24 hours
+
 ### Objective
 
 The code should concurrently run the data collection functions for 5-10 bus routes for a minimum of a month, 24 hours a day. The code calls the APIs every 30 seconds because that is how often the information gets updated at the source, so there is no point calling the API anymore often. Each bus route should store the arrival information in its own CSV file for each 24 hour day. A new CSV file should be made for each new day, starting at 00:00. 

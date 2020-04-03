@@ -46,7 +46,6 @@ class Data_Collection(object):
     def evaluate_bus_data(self, new_data, old_data, stop_info):
         start = time.time()
         print("Evaluating new bus arrival information")
-        today = dt.datetime.today().strftime('%Y-%m-%d')
         helper = Utilities()
 
         for bus_stop in new_data:
@@ -66,8 +65,11 @@ class Data_Collection(object):
                     break
                 
                 direction = "out" if info[3] == '2' else "in"
-                vehicle_id = info[5] + "_" + stop_code + "_" + today + "_" + direction + "_0"
                 eta = dt.datetime.fromtimestamp(int(info[6])/1000.0)
+                # so that requests made at 11.50 pm for buses arriving after midnight on the 
+                # next day have vehicle ids with eta's date instead of request's date
+                date = info[6][:10]
+                vehicle_id = info[5] + "_" + stop_code + "_" + date + "_" + direction + "_0"
 
                 # incoming vehicle info
                 new_vehicle_info = {

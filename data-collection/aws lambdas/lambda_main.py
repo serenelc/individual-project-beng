@@ -12,8 +12,6 @@ def handler(event, context):
     helper = Utilities()
     data = Data_Collection()
     bus_route = event
-
-    today = dt.datetime.today().strftime('%Y-%m-%d')
     
     # Get valid stops for this bus route
     valid_stops = helper.get_valid_stop_ids(bus_route)
@@ -36,6 +34,7 @@ def handler(event, context):
             new_bus_info.append(new_arrival_info)
         end = time.time() - start_1
         print("Get expected arrival times: ", end)
+        print("New data gathered: ", len(new_bus_info))
 
         # Evaluate the new data with respect to the old gathered data
         evaluated_data = data.evaluate_bus_data(new_bus_info, old_bus_info, valid_stops)

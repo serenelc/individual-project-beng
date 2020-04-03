@@ -79,7 +79,8 @@ class Utilities(object):
                 raise
             else: #ConditionalCheckFailedException i.e. key already exists -> 2nd journey of the day
                 vehicle_id = bus_information.get("vehicle_id").get("S")
-                trip_num = int(vehicle_id[-1]) + 1
+                [_, _, _, _, num_trip] = vehicle_id.split('_')
+                trip_num = int(num_trip) + 1
                 new_id = vehicle_id[:-1] + str(trip_num)
                 bus_information["vehicle_id"]['S'] = new_id
                 print("Failed to write. Try again")
@@ -113,7 +114,8 @@ class Utilities(object):
             if e.response['Error']['Code'] != 'ConditionalCheckFailedException':
                 raise
             else: #ConditionalCheckFailedException i.e. key already exists -> 2nd journey of the day
-                trip_num = int(vehicle_id[-1]) + 1
+                [_, _, _, _, num_trip] = vehicle_id.split('_')
+                trip_num = int(num_trip) + 1
                 new_id = vehicle_id[:-1] + str(trip_num)
                 item["vehicle_id"]['S'] = new_id
                 self.try_write_to_db(dynamodb, route, item)

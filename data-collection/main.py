@@ -64,11 +64,14 @@ def main(bus_route):
     return comp_time
 
 # bus_routes = ["452", "9", "52", "328", "277", "267", "7"]
-bus_routes = ["9"]
-while True:
-    for bus_route in bus_routes:
-        comp_time = main(bus_route)
-        print("SLEEP")
-        if (comp_time < 30):
-            time.sleep(30 - comp_time)
-        main(bus_route)
+# bus_routes = ["9"]
+# while True:
+#     for bus_route in bus_routes:
+#         comp_time = main(bus_route)
+#         print("SLEEP")
+#         if (comp_time < 30):
+#             time.sleep(30 - comp_time)
+#         main(bus_route)
+
+item = "2020-04-02 11:29:55"
+print(item[:10])
