@@ -71,19 +71,19 @@ class Utilities(object):
         
         try:
             dynamodb.put_item(TableName=table_name, 
-                                  Item=bus_information,
-                                  ConditionExpression='attribute_not_exists(vehicle_id)')
+                              Item=bus_information,
+                              ConditionExpression='attribute_not_exists(vehicle_id)')
                                   
         except ClientError as e:
             if e.response['Error']['Code'] != 'ConditionalCheckFailedException':
                 raise
             else: #ConditionalCheckFailedException i.e. key already exists -> 2nd journey of the day
+                print("Failed to write. Try again: ", e)
                 vehicle_id = bus_information.get("vehicle_id").get("S")
-                [_, _, _, _, num_trip] = vehicle_id.split('_')
+                [a, b, c, d, num_trip] = vehicle_id.split('_')
                 trip_num = int(num_trip) + 1
-                new_id = vehicle_id[:-1] + str(trip_num)
+                new_id = a + "_" + b + "_" + c + "_" + d + "_" + str(trip_num)
                 bus_information["vehicle_id"]['S'] = new_id
-                print("Failed to write. Try again")
                 self.try_write_to_db(dynamodb, route, bus_information)
             
             
@@ -114,9 +114,10 @@ class Utilities(object):
             if e.response['Error']['Code'] != 'ConditionalCheckFailedException':
                 raise
             else: #ConditionalCheckFailedException i.e. key already exists -> 2nd journey of the day
-                [_, _, _, _, num_trip] = vehicle_id.split('_')
+                print("ERROR: ", e)
+                [a, b, c, d, num_trip] = vehicle_id.split('_')
                 trip_num = int(num_trip) + 1
-                new_id = vehicle_id[:-1] + str(trip_num)
+                new_id = a + "_" + b + "_" + c + "_" + d + "_" + str(trip_num)
                 item["vehicle_id"]['S'] = new_id
                 self.try_write_to_db(dynamodb, route, item)
         
@@ -194,10 +195,9 @@ class Utilities(object):
                
             except IOError:
                 print("I/O error in writing information into dynamodb")
-            except ProvisionedThroughputExceededException as p:
-                # Issue here: [ERROR] NameError: name 'ProvisionedThroughputExceededException' is not defined
-                print("provisioned throughput exceeded exception: ", p)
-                return 
+            except ClientError as e:
+                print("ERROR IN BATCH WRITE: ", e)
+                raise
             
             comp_time = time.time() - start
             print("Batch write to db: ", comp_time)

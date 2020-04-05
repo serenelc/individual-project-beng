@@ -73,5 +73,5 @@ def main(bus_route):
 #             time.sleep(30 - comp_time)
 #         main(bus_route)
 
-item = "2020-04-02 11:29:55"
-print(item[:10])
+item = 1586081932
+print(dt.datetime.fromtimestamp(item).strftime('%Y-%m-%d'))

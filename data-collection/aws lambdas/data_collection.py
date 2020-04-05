@@ -68,7 +68,7 @@ class Data_Collection(object):
                 eta = dt.datetime.fromtimestamp(int(info[6])/1000.0)
                 # so that requests made at 11.50 pm for buses arriving after midnight on the 
                 # next day have vehicle ids with eta's date instead of request's date
-                date = info[6][:10]
+                date = dt.datetime.fromtimestamp(int(info[6][:10])).strftime('%Y-%m-%d')
                 vehicle_id = info[5] + "_" + stop_code + "_" + date + "_" + direction + "_0"
 
                 # incoming vehicle info
