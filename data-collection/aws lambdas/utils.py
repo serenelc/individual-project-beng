@@ -57,7 +57,8 @@ class Utilities(object):
                     results.append(i)
     
         except ClientError as e:
-            print(e.response['Error']['Message'])
+            print("Error in getting valid stop IDs: ", e)
+            raise
             
         else:
             comp_time = time.time() - start
@@ -76,6 +77,7 @@ class Utilities(object):
                                   
         except ClientError as e:
             if e.response['Error']['Code'] != 'ConditionalCheckFailedException':
+                print("Error in try write db: ", e)
                 raise
             else: #ConditionalCheckFailedException i.e. key already exists -> 2nd journey of the day
                 print("Failed to write. Try again: ", e)
@@ -112,6 +114,7 @@ class Utilities(object):
                               
         except ClientError as e:
             if e.response['Error']['Code'] != 'ConditionalCheckFailedException':
+                print("Error in write to db: ", e)
                 raise
             else: #ConditionalCheckFailedException i.e. key already exists -> 2nd journey of the day
                 print("ERROR: ", e)
@@ -195,8 +198,9 @@ class Utilities(object):
                
             except IOError:
                 print("I/O error in writing information into dynamodb")
+                raise
             except ClientError as e:
-                print("ERROR IN BATCH WRITE: ", e)
+                print("error in batch write: ", e)
                 raise
             
             comp_time = time.time() - start
@@ -225,7 +229,8 @@ class Utilities(object):
                     )
             
             except IOError:
-                    print("I/O error in deleting information from dynamodb")
+                print("I/O error in deleting information from dynamodb")
+                raise
             
             comp_time = time.time() - start
             print("Delete from db: ", comp_time)
@@ -256,7 +261,8 @@ class Utilities(object):
                     results.append(i)
     
         except ClientError as e:
-            print(e.response['Error']['Message'])
+            print("error in getting old information: ", e)
+            raise
             
         else:
             old_information = []
