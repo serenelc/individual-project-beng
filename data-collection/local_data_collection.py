@@ -3,37 +3,16 @@ from urllib.error import HTTPError, URLError
 import json
 from socket import timeout
 import datetime as dt
+from utils import Utilities
 import time
-from local_helper import Helper
 
 class Data_Collection(object):
-
-    def get_stop_info(self, bus_route_id: str):
-        bus_stop_info = []
-
-        try:
-            with urllib.request.urlopen("https://api.tfl.gov.uk/line/"+ bus_route_id +"/stoppoints") as api:
-                data = json.loads(api.read().decode())
-                for stop in data:
-                    info = {
-                        "stopName": stop.get("commonName"),
-                        "stopID": stop.get("naptanId")
-                    }
-                    bus_stop_info.append(info)
-
-                return bus_stop_info
-        except (HTTPError, URLError) as error:
-            print("error: ", error)
-        except timeout:
-            print("timeout error")
-
-
+            
     def get_expected_arrival_times(self, stop_code: str, route_id: str):
         start = time.time()
         url =  "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Stopcode2=" + stop_code + "&LineName=" + route_id + "&ReturnList=StopPointName,LineName,DestinationText,EstimatedTime,ExpireTime,VehicleID,DirectionID"
         bus_information = []
 
-        # print(url)
         try:
             with urllib.request.urlopen(url) as api:
                 data = api.read().decode()
@@ -55,17 +34,19 @@ class Data_Collection(object):
 
 
     def get_stop_code(self, bus_stop_name, all_stops):
+        start = time.time()
         for stop in all_stops:
-            if bus_stop_name == stop.get("stop_name"):
-                return stop.get("stop_id")
+            if bus_stop_name == stop.get("stop_name").get("S"):
+                return stop.get("stop_id").get("S")
+        comp_time = time.time() - start
+        print("Get stop code: ", comp_time)
         return "NOT_FOUND"
 
 
     def evaluate_bus_data(self, new_data, old_data, stop_info):
         start = time.time()
         print("Evaluating new bus arrival information")
-        today = dt.datetime.today().strftime('%Y-%m-%d')
-        helper = Helper()
+        helper = Utilities()
 
         for bus_stop in new_data:
 
@@ -84,8 +65,11 @@ class Data_Collection(object):
                     break
                 
                 direction = "out" if info[3] == '2' else "in"
-                vehicle_id = info[5] + "_" + stop_code + "_" + today + "_" + direction + "_0"
                 eta = dt.datetime.fromtimestamp(int(info[6])/1000.0)
+                # so that requests made at 11.50 pm for buses arriving after midnight on the 
+                # next day have vehicle ids with eta's date instead of request's date
+                date = dt.datetime.fromtimestamp(int(info[6][:10])).strftime('%Y-%m-%d')
+                vehicle_id = info[5] + "_" + stop_code + "_" + date + "_" + direction + "_0"
 
                 # incoming vehicle info
                 new_vehicle_info = {
@@ -97,7 +81,7 @@ class Data_Collection(object):
                     "arrived": False
                 }
 
-                found, first_journey, index = self.vehicle_already_found(new_vehicle_info, old_data)
+                found, index = self.vehicle_already_found(new_vehicle_info, old_data)
 
                 # if this vehicle is already in the dictionary
                 if found:
@@ -106,19 +90,11 @@ class Data_Collection(object):
                     
                     current_id = new_vehicle_info.get("vehicle_id")
 
-                    # if this is the first journey update the eta if it has changed
-                    if first_journey:
-                        if found_vehicle["expected_arrival"] != eta:
-                            found_vehicle["expected_arrival"] = eta 
-                            found_vehicle["time_of_req"] = time_of_request
-                            old_data[index] = found_vehicle
-
-                    # if this is not the first journey, change vehicle ID to indicate trip number
-                    else:
-                        trip_num = int(new_vehicle_info.get("vehicle_id")[-1]) + 1
-                        new_id = new_vehicle_info.get("vehicle_id")[:-1] + str(trip_num)
-                        new_vehicle_info["vehicle_id"] = new_id
-                        old_data.append(new_vehicle_info)
+                    # update the eta if it has changed
+                    if found_vehicle["expected_arrival"] != eta:
+                        found_vehicle["expected_arrival"] = eta 
+                        found_vehicle["time_of_req"] = time_of_request
+                        old_data[index] = found_vehicle
 
                 else:
                     # If this vehicle is not in the dictionary, then add it to the dictionary.
@@ -131,42 +107,24 @@ class Data_Collection(object):
 
     def vehicle_already_found(self, current_vehicle, old_data):
         start = time.time()
-        helper = Helper()
+        helper = Utilities()
 
         found = False
-        first_journey = True
         index = -1
-
-        # get rid of journey number to allow for comparison
         current_id = current_vehicle.get("vehicle_id")[:-1]
         
         for i, old_bus in enumerate(old_data):
-            # get rid of journey number to allow for comparison
             old_id = old_bus.get("vehicle_id")[:-1]
             old_direction = old_bus.get("direction")
             
             if current_id == old_id:
-                found_vehicle = old_bus
-                same_direction = old_direction == current_vehicle.get("direction")
-                
-                # check that this isn't the 1st trip of the day for that vehicle
-                if not same_direction:
-                    first_journey = False
-    
-                # assume that a bus takes 2 hours to run its full route
-                two_hours_before = current_vehicle.get("time_of_req") - dt.timedelta(hours = 2)
-                found_time_of_req = found_vehicle.get("time_of_req")
-                # if time of req of old bus was more than 2 hours ago, then it's likely to be on its 2nd or more trip of the day
-                if found_time_of_req < two_hours_before:
-                    first_journey = False
-                
                 found = True
                 index = i
                 break
         
         comp_time = time.time() - start
         # print("Vehicle already found: ", comp_time)
-        return found, first_journey, index
+        return found, index
 
 
     def check_if_bus_is_due(self, bus_information):
