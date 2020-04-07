@@ -3,7 +3,7 @@ from urllib.error import HTTPError, URLError
 import json
 from socket import timeout
 import datetime as dt
-from utils import Utilities
+from local_helper import Utilities
 import time
 
 class Data_Collection(object):
@@ -34,10 +34,12 @@ class Data_Collection(object):
 
 
     def get_stop_code(self, bus_stop_name, all_stops):
+        # all_stops = list of tuples (key, stop_id, stop_name)
+        
         start = time.time()
         for stop in all_stops:
-            if bus_stop_name == stop.get("stop_name").get("S"):
-                return stop.get("stop_id").get("S")
+            if bus_stop_name == stop[2]:
+                return stop[1]
         comp_time = time.time() - start
         print("Get stop code: ", comp_time)
         return "NOT_FOUND"
@@ -111,11 +113,13 @@ class Data_Collection(object):
 
         found = False
         index = -1
-        current_id = current_vehicle.get("vehicle_id")[:-1]
+        # can do this because this automatically has only 0 appended
+        current_id = current_vehicle.get("vehicle_id")[:-1] 
         
         for i, old_bus in enumerate(old_data):
-            old_id = old_bus.get("vehicle_id")[:-1]
-            old_direction = old_bus.get("direction")
+            # should technically all end in 0s because I don't change the index until I write to bus_arrivals anyway
+            [a, b, c, d, _] = old_bus.get("vehicle_id").split('_')
+            old_id = a + "_" + b + "_" + c + "_" + d + "_"
             
             if current_id == old_id:
                 found = True
@@ -140,10 +144,9 @@ class Data_Collection(object):
 
             # if the current time is after the expected arrival time of the bus, then it is due
             if now >= eta:
-                three_minutes_ago = now - dt.timedelta(minutes = 3)
-                # wait for 3 minutes after the bus is due to arrive
-                if eta < three_minutes_ago:
-                    # print("Now: {}, Three Minutes Ago: {}, ETA: {}".format(now, three_minutes_ago, eta))
+                five_minutes_ago = now - dt.timedelta(minutes = 5)
+                # wait for 5 minutes after the bus is due to arrive
+                if eta < five_minutes_ago:
                     this_bus["arrived"] = True
                     buses_arrived.append(this_bus)
                 else:

@@ -20,12 +20,14 @@ class Utilities(object):
 
 
     def convert_types_db(self, bus):
-        vehicle_id = bus.get("vehicle_id").get("S")
-        bus_stop_name = bus.get("bus_stop_name").get("S")
-        direction = bus.get("direction").get("S")
-        eta = self.convert_time_to_datetime(bus.get("expected_arrival").get("S"))
-        time_of_req = self.convert_time_to_datetime(bus.get("time_of_req").get("S"))
-        arrived = True if bus.get("arrived").get("S") else False
+        # each bus is a tuple (key, vehicle_id, arrived, bus_stop_name, direction, expected_arrival, time_of_req)
+
+        vehicle_id = bus[1]
+        bus_stop_name = bus[3]
+        direction = bus[4]
+        eta = self.convert_time_to_datetime(bus[5])
+        time_of_req = self.convert_time_to_datetime(bus[6])
+        arrived = bus[2] # should be a boolean type anyway
         return vehicle_id, bus_stop_name, direction, eta, time_of_req, arrived
         
         
@@ -42,7 +44,7 @@ class Utilities(object):
             cursor = conn.cursor()
             sql = "SELECT * FROM " + table_name 
             cursor.execute(sql)
-            results = cursor.fetchall() #list of tuples (stop_id, stop_name)
+            results = cursor.fetchall() #list of tuples (key, stop_id, stop_name)
             cursor.close()
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error in getting valid stop IDs: ", error)
@@ -122,74 +124,41 @@ class Utilities(object):
         if len(bus_info_to_write) == 0:
             print("Nothing to batch write to {}".format(table_name))
         else:
+           
             print("Batch writing {} items to {}".format(len(bus_info_to_write), table_name))
+
+            items_to_write = ()
+            for bus_information in bus_info_to_write:
+                vehicle_id = bus_information.get("vehicle_id")
+                bus_stop_name = bus_information.get("bus_stop_name")
+                direction = bus_information.get("direction")
+                eta = str(bus_information.get("expected_arrival"))
+                time_of_req = str(bus_information.get("time_of_req"))
+                arrived = bus_information.get("arrived")
+                tuple_item = (vehicle_id, arrived, bus_stop_name, direction, eta, time_of_req)
+                items_to_write = items_to_write + tuple_item
+
+
+            sql = ''.join(("INSERT INTO " + table_name + "(vehicle_id, arrived, bus_stop_name, direction, expected_arrival, time_of_req) ",
+                            "VALUES (%s, %s, %s, %r, %s, %s)",
+                            "ON CONFLICT (vehicle_id)",
+                            "DO",
+                            "UPDATE",
+                            "SET vehicle_id = EXCLUDED.vehicle_id, expected_arrival = EXCLUDED.expected_arrival, time_of_req = EXCLUDED.time_of_req"
+                            ))
+            
+            conn = None
             try:
-                dynamodb = boto3.client('dynamodb')
-                
-                items_to_write = []
-                for bus_information in bus_info_to_write:
-                    vehicle_id = bus_information.get("vehicle_id")
-                    bus_stop_name = bus_information.get("bus_stop_name")
-                    direction = bus_information.get("direction")
-                    eta = str(bus_information.get("expected_arrival"))
-                    time_of_req = str(bus_information.get("time_of_req"))
-                    arrived = "True" if bus_information.get("arrived") else "False"
-                    
-                    item = {
-                        'PutRequest': {
-                            'Item': {
-                                        'vehicle_id': {
-                                            'S': vehicle_id
-                                        },
-                                        'bus_stop_name': {
-                                            'S': bus_stop_name
-                                        },
-                                        'direction': {
-                                            'S': direction
-                                        },
-                                        'expected_arrival': {
-                                            'S': eta
-                                        },
-                                        'time_of_req': {
-                                            'S': time_of_req
-                                        },
-                                        'arrived': {
-                                            'S': arrived
-                                        }
-                                    }
-                                }
-                            }
-                    items_to_write.append(item)
-                    
-                resp = {}
-                if len(items_to_write) > 25:
-                    # Can only batch write items in groups of 25 or fewer.
-                    batches = []
-                    batch = []
-                    for item in items_to_write:
-                        batch.append(item)
-                        if len(batch) == 25:
-                            batches.append(batch)
-                            batch = []
-                            
-                    for batch in batches:
-                        resp = dynamodb.batch_write_item(RequestItems={table_name:batch})
-                        if (len(resp.get('UnprocessedItems'))):
-                            print("Unprocessed items: ", resp.get('UnprocessedItems'))
-                
-                else:
-                    resp = dynamodb.batch_write_item(RequestItems={table_name:items_to_write})
-                
-                # don't automatically retry
-                if (len(resp.get('UnprocessedItems'))):
-                    print("Unprocessed items: ", resp.get('UnprocessedItems'))
-               
-            except IOError:
-                print("I/O error in writing information into dynamodb")
-                raise
-            except ClientError as e:
-                print("error in batch write: ", e)
-                raise
+                conn = psycopg2.connect(host="localhost", database=table_name, user="postgres", password="postgres")
+                cursor = conn.cursor()
+                cursor.executemany(sql, items_to_write)
+                conn.commit()
+                cursor.close()
+            except (Exception, psycopg2.DatabaseError) as error:
+                print("Error in batch writing to database: ", error)
+            finally:
+                if conn is not None:
+                    conn.close()
             
             comp_time = time.time() - start
             print("Batch write to db: ", comp_time)
@@ -226,33 +195,23 @@ class Utilities(object):
             
     def get_old_info(self, route):
         start = time.time()
-        dynamodb = boto3.client('dynamodb')
-        tablename = "bus_information_" + route
+        table_name = "bus_information_" + route
         
         results = []
-        
+
+        conn = None
         try:
-            response = dynamodb.scan(
-                TableName = tablename
-            )
-            
-            for i in response['Items']:
-                results.append(i)
-            
-            # Can only scan up to 1MB at a time.
-            while 'LastEvaluatedKey' in response:
-                response = dynamodb.scan(
-                    TableName = tablename,
-                    ExclusiveStartKey=response['LastEvaluatedKey']
-                )
-                for i in response['Items']:
-                    results.append(i)
-    
-        except ClientError as e:
-            print("error in getting old information: ", e)
-            raise
-            
-        else:
+            conn = psycopg2.connect(host="localhost", database=table_name, user="postgres", password="postgres")
+            cursor = conn.cursor()
+            sql = "SELECT * FROM " + table_name 
+            cursor.execute(sql)
+            results = cursor.fetchall() #list of tuples (vehicle_id, arrived, bus_stop_name, direction, expected_arrival, time_of_req)
+            cursor.close()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print("Error in getting old information: ", error)
+        finally:
+            if conn is not None:
+                conn.close()
             old_information = []
             
             for res in results:
@@ -267,7 +226,8 @@ class Utilities(object):
                                 "arrived": arrived
                                 }
                 old_information.append(vehicle_info)
-            
+
             comp_time = time.time() - start
-            print("Get old infos: ", comp_time)
-            return old_information
+            print("Get old info: ", comp_time)
+            return results
+    

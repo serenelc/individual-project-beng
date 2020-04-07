@@ -13,7 +13,7 @@ def main(bus_route):
     # Get valid stops for this bus route
     valid_stops = helper.get_valid_stop_ids(bus_route)
 
-    # Get old gathered information on buses not yet arrived from dynamo
+    # Get old gathered information on buses not yet arrived from table
     old_bus_info = helper.get_old_info(bus_route)
     print("Old information gathered: {}".format(len(old_bus_info)))
 
@@ -26,7 +26,8 @@ def main(bus_route):
         # Get expected arrival times for each stop on the route
         start_1 = time.time()
         for bus_stop in valid_stops:
-            bus_stop_id = bus_stop[0]
+            # bus_stop is a tuple (key, stop_id, stop_name)
+            bus_stop_id = bus_stop[1]
             new_arrival_info = data.get_expected_arrival_times(bus_stop_id, bus_route)
             new_bus_info.append(new_arrival_info)
         end = time.time() - start_1
