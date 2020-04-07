@@ -56,7 +56,7 @@ def main(bus_route):
                 helper.write_to_db(cursor, arrived_bus)
             cursor.close()
         except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
+            print("Error in writing arrived items: ", error)
         finally:
             if conn is not None:
                 conn.close()

@@ -55,65 +55,40 @@ class Utilities(object):
                 conn.close()
             return results
             
-    
-    def try_write_to_db(self, dynamodb, route, bus_information):
-        print("This is not the 1st journey of the day. Updated vehicle id: ", bus_information)
-        table_name = "bus_arrivals_" + route
-        
-        try:
-            dynamodb.put_item(TableName=table_name, 
-                              Item=bus_information,
-                              ConditionExpression='attribute_not_exists(vehicle_id)')
-                                  
-        except ClientError as e:
-            if e.response['Error']['Code'] != 'ConditionalCheckFailedException':
-                print("Error in try write db: ", e)
-                raise
-            else: #ConditionalCheckFailedException i.e. key already exists -> 2nd journey of the day
-                print("Failed to write. Try again: ", e)
-                vehicle_id = bus_information.get("vehicle_id").get("S")
-                [a, b, c, d, num_trip] = vehicle_id.split('_')
-                trip_num = int(num_trip) + 1
-                new_id = a + "_" + b + "_" + c + "_" + d + "_" + str(trip_num)
-                bus_information["vehicle_id"]['S'] = new_id
-                self.try_write_to_db(dynamodb, route, bus_information)
             
-            
-    def write_to_db(self, dynamodb, route, bus_information):
+    def write_to_db(self, cursor, route, bus_information):
         start = time.time()
         table_name = "bus_arrivals_" + route
         
         vehicle_id = bus_information.get("vehicle_id")
+        [a, b, c, d, num_trip] = vehicle_id.split('_')
+        query_id = a + "_" + b + "_" + c + "_" + d + "_%"
         bus_stop_name = bus_information.get("bus_stop_name")
         direction = str(bus_information.get("direction"))
         eta = str(bus_information.get("expected_arrival"))
         time_of_req = str(bus_information.get("time_of_req"))
-        arrived = "True" if bus_information.get("arrived") else "False"
+        arrived = bus_information.get("arrived")
+
+        sql_select = "SELECT vehicle_id FROM " + table_name + " WHERE vehicle_id LIKE " + query_id
         
-        item = {'vehicle_id': {'S': vehicle_id},
-                'bus_stop_name': {'S': bus_stop_name},
-                'direction': {'S': direction},
-                'expected_arrival': {'S': eta},
-                'time_of_req': {'S': time_of_req},
-                'arrived': {'S': arrived}}
+        cursor.execute(sql_select)
+        rows = cursor.fetchall()
+        trip_count = 0
+        for row in rows:
+            found_id = row[0]
+            [a, b, c, d, num_trip] = found_id.split('_')
+            if int(num_trip) > trip_count:
+                trip_count = int(num_trip)
+
+        new_trip_num = trip_count + 1
+        new_id = a + "_" + b + "_" + c + "_" + d + "_" + str(new_trip_num)
+
+        tuple_item = (new_id, arrived, bus_stop_name, direction, eta, time_of_req)
         
-        try:
-            dynamodb.put_item(TableName=table_name, 
-                              Item=item,
-                              ConditionExpression='attribute_not_exists(vehicle_id)')
-                              
-        except ClientError as e:
-            if e.response['Error']['Code'] != 'ConditionalCheckFailedException':
-                print("Error in write to db: ", e)
-                raise
-            else: #ConditionalCheckFailedException i.e. key already exists -> 2nd journey of the day
-                print("ERROR: ", e)
-                [a, b, c, d, num_trip] = vehicle_id.split('_')
-                trip_num = int(num_trip) + 1
-                new_id = a + "_" + b + "_" + c + "_" + d + "_" + str(trip_num)
-                item["vehicle_id"]['S'] = new_id
-                self.try_write_to_db(dynamodb, route, item)
-        
+        sql_put = "INSERT INTO " + table_name + "(vehicle_id, arrived, bus_stop_name, direction, expected_arrival, time_of_req) "
+        sql_put = sql_put + "VALUES (%s, %s, %s, %r, %s, %s)"
+
+        cursor.execute(sql_put, (tuple_item))
         comp_time = time.time() - start
         # print("Write arrived items to db: ", comp_time)
                 
@@ -124,7 +99,6 @@ class Utilities(object):
         if len(bus_info_to_write) == 0:
             print("Nothing to batch write to {}".format(table_name))
         else:
-           
             print("Batch writing {} items to {}".format(len(bus_info_to_write), table_name))
 
             items_to_write = ()
@@ -137,7 +111,6 @@ class Utilities(object):
                 arrived = bus_information.get("arrived")
                 tuple_item = (vehicle_id, arrived, bus_stop_name, direction, eta, time_of_req)
                 items_to_write = items_to_write + tuple_item
-
 
             sql = ''.join(("INSERT INTO " + table_name + "(vehicle_id, arrived, bus_stop_name, direction, expected_arrival, time_of_req) ",
                             "VALUES (%s, %s, %s, %r, %s, %s)",
@@ -171,23 +144,20 @@ class Utilities(object):
             print("Nothing to delete in {}".format(table_name))
         else:
             print("Number of arrived items to delete {}".format(len(arrived_items)))
+            conn = None
             try:
-                dynamodb = boto3.client('dynamodb')
-                
-                for bus in arrived_items:
-                    vehicle_id = bus.get("vehicle_id")
-                    dynamodb.delete_item(
-                        Key={
-                            'vehicle_id': {
-                                'S': vehicle_id,
-                            }
-                        },
-                        TableName=table_name,
-                    )
-            
-            except IOError:
-                print("I/O error in deleting information from dynamodb")
-                raise
+                conn = psycopg2.connect(host="localhost", database=table_name, user="postgres", password="postgres")
+                cursor = conn.cursor()
+                for arrived in arrived_items:
+                    vehicle_id = arrived.get("vehicle_id")
+                    sql = "DELETE FROM " + table_name + " WHERE vehicle_id = " + vehicle_id
+                    cursor.execute(sql)
+                cursor.close()
+            except (Exception, psycopg2.DatabaseError) as error:
+                print("Error in deleting arrived items: ", error)
+            finally:
+                if conn is not None:
+                    conn.close()
             
             comp_time = time.time() - start
             print("Delete from db: ", comp_time)
