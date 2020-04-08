@@ -1,5 +1,8 @@
 version: '3.1'
 
+volumes:
+  db:
+
 services:
 
   # bus-data-collector: 
@@ -13,6 +16,7 @@ services:
       POSTGRES_PASSWORD: example
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgresBusData:/var/lib/postgresql/data
 
   adminer:
     image: adminer
