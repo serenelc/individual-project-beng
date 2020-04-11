@@ -20,7 +20,7 @@ class Utilities(object):
 
 
     def convert_types_db(self, bus):
-        # each bus is a tuple (key, vehicle_id, arrived, bus_stop_name, direction, expected_arrival, time_of_req)
+        # each bus is a tuple (vehicle_id, arrived, bus_stop_name, direction, expected_arrival, time_of_req)
 
         vehicle_id = bus[1]
         bus_stop_name = bus[3]
@@ -40,11 +40,11 @@ class Utilities(object):
 
         conn = None
         try:
-            conn = psycopg2.connect(host="localhost", database=table_name, user="postgres", password="postgres")
+            conn = psycopg2.connect(host="localhost", database=table_name, user="postgres", password="example")
             cursor = conn.cursor()
             sql = "SELECT * FROM " + table_name 
             cursor.execute(sql)
-            results = cursor.fetchall() #list of tuples (key, stop_id, stop_name)
+            results = cursor.fetchall() #list of tuples (stop_id, stop_name)
             cursor.close()
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error in getting valid stop IDs: ", error)

@@ -45,7 +45,7 @@ def main(bus_route):
         # Write/delete the relevant data to the relevant tables
         print(len(not_arrived), len(arrived))
         a = time.time()
-        resp_not_arrived = helper.batch_write_to_db(table_name_gathering, not_arrived)
+        helper.batch_write_to_db(table_name_gathering, not_arrived)
 
         c = time.time()
         conn = None
