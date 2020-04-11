@@ -5,9 +5,9 @@ volumes:
 
 services:
 
-  # bus-data-collector: 
-  #   build:
-  #     context: .
+  bus-data-collector: 
+    build:
+      context: .
 
   db:
     image: postgres
@@ -15,7 +15,7 @@ services:
     environment:
       POSTGRES_PASSWORD: example
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./postgresBusData:/var/lib/postgresql/data
 
   adminer:

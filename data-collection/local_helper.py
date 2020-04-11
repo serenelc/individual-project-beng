@@ -20,14 +20,14 @@ class Utilities(object):
 
 
     def convert_types_db(self, bus):
-        # each bus is a tuple (vehicle_id, arrived, bus_stop_name, direction, expected_arrival, time_of_req)
+        # each bus is a tuple (vehicle_id, bus_stop_name, expected_arrival, time_of_req, direction, arrived)
 
-        vehicle_id = bus[1]
-        bus_stop_name = bus[3]
+        vehicle_id = bus[0]
+        bus_stop_name = bus[1]
         direction = bus[4]
-        eta = self.convert_time_to_datetime(bus[5])
-        time_of_req = self.convert_time_to_datetime(bus[6])
-        arrived = bus[2] # should be a boolean type anyway
+        eta = self.convert_time_to_datetime(bus[2])
+        time_of_req = self.convert_time_to_datetime(bus[3])
+        arrived = bus[5] # should be a boolean type anyway
         return vehicle_id, bus_stop_name, direction, eta, time_of_req, arrived
         
         
@@ -40,7 +40,7 @@ class Utilities(object):
 
         conn = None
         try:
-            conn = psycopg2.connect(host="localhost", database=table_name, user="postgres", password="example")
+            conn = psycopg2.connect(host="localhost:8080", database=table_name, user="postgres", password="example")
             cursor = conn.cursor()
             sql = "SELECT * FROM " + table_name 
             cursor.execute(sql)
@@ -122,7 +122,7 @@ class Utilities(object):
             
             conn = None
             try:
-                conn = psycopg2.connect(host="localhost", database=table_name, user="postgres", password="postgres")
+                conn = psycopg2.connect(host="localhost:8080", database=table_name, user="postgres", password="example")
                 cursor = conn.cursor()
                 cursor.executemany(sql, items_to_write)
                 conn.commit()
@@ -146,7 +146,7 @@ class Utilities(object):
             print("Number of arrived items to delete {}".format(len(arrived_items)))
             conn = None
             try:
-                conn = psycopg2.connect(host="localhost", database=table_name, user="postgres", password="postgres")
+                conn = psycopg2.connect(host="localhost:8080", database=table_name, user="postgres", password="example")
                 cursor = conn.cursor()
                 for arrived in arrived_items:
                     vehicle_id = arrived.get("vehicle_id")
@@ -171,11 +171,11 @@ class Utilities(object):
 
         conn = None
         try:
-            conn = psycopg2.connect(host="localhost", database=table_name, user="postgres", password="postgres")
+            conn = psycopg2.connect(host="localhost:8080", database=table_name, user="postgres", password="example")
             cursor = conn.cursor()
             sql = "SELECT * FROM " + table_name 
             cursor.execute(sql)
-            results = cursor.fetchall() #list of tuples (vehicle_id, arrived, bus_stop_name, direction, expected_arrival, time_of_req)
+            results = cursor.fetchall() #list of tuples (vehicle_id, bus_stop_name, expected_arrival, time_of_req, direction, arrived)
             cursor.close()
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error in getting old information: ", error)
