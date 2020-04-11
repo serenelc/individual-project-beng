@@ -21,7 +21,6 @@ class Utilities(object):
 
     def convert_types_db(self, bus):
         # each bus is a tuple (vehicle_id, bus_stop_name, expected_arrival, time_of_req, direction, arrived)
-
         vehicle_id = bus[0]
         bus_stop_name = bus[1]
         direction = bus[4]
@@ -40,7 +39,7 @@ class Utilities(object):
 
         conn = None
         try:
-            conn = psycopg2.connect(host="localhost:8080", database=table_name, user="postgres", password="example")
+            conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example")
             cursor = conn.cursor()
             sql = "SELECT * FROM " + table_name 
             cursor.execute(sql)
@@ -122,7 +121,7 @@ class Utilities(object):
             
             conn = None
             try:
-                conn = psycopg2.connect(host="localhost:8080", database=table_name, user="postgres", password="example")
+                conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example")
                 cursor = conn.cursor()
                 cursor.executemany(sql, items_to_write)
                 conn.commit()
@@ -146,7 +145,7 @@ class Utilities(object):
             print("Number of arrived items to delete {}".format(len(arrived_items)))
             conn = None
             try:
-                conn = psycopg2.connect(host="localhost:8080", database=table_name, user="postgres", password="example")
+                conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example")
                 cursor = conn.cursor()
                 for arrived in arrived_items:
                     vehicle_id = arrived.get("vehicle_id")
@@ -171,7 +170,8 @@ class Utilities(object):
 
         conn = None
         try:
-            conn = psycopg2.connect(host="localhost:8080", database=table_name, user="postgres", password="example")
+            # http://localhost:8080/?pgsql=db&username=postgres&db=postgres&ns=public&select=valid_stop_ids_14
+            conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example")
             cursor = conn.cursor()
             sql = "SELECT * FROM " + table_name 
             cursor.execute(sql)

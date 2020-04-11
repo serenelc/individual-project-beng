@@ -51,7 +51,7 @@ def main(bus_route):
     #     c = time.time()
     #     conn = None
     #     try:
-    #         conn = psycopg2.connect(host="localhost", database=table_name_arrived, user="postgres", password="postgres")
+    #         conn = psycopg2.connect(host="localhost", database="postgres", user="postgres", password="postgres")
     #         cursor = conn.cursor()
     #         for arrived_bus in arrived:
     #             helper.write_to_db(cursor, arrived_bus)
