@@ -39,7 +39,8 @@ class Utilities(object):
 
         conn = None
         try:
-            conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example")
+            conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example", port="5432")
+            print(conn)
             cursor = conn.cursor()
             sql = "SELECT * FROM " + table_name 
             cursor.execute(sql)

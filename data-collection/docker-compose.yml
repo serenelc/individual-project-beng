@@ -1,16 +1,13 @@
 version: '3.1'
 
-volumes:
-  db:
-
 services:
 
   bus-data-collector: 
     build:
       context: .
-    environment: 
-      DATABASE_URL: postgres://todoapp@postgres/todos
-    depends_on:
+    networks:
+      - default
+    depends_on: 
       - db
 
   db:
@@ -18,11 +15,15 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: example
+    ports:
+      - 5432:5432
+    expose:
+      - '5432'
+    networks:
+      - default
     volumes:
       # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./postgresBusData:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
 
   adminer:
     image: adminer
