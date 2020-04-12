@@ -34,12 +34,12 @@ class Data_Collection(object):
 
 
     def get_stop_code(self, bus_stop_name, all_stops):
-        # all_stops = list of tuples (key, stop_id, stop_name)
+        # all_stops = list of tuples (stop_id, stop_name)
         
         start = time.time()
         for stop in all_stops:
-            if bus_stop_name == stop[2]:
-                return stop[1]
+            if bus_stop_name == stop[1]:
+                return stop[0]
         comp_time = time.time() - start
         print("Get stop code: ", comp_time)
         return "NOT_FOUND"

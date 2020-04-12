@@ -34,18 +34,26 @@ def main(bus_route):
         print("Get expected arrival times: ", end)
         print("New data gathered: ", len(new_bus_info))
 
-    #     # Evaluate the new data with respect to the old gathered data
-    #     evaluated_data = data.evaluate_bus_data(new_bus_info, old_bus_info, valid_stops)
+        # Evaluate the new data with respect to the old gathered data
+        evaluated_data = data.evaluate_bus_data(new_bus_info, old_bus_info, valid_stops)
+        print(len(evaluated_data))
 
-    #     not_arrived, arrived = data.check_if_bus_is_due(evaluated_data)
+        print("#################################################")
+        print(evaluated_data)
+        print("#################################################")
 
-    #     table_name_arrived = "bus_arrivals_" + bus_route
-    #     table_name_gathering = "bus_information_" + bus_route
+        not_arrived, arrived = data.check_if_bus_is_due(evaluated_data)
+        print("#################################################")
+        print(not_arrived)
+        print("#################################################")
+
+        table_name_arrived = "bus_arrivals_" + bus_route
+        table_name_gathering = "bus_information_" + bus_route
         
-    #     # Write/delete the relevant data to the relevant tables
-    #     print(len(not_arrived), len(arrived))
-    #     a = time.time()
-    #     helper.batch_write_to_db(table_name_gathering, not_arrived)
+        # Write/delete the relevant data to the relevant tables
+        print(len(not_arrived), len(arrived))
+        a = time.time()
+        helper.batch_write_to_db(table_name_gathering, not_arrived)
 
     #     c = time.time()
     #     conn = None
@@ -70,9 +78,9 @@ def main(bus_route):
     #     comp_time = time.time() - start
     #     print("Entire function: ", comp_time)
 
-    # except (HTTPError, URLError) as error:
-    #     # Send me a notification so I can fix it and keep it running.
-    #     print("ERROR IN MAIN: ", error)
+    except (HTTPError, URLError) as error:
+        # Send me a notification so I can fix it and keep it running.
+        print("ERROR IN MAIN: ", error)
     
 
 connected = False
