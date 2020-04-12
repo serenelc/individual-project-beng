@@ -8,6 +8,10 @@ services:
   bus-data-collector: 
     build:
       context: .
+    environment: 
+      DATABASE_URL: postgres://todoapp@postgres/todos
+    depends_on:
+      - db
 
   db:
     image: postgres
@@ -17,6 +21,8 @@ services:
     volumes:
       # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./postgresBusData:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
 
   adminer:
     image: adminer
