@@ -47,31 +47,18 @@ def main(bus_route):
         print(len(not_arrived), len(arrived))
         a = time.time()
         helper.write_to_db_2(table_name_gathering, not_arrived)
-        print("done")
         
+        c = time.time()
+        helper.write_to_db(table_name_arrived, arrived)
+        d = time.time()
+        print("Time to write arrived items to db: ", (d - c))
 
-    #     c = time.time()
-    #     conn = None
-    #     try:
-    #         conn = psycopg2.connect(host="localhost", database="postgres", user="postgres", password="postgres")
-    #         cursor = conn.cursor()
-    #         for arrived_bus in arrived:
-    #             helper.write_to_db(cursor, bus_route, arrived_bus)
-    #         cursor.close()
-    #     except (Exception, psycopg2.DatabaseError) as error:
-    #         print("Error in writing arrived items: ", error)
-    #     finally:
-    #         if conn is not None:
-    #             conn.close()
-    #     d = time.time()
-    #     print("Time to write arrived items to db: ", (d - c))
-
-    #     helper.delete_arrived_items(table_name_gathering, arrived)
-    #     b = time.time()
-    #     print("Total time to write and delete from db: ", (b - a))
+        helper.delete_arrived_items(table_name_gathering, arrived)
+        b = time.time()
+        print("Total time to write and delete from db: ", (b - a))
             
-    #     comp_time = time.time() - start
-    #     print("Entire function: ", comp_time)
+        comp_time = time.time() - start
+        print("Entire function: ", comp_time)
 
     except (HTTPError, URLError) as error:
         # Send me a notification so I can fix it and keep it running.

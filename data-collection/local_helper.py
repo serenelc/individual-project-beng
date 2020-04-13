@@ -55,47 +55,61 @@ class Utilities(object):
             return results
             
             
-    def write_to_db(self, cursor, route, bus_information):
+    def write_to_db(self, table_name, bus_info_to_write):
+
         start = time.time()
-        table_name = "bus_arrivals_" + route
-        
-        vehicle_id = bus_information.get("vehicle_id")
-        [a, b, c, d, num_trip] = vehicle_id.split('_')
-        query_id = "'" + a + "\_" + b + "\_" + c + "\_" + d + "\_%'"
-        bus_stop_name = bus_information.get("bus_stop_name")
-        direction = str(bus_information.get("direction"))
-        eta = str(bus_information.get("expected_arrival"))
-        time_of_req = str(bus_information.get("time_of_req"))
-        arrived = bus_information.get("arrived")
+        if len(bus_info_to_write) == 0:
+            print("Nothing to write to {}".format(table_name))
+        else:
+            print("Writing {} items to {}".format(len(bus_info_to_write), table_name))
 
-        # need to escape underscores and put queries in ''
-        sql_select = "SELECT vehicle_id FROM " + table_name + " WHERE vehicle_id LIKE " + query_id
-        print("sql select: ", sql_select)
-        
-        cursor.execute(sql_select)
-        rows = cursor.fetchall()
-        if len(rows) > 0:
-            trip_count = 0
-            for row in rows:
-                found_id = row[0]
-                [a, b, c, d, num_trip] = found_id.split('_')
-                if int(num_trip) > trip_count:
-                    trip_count = int(num_trip)
+            for item in bus_info_to_write:
+                vehicle_id = bus_information.get("vehicle_id")
+                [a, b, c, d, num_trip] = vehicle_id.split('_')
+                query_id = "'" + a + "\_" + b + "\_" + c + "\_" + d + "\_%'"
+                bus_stop_name = bus_information.get("bus_stop_name")
+                direction = str(bus_information.get("direction"))
+                eta = str(bus_information.get("expected_arrival"))
+                time_of_req = str(bus_information.get("time_of_req"))
+                arrived = bus_information.get("arrived")
 
-            new_trip_num = trip_count + 1
-            vehicle_id = a + "_" + b + "_" + c + "_" + d + "_" + str(new_trip_num)
+                # need to escape underscores and put queries in ''
+                sql_select = "SELECT vehicle_id FROM " + table_name + " WHERE vehicle_id LIKE " + query_id
 
-        tuple_item = (vehicle_id, arrived, bus_stop_name, direction, eta, time_of_req)
-        
-        print("Tuple item: ", tuple_item)
-        sql_put = "INSERT INTO " + table_name + "(vehicle_id, arrived, bus_stop_name, direction, expected_arrival, time_of_req) "
-        sql_put = sql_put + "VALUES (%s, %s, %s, %s, %s, %s)"
-        print("SQL put: ", sql_put)
+                conn = None
+                try:
+                    conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example", port="5432")
+                    cursor = conn.cursor()
 
-        cursor.execute(sql_put, (tuple_item))
-        print("after execute")
-        comp_time = time.time() - start
-        # print("Write arrived items to db: ", comp_time)
+                    cursor.execute(sql_select)
+                    rows = cursor.fetchall()
+                    if len(rows) > 0:
+                        trip_count = 0
+                        for row in rows:
+                            found_id = row[0]
+                            [a, b, c, d, num_trip] = found_id.split('_')
+                            if int(num_trip) > trip_count:
+                                trip_count = int(num_trip)
+
+                        new_trip_num = trip_count + 1
+                        vehicle_id = a + "_" + b + "_" + c + "_" + d + "_" + str(new_trip_num)
+
+                    tuple_item = (vehicle_id, arrived, bus_stop_name, direction, eta, time_of_req)
+                    sql_put = "INSERT INTO " + table_name + "(vehicle_id, arrived, bus_stop_name, direction, expected_arrival, time_of_req) "
+                    sql_put = sql_put + "VALUES (%s, %s, %s, %s, %s, %s)"
+
+                    cursor.execute(sql_put, (tuple_item))
+
+                    conn.commit()
+                    cursor.close()
+                except (Exception, psycopg2.DatabaseError) as error:
+                    print("Error in writing arrived items: ", error)
+                finally:
+                    if conn is not None:
+                        conn.close()
+
+            comp_time = time.time() - start
+            print("Write arrived items to db: ", comp_time)
 
 
     def write_to_db_2(self, table_name, bus_info_to_write):
@@ -118,7 +132,6 @@ class Utilities(object):
                 try:
                     conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example", port="5432")
                     cursor = conn.cursor()
-                    print("Tuple item: ", tuple_item)
                     sql = ''.join(("INSERT INTO " + table_name + "(vehicle_id, arrived, bus_stop_name, direction, expected_arrival, time_of_req) ",
                             "VALUES (%s, %s, %s, %s, %s, %s) ",
                             "ON CONFLICT (vehicle_id) ",
@@ -128,6 +141,7 @@ class Utilities(object):
                             ))
 
                     cursor.execute(sql, (tuple_item))
+                    conn.commit()
                     cursor.close()
                 except (Exception, psycopg2.DatabaseError) as error:
                     print("Error in writing not arrived items: ", error)
@@ -136,7 +150,7 @@ class Utilities(object):
                         conn.close()
 
             comp_time = time.time() - start
-            # print("Write arrived items to db: ", comp_time)
+            print("Write not arrived items to db: ", comp_time)
 
             
     def batch_write_to_db(self, table_name, bus_info_to_write):
@@ -198,6 +212,8 @@ class Utilities(object):
                     vehicle_id = arrived.get("vehicle_id")
                     sql = "DELETE FROM " + table_name + " WHERE vehicle_id = " + vehicle_id
                     cursor.execute(sql)
+
+                conn.commit()
                 cursor.close()
             except (Exception, psycopg2.DatabaseError) as error:
                 print("Error in deleting arrived items: ", error)
