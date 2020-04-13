@@ -38,14 +38,7 @@ def main(bus_route):
         evaluated_data = data.evaluate_bus_data(new_bus_info, old_bus_info, valid_stops)
         print(len(evaluated_data))
 
-        print("#################################################")
-        print(evaluated_data)
-        print("#################################################")
-
         not_arrived, arrived = data.check_if_bus_is_due(evaluated_data)
-        print("#################################################")
-        print(not_arrived)
-        print("#################################################")
 
         table_name_arrived = "bus_arrivals_" + bus_route
         table_name_gathering = "bus_information_" + bus_route
@@ -53,7 +46,9 @@ def main(bus_route):
         # Write/delete the relevant data to the relevant tables
         print(len(not_arrived), len(arrived))
         a = time.time()
-        helper.batch_write_to_db(table_name_gathering, not_arrived)
+        helper.write_to_db_2(table_name_gathering, not_arrived)
+        print("done")
+        
 
     #     c = time.time()
     #     conn = None
@@ -61,7 +56,7 @@ def main(bus_route):
     #         conn = psycopg2.connect(host="localhost", database="postgres", user="postgres", password="postgres")
     #         cursor = conn.cursor()
     #         for arrived_bus in arrived:
-    #             helper.write_to_db(cursor, arrived_bus)
+    #             helper.write_to_db(cursor, bus_route, arrived_bus)
     #         cursor.close()
     #     except (Exception, psycopg2.DatabaseError) as error:
     #         print("Error in writing arrived items: ", error)
