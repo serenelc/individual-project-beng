@@ -53,6 +53,7 @@ def main(bus_route):
         d = time.time()
         print("Time to write arrived items to db: ", (d - c))
 
+        # Not deleting yet
         helper.delete_arrived_items(table_name_gathering, arrived)
         b = time.time()
         print("Total time to write and delete from db: ", (b - a))
@@ -78,4 +79,6 @@ while not connected:
 bus_routes = ["452", "9", "52", "267", "277", "7", "6", "14", "35", "37", "69"]
 bus_routes = ["9"]
 for route in bus_routes:
-    main(route)
+    while True:
+        a = time.time()
+        main(route)

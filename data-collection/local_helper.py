@@ -64,14 +64,14 @@ class Utilities(object):
             print("Writing {} items to {}".format(len(bus_info_to_write), table_name))
 
             for item in bus_info_to_write:
-                vehicle_id = bus_information.get("vehicle_id")
+                vehicle_id = item.get("vehicle_id")
                 [a, b, c, d, num_trip] = vehicle_id.split('_')
                 query_id = "'" + a + "\_" + b + "\_" + c + "\_" + d + "\_%'"
-                bus_stop_name = bus_information.get("bus_stop_name")
-                direction = str(bus_information.get("direction"))
-                eta = str(bus_information.get("expected_arrival"))
-                time_of_req = str(bus_information.get("time_of_req"))
-                arrived = bus_information.get("arrived")
+                bus_stop_name = item.get("bus_stop_name")
+                direction = str(item.get("direction"))
+                eta = str(item.get("expected_arrival"))
+                time_of_req = str(item.get("time_of_req"))
+                arrived = item.get("arrived")
 
                 # need to escape underscores and put queries in ''
                 sql_select = "SELECT vehicle_id FROM " + table_name + " WHERE vehicle_id LIKE " + query_id
@@ -210,6 +210,8 @@ class Utilities(object):
                 cursor = conn.cursor()
                 for arrived in arrived_items:
                     vehicle_id = arrived.get("vehicle_id")
+                    [a, b, c, d, e] = vehicle_id.split('_')
+                    vehicle_id = "'" + a + "\_" + b + "\_" + c + "\_" + d + "\_" + e + "'"
                     sql = "DELETE FROM " + table_name + " WHERE vehicle_id = " + vehicle_id
                     cursor.execute(sql)
 
@@ -244,6 +246,7 @@ class Utilities(object):
         finally:
             if conn is not None:
                 conn.close()
+
             old_information = []
             
             for res in results:
@@ -261,5 +264,5 @@ class Utilities(object):
 
             comp_time = time.time() - start
             print("Get old info: ", comp_time)
-            return results
+            return old_information
     
