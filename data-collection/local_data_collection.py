@@ -133,8 +133,9 @@ class Data_Collection(object):
 
     def check_if_bus_is_due(self, bus_information):
         start = time.time()
+        bst = dt.timezone(dt.timedelta(hours = 1))
 
-        now = dt.datetime.now()
+        now = dt.datetime.now(tz = bst)
         buses_not_arrived = []
         buses_arrived = []
 

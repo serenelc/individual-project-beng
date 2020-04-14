@@ -78,8 +78,8 @@ while not connected:
 
 bus_routes = ["452", "9", "52", "267", "277", "7", "6", "14", "35", "37", "69"]
 bus_routes = ["9"]
-for route in bus_routes:
-    while True:
+while True:
+    for route in bus_routes:
         a = dt.datetime.now()
         main(route)
         b = dt.datetime.now() - a
