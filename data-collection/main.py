@@ -80,5 +80,10 @@ bus_routes = ["452", "9", "52", "267", "277", "7", "6", "14", "35", "37", "69"]
 bus_routes = ["9"]
 for route in bus_routes:
     while True:
-        a = time.time()
+        a = dt.datetime.now()
         main(route)
+        b = dt.datetime.now() - a
+        if b < dt.timedelta(seconds = 30):
+            print("sleep for 30")
+            time.sleep(30)
+    

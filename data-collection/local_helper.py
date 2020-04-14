@@ -210,8 +210,7 @@ class Utilities(object):
                 cursor = conn.cursor()
                 for arrived in arrived_items:
                     vehicle_id = arrived.get("vehicle_id")
-                    [a, b, c, d, e] = vehicle_id.split('_')
-                    vehicle_id = "'" + a + "\_" + b + "\_" + c + "\_" + d + "\_" + e + "'"
+                    vehicle_id = "'" + vehicle_id + "'"
                     sql = "DELETE FROM " + table_name + " WHERE vehicle_id = " + vehicle_id
                     cursor.execute(sql)
 
