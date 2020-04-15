@@ -134,20 +134,25 @@ class Data_Collection(object):
     def check_if_bus_is_due(self, bus_information):
         start = time.time()
         bst = dt.timezone(dt.timedelta(hours = 1))
+        gmt = dt.timezone.utc
 
-        now = dt.datetime.now(tz = bst)
+        #the api returns the expected arrival times in GMT but should I convert the times into BST so +1?
+
+        now = dt.datetime.now(tz = gmt)
         buses_not_arrived = []
         buses_arrived = []
 
         for index, this_bus in enumerate(bus_information):
             eta = this_bus.get("expected_arrival")
+            eta_aware = eta.replace(tzinfo=gmt)
             vehicle_id = this_bus.get("vehicle_id")
 
             # if the current time is after the expected arrival time of the bus, then it is due
-            if now >= eta:
+            if now >= eta_aware:
                 five_minutes_ago = now - dt.timedelta(minutes = 5)
+                five_minutes_ago = five_minutes_ago.replace(tzinfo=gmt)
                 # wait for 5 minutes after the bus is due to arrive
-                if eta < five_minutes_ago:
+                if eta_aware < five_minutes_ago:
                     this_bus["arrived"] = True
                     buses_arrived.append(this_bus)
                 else:
