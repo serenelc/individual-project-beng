@@ -1,9 +1,7 @@
 ## TO DO
 
-- If it times out or provisioned throughput exception thing, doesn't know how to handle yet.
 - Need to update the README with instructions that are valid
-- Set up code so that locally can run the csv version while the AWS is dying from 'too many writes per minute' and then can use the batch write to write the stuff from the csv onto the database -> need to make sure the number of journeys doesn't clash though. 
-- Investigate moving everything to a relational database in case it makes the data analytics easier.
+- route 9 bus 14511 has its directions opposite to what it should be idk why, but all the othe rbuses seem to have the right direction of travel. 
 
 
 ## Overview

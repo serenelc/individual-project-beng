@@ -76,14 +76,14 @@ while not connected:
         connected = True
         print("Connected!!")
 
-bus_routes = ["452", "9", "52", "267", "277", "7", "6", "14", "35", "37", "69"]
-bus_routes = ["9"]
+bus_routes = ["452", "9", "52", "267", "277", "7", "14", "35", "37", "69"]
+bus_routes = ["14", "37"]
 while True:
     for route in bus_routes:
         a = dt.datetime.now()
         main(route)
         b = dt.datetime.now() - a
-        if b < dt.timedelta(seconds = 30):
-            print("sleep for 30")
-            time.sleep(30)
+        # if b < dt.timedelta(seconds = 30):
+        #     print("sleep for 30")
+        #     time.sleep(30)
     
