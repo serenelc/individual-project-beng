@@ -77,7 +77,7 @@ while not connected:
         print("Connected!!")
 
 bus_routes = ["452", "9", "52", "267", "277", "7", "14", "35", "37", "69"]
-bus_routes = ["14", "37"]
+bus_routes = ["52", "37", "69"]
 while True:
     for route in bus_routes:
         a = dt.datetime.now()
