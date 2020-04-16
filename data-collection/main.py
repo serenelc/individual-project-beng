@@ -1,5 +1,6 @@
 import datetime as dt
 import time
+import os
 import json
 import psycopg2
 from local_helper import Utilities
@@ -76,14 +77,10 @@ while not connected:
         connected = True
         print("Connected!!")
 
-bus_routes = ["452", "9", "52", "267", "277", "7", "14", "35", "37", "69"]
-bus_routes = ["52", "37", "69"]
+routes = os.environ['BUS_ROUTES']
+bus_routes = routes.split(',')
+print(bus_routes)
 while True:
     for route in bus_routes:
-        a = dt.datetime.now()
         main(route)
-        b = dt.datetime.now() - a
-        # if b < dt.timedelta(seconds = 30):
-        #     print("sleep for 30")
-        #     time.sleep(30)
     

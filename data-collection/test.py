@@ -20,3 +20,7 @@ print(now)
 print(eta)
 print(eta_aware)
 print(aware)
+
+string = "37, 23, 12"
+routes = string.split(',')
+print(routes)

@@ -9,6 +9,18 @@ services:
       - default
     depends_on: 
       - db
+    environment:
+      BUS_ROUTES: "267,277,35"
+
+  bus-data-collector-2: 
+    build:
+      context: .
+    networks:
+      - default
+    depends_on: 
+      - db
+    environment:
+      BUS_ROUTES: "37,69,14"
 
   db:
     image: postgres
