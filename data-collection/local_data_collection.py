@@ -26,9 +26,11 @@ class Data_Collection(object):
         except (HTTPError, URLError) as error:
             # Invalid stop code, so ignore error. 
             return bus_information
+        except http.client.RemoteDisconnected as disconnect:
+            # remote end closed connection without response. Try again later.
+            return bus_information
         except timeout:
             print("timeout error when getting expected arrival times")
-            
         comp_time = time.time() - start
         print("Get expected arrival times: ", comp_time)
 
@@ -113,6 +115,9 @@ class Data_Collection(object):
 
         found = False
         index = -1
+        if len(old_data) == 0:
+            return found, index
+        
         # can do this because this automatically has only 0 appended
         current_id = current_vehicle.get("vehicle_id")[:-1] 
         
