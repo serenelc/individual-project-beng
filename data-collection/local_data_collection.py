@@ -25,9 +25,11 @@ class Data_Collection(object):
                 return bus_information
         except (HTTPError, URLError) as error:
             # Invalid stop code, so ignore error. 
+            print("Invalid stop code")
             return bus_information
         except http.client.RemoteDisconnected as disconnect:
             # remote end closed connection without response. Try again later.
+            print("remote disconnected: ", disconnect)
             return bus_information
         except timeout:
             print("timeout error when getting expected arrival times")
@@ -53,6 +55,7 @@ class Data_Collection(object):
         helper = Utilities()
 
         for bus_stop in new_data:
+            # print(bus_stop)
 
             # no eta returned so skip
             if len(bus_stop) <= 1:
