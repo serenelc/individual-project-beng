@@ -20,7 +20,7 @@ services:
     depends_on: 
       - db
     environment:
-      BUS_ROUTES: "52,7"
+      BUS_ROUTES: "452,7"
 
   db:
     image: postgres
