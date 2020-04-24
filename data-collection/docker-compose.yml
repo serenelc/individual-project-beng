@@ -10,7 +10,7 @@ services:
     depends_on: 
       - db
     environment:
-      BUS_ROUTES: "267,35"
+      BUS_ROUTES: "14,9"
 
   bus-data-collector-2: 
     build:
@@ -20,7 +20,7 @@ services:
     depends_on: 
       - db
     environment:
-      BUS_ROUTES: "7,328"
+      BUS_ROUTES: "52,452"
 
   db:
     image: postgres
