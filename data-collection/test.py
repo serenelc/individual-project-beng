@@ -1,47 +1,48 @@
+import json
 import csv
-import datetime as dt
-from pathlib import Path
-from os import path
-import time
 import urllib.request
 from urllib.error import HTTPError, URLError
 import json
 from socket import timeout
+from pathlib import Path
 
-def get_valid_stop_ids(bus_route):
-    start = time.time()
-    route_information = []
-    file_name = 'valid_stops/valid_stop_ids_' + bus_route + '.csv'
-    bus_file = Path.cwd() / file_name
+def write_to_csv(route, valid_stops):
 
-    if bus_file.is_file():
-        try:
-            with open(file_name) as csv_file:
-                csv_reader = csv.reader(csv_file, delimiter = ',')
-                line_count = 0
-                for row in csv_reader:
-                    if line_count != 0:
-                        stop_name = row[0]
-                        stop_id = row[1]
+    csv_name = "valid_stops/valid_stop_ids_" + route + ".csv"
+    csv_columns = ['stop_id', 'stop_name']
+    try:
+        with open(csv_name, 'w') as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames = csv_columns)
+            writer.writeheader()
+            for data in valid_stops:
+                writer.writerow(data)
+    except IOError:
+        print("I/O error in loading information into csv file")
+        
+        
+def get_stop_info(bus_route_id: str):
+    bus_stop_info = []
 
-                        valid_stop = {
-                            "stop_name": stop_name,
-                            "stop_id": stop_id
-                        }
+    try:
+        with urllib.request.urlopen("https://api.tfl.gov.uk/line/"+ bus_route_id +"/stoppoints") as api:
+            print("Making API call to get stop info")
+            data = json.loads(api.read().decode())
+            for stop in data:
+                info = {
+                    "stop_name": stop.get("commonName"),
+                    "stop_id": stop.get("naptanId")
+                }
+                bus_stop_info.append(info)
 
-                        route_information.append(valid_stop)
-                    line_count += 1
-        except IOError:
-            print("I/O error in loading valid stop information from csv file")
-    
-    comp_time = time.time() - start
-    print("Get valid stop ids: ", comp_time)
-    return route_information
-
+            return bus_stop_info
+    except (HTTPError, URLError) as error:
+        print("error in getting bus stop info: ", error)
+    except timeout:
+        print("timeout error")
+        
 
 def get_expected_arrival_times(stop_code: str, route_id: str):
-    start = time.time()
-    url =  "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Stopcode2=" + stop_code + "&LineName=" + route_id + "&ReturnList=StopPointName,LineName,DestinationText,EstimatedTime,ExpireTime,VehicleID,DirectionID"
+    url =  "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Stopcode2=" + stop_code + "&LineName=" + route_id + "&ReturnList=StopPointName"
     bus_information = []
 
     try:
@@ -55,29 +56,33 @@ def get_expected_arrival_times(stop_code: str, route_id: str):
                 bus_information.append(line_info)
             return bus_information
     except (HTTPError, URLError) as error:
-        # Invalid stop code, so ignore error. 
-        print(stop_code)
-        return bus_information
-    except http.client.RemoteDisconnected as disconnect:
-        # remote end closed connection without response. Try again later.
-        print("remote disconnected: ", disconnect)
-        return bus_information
+        # Invalid bus ID, so ignore error
+        print("Invalid ID: ", stop_code)
+        return []
     except timeout:
         print("timeout error when getting expected arrival times")
-    comp_time = time.time() - start
-    print("Get expected arrival times: ", comp_time)
 
 
-valid_stops = get_valid_stop_ids("452")
-new_bus_info = []
-for bus_stop in valid_stops:
-    # bus_stop is a tuple (stop_id, stop_name)
-    bus_stop_id = bus_stop.get("stop_id")
-    new_arrival_info = get_expected_arrival_times(bus_stop_id, "452")
-    new_bus_info.append(new_arrival_info)
+def get_valid_bus_stop_ids(bus_route):
+    bus_stop_info = get_stop_info(bus_route)
+    
+    print("Getting list of all bus stop IDs on route {}".format(bus_route))
+    print("All stop id count: ", len(bus_stop_info))
+    
+    for i, bus_stop in enumerate(bus_stop_info):
+        bus_stop_id = bus_stop.get("stop_id")
+        expected_arrival_times = get_expected_arrival_times(bus_stop_id, bus_route)
+        if len(expected_arrival_times) == 0:
+            bus_stop_info.remove(bus_stop)
+
+    print("Valid stop id count: ", len(bus_stop_info))
+    return bus_stop_info
 
 
-# print("New data gathered: ", len(new_bus_info))
-# # Evaluate the new data with respect to the old gathered data
-# for bus_stop in new_bus_info:
-#     print(bus_stop)
+def main():
+    bus_routes = ["9", "452", "52", "328", "277", "267", "7", "6", "35", "37", "69", "14"]
+
+    valid_stops = get_valid_bus_stop_ids(bus_routes[7])
+    write_to_csv(bus_routes[7], valid_stops)
+
+main()
