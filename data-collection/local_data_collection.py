@@ -72,6 +72,7 @@ class Data_Collection(object):
                 if stop_code == "NOT_FOUND":
                     break
                 
+                # Actually 2 should be in and 1 should be out, but will fix this in the data exploration stage
                 direction = "out" if info[3] == '2' else "in"
                 eta = dt.datetime.fromtimestamp(int(info[6])/1000.0)
                 # so that requests made at 11.50 pm for buses arriving after midnight on the 
