@@ -73,7 +73,7 @@ class Data_Collection(object):
                     break
                 
                 # 2 should be in and 1 should be out: data before 12th may needs to be swapped
-                direction = "in" if info[3] == '2' else "out"
+                direction = "inbound" if info[3] == '2' else "outbound"
                 eta = dt.datetime.fromtimestamp(int(info[6])/1000.0)
                 # so that requests made at 11.50 pm for buses arriving after midnight on the 
                 # next day have vehicle ids with eta's date instead of request's date

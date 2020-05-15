@@ -2,25 +2,25 @@ version: '3.1'
 
 services:
 
-  bus-data-collector: 
-    build:
-      context: .
-    networks:
-      - default
-    depends_on: 
-      - db
-    environment:
-      BUS_ROUTES: "328,7"
+  # bus-data-collector: 
+  #   build:
+  #     context: .
+  #   networks:
+  #     - default
+  #   depends_on: 
+  #     - db
+  #   environment:
+  #     BUS_ROUTES: "328,7"
 
-  bus-data-collector-2: 
-    build:
-      context: .
-    networks:
-      - default
-    depends_on: 
-      - db
-    environment:
-      BUS_ROUTES: "9,452"
+  # bus-data-collector-2: 
+  #   build:
+  #     context: .
+  #   networks:
+  #     - default
+  #   depends_on: 
+  #     - db
+  #   environment:
+  #     BUS_ROUTES: "9,452"
 
   db:
     image: postgres
