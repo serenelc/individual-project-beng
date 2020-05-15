@@ -24,8 +24,8 @@ class Utilities(object):
         vehicle_id = bus[0]
         bus_stop_id = bus[1]
         direction = bus[4]
-        eta = self.convert_time_to_datetime(bus[2])
-        time_of_req = self.convert_time_to_datetime(bus[3])
+        eta = bus[2]
+        time_of_req = bus[3]
         return vehicle_id, bus_stop_id, direction, eta, time_of_req
         
         
@@ -130,7 +130,7 @@ class Utilities(object):
                     conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example", port="5432")
                     cursor = conn.cursor()
                     sql = ''.join(("INSERT INTO " + table_name + "(vehicle_id, bus_stop_id, direction, expected_arrival, time_of_req) ",
-                            "VALUES (%s, %s, %s, %s, %s, %s) ",
+                            "VALUES (%s, %s, %s, %s, %s) ",
                             "ON CONFLICT (vehicle_id) ",
                             "DO ",
                             "UPDATE ",
@@ -203,8 +203,6 @@ class Utilities(object):
             
             for res in results:
                 vehicle_id, bus_stop_id, direction, eta, time_of_req = self.convert_types_db(res)
-
-                print("GOT FROM DB TYPE = ", type(eta))
             
                 vehicle_info = {
                                 "vehicle_id": vehicle_id,
