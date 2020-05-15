@@ -20,14 +20,13 @@ class Utilities(object):
 
 
     def convert_types_db(self, bus):
-        # each bus is a tuple (vehicle_id, bus_stop_name, expected_arrival, time_of_req, direction, arrived)
+        # each bus is a tuple (vehicle_id, bus_stop_id, expected_arrival, time_of_req, direction)
         vehicle_id = bus[0]
-        bus_stop_name = bus[1]
+        bus_stop_id = bus[1]
         direction = bus[4]
         eta = self.convert_time_to_datetime(bus[2])
         time_of_req = self.convert_time_to_datetime(bus[3])
-        arrived = bus[5] # should be a boolean type anyway
-        return vehicle_id, bus_stop_name, direction, eta, time_of_req, arrived
+        return vehicle_id, bus_stop_id, direction, eta, time_of_req
         
         
     def get_valid_stop_ids(self, route):
@@ -67,11 +66,10 @@ class Utilities(object):
                 vehicle_id = item.get("vehicle_id")
                 [a, b, c, d, num_trip] = vehicle_id.split('_')
                 query_id = "'" + a + "\_" + b + "\_" + c + "\_" + d + "\_%'"
-                bus_stop_name = item.get("bus_stop_name")
+                bus_stop_id = item.get("bus_stop_id")
                 direction = str(item.get("direction"))
                 eta = str(item.get("expected_arrival"))
                 time_of_req = str(item.get("time_of_req"))
-                arrived = item.get("arrived")
 
                 # need to escape underscores and put queries in ''
                 sql_select = "SELECT vehicle_id FROM " + table_name + " WHERE vehicle_id LIKE " + query_id
@@ -94,9 +92,9 @@ class Utilities(object):
                         new_trip_num = trip_count + 1
                         vehicle_id = a + "_" + b + "_" + c + "_" + d + "_" + str(new_trip_num)
 
-                    tuple_item = (vehicle_id, arrived, bus_stop_name, direction, eta, time_of_req)
-                    sql_put = "INSERT INTO " + table_name + "(vehicle_id, arrived, bus_stop_name, direction, expected_arrival, time_of_req) "
-                    sql_put = sql_put + "VALUES (%s, %s, %s, %s, %s, %s)"
+                    tuple_item = (vehicle_id, bus_stop_id, direction, eta, time_of_req)
+                    sql_put = "INSERT INTO " + table_name + "(vehicle_id, bus_stop_id, direction, time_of_arrival, time_of_req) "
+                    sql_put = sql_put + "VALUES (%s, %s, %s, %s, %s)"
 
                     cursor.execute(sql_put, (tuple_item))
 
@@ -121,18 +119,17 @@ class Utilities(object):
 
             for item in bus_info_to_write:
                 vehicle_id = item.get("vehicle_id")
-                bus_stop_name = item.get("bus_stop_name")
+                bus_stop_id = item.get("bus_stop_id")
                 direction = item.get("direction")
                 eta = str(item.get("expected_arrival"))
                 time_of_req = str(item.get("time_of_req"))
-                arrived = item.get("arrived")
-                tuple_item = (vehicle_id, arrived, bus_stop_name, direction, eta, time_of_req)
+                tuple_item = (vehicle_id, bus_stop_id, direction, eta, time_of_req)
 
                 conn = None
                 try:
                     conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example", port="5432")
                     cursor = conn.cursor()
-                    sql = ''.join(("INSERT INTO " + table_name + "(vehicle_id, arrived, bus_stop_name, direction, expected_arrival, time_of_req) ",
+                    sql = ''.join(("INSERT INTO " + table_name + "(vehicle_id, bus_stop_id, direction, expected_arrival, time_of_req) ",
                             "VALUES (%s, %s, %s, %s, %s, %s) ",
                             "ON CONFLICT (vehicle_id) ",
                             "DO ",
@@ -151,50 +148,6 @@ class Utilities(object):
 
             comp_time = time.time() - start
             print("Write not arrived items to db: ", comp_time)
-
-            
-    def batch_write_to_db(self, table_name, bus_info_to_write):
-        start = time.time()
-        
-        if len(bus_info_to_write) == 0:
-            print("Nothing to batch write to {}".format(table_name))
-        else:
-            print("Batch writing {} items to {}".format(len(bus_info_to_write), table_name))
-
-            items_to_write = ()
-            for bus_information in bus_info_to_write:
-                vehicle_id = bus_information.get("vehicle_id")
-                bus_stop_name = bus_information.get("bus_stop_name")
-                direction = bus_information.get("direction")
-                eta = str(bus_information.get("expected_arrival"))
-                time_of_req = str(bus_information.get("time_of_req"))
-                arrived = bus_information.get("arrived")
-                tuple_item = (vehicle_id, arrived, bus_stop_name, direction, eta, time_of_req)
-                items_to_write = items_to_write + tuple_item
-
-            sql = ''.join(("INSERT INTO " + table_name + "(vehicle_id, arrived, bus_stop_name, direction, expected_arrival, time_of_req) ",
-                            "VALUES (%s, %s, %s, %s, %s, %s)",
-                            "ON CONFLICT (vehicle_id)",
-                            "DO",
-                            "UPDATE",
-                            "SET vehicle_id = EXCLUDED.vehicle_id, expected_arrival = EXCLUDED.expected_arrival, time_of_req = EXCLUDED.time_of_req"
-                            ))
-            
-            conn = None
-            try:
-                conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example", port="5432")
-                cursor = conn.cursor()
-                cursor.executemany(sql, items_to_write)
-                conn.commit()
-                cursor.close()
-            except (Exception, psycopg2.DatabaseError) as error:
-                print("Error in batch writing to database: ", error)
-            finally:
-                if conn is not None:
-                    conn.close()
-            
-            comp_time = time.time() - start
-            print("Batch write to db: ", comp_time)
             
             
     def delete_arrived_items(self, table_name, arrived_items):
@@ -238,7 +191,7 @@ class Utilities(object):
             cursor = conn.cursor()
             sql = "SELECT * FROM " + table_name 
             cursor.execute(sql)
-            results = cursor.fetchall() #list of tuples (vehicle_id, bus_stop_name, expected_arrival, time_of_req, direction, arrived)
+            results = cursor.fetchall() #list of tuples (vehicle_id, bus_stop_id, expected_arrival, time_of_req, direction)
             cursor.close()
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error in getting old information: ", error)
@@ -249,15 +202,16 @@ class Utilities(object):
             old_information = []
             
             for res in results:
-                vehicle_id, bus_stop_name, direction, eta, time_of_req, arrived = self.convert_types_db(res)
+                vehicle_id, bus_stop_id, direction, eta, time_of_req = self.convert_types_db(res)
+
+                print("GOT FROM DB TYPE = ", type(eta))
             
                 vehicle_info = {
                                 "vehicle_id": vehicle_id,
-                                "bus_stop_name": bus_stop_name,
+                                "bus_stop_id": bus_stop_id,
                                 "direction": direction,
                                 "expected_arrival": eta,
-                                "time_of_req": time_of_req,
-                                "arrived": arrived
+                                "time_of_req": time_of_req
                                 }
                 old_information.append(vehicle_info)
 

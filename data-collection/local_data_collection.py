@@ -56,7 +56,6 @@ class Data_Collection(object):
         helper = Utilities()
 
         for bus_stop in new_data:
-            # print(bus_stop)
 
             # no eta returned so skip
             if len(bus_stop) <= 1:
@@ -83,11 +82,10 @@ class Data_Collection(object):
                 # incoming vehicle info
                 new_vehicle_info = {
                     "vehicle_id": vehicle_id,
-                    "bus_stop_name": bus_stop_name,
+                    "bus_stop_id": stop_code,
                     "direction": direction,
                     "expected_arrival": eta,
-                    "time_of_req": time_of_request,
-                    "arrived": False
+                    "time_of_req": time_of_request
                 }
 
                 found, index = self.vehicle_already_found(new_vehicle_info, old_data)
@@ -163,13 +161,10 @@ class Data_Collection(object):
                 five_minutes_ago = five_minutes_ago.replace(tzinfo=gmt)
                 # wait for 5 minutes after the bus is due to arrive
                 if eta_aware < five_minutes_ago:
-                    this_bus["arrived"] = True
                     buses_arrived.append(this_bus)
                 else:
-                    this_bus["arrived"] = False
                     buses_not_arrived.append(this_bus)
             else:
-                this_bus["arrived"] = False
                 buses_not_arrived.append(this_bus)
 
         comp_time = time.time() - start
