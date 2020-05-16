@@ -23,6 +23,7 @@ class Data_Collection(object):
                     line = line.replace("\"", "")
                     line_info = list(line.split(","))
                     bus_information.append(line_info)
+
                 return bus_information
         except (HTTPError, URLError) as error:
             # Invalid stop code, so ignore error. 

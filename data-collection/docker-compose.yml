@@ -10,17 +10,17 @@ services:
     depends_on: 
       - db
     environment:
-      BUS_ROUTES: "35"
+      BUS_ROUTES: "9,328"
 
-  # bus-data-collector-2: 
-  #   build:
-  #     context: .
-  #   networks:
-  #     - default
-  #   depends_on: 
-  #     - db
-  #   environment:
-  #     BUS_ROUTES: "9,452"
+  bus-data-collector-2: 
+    build:
+      context: .
+    networks:
+      - default
+    depends_on: 
+      - db
+    environment:
+      BUS_ROUTES: "7"
 
   db:
     image: postgres
