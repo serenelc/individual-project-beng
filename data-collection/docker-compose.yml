@@ -10,7 +10,8 @@ services:
     depends_on: 
       - db
     environment:
-      BUS_ROUTES: "69,6"
+      BUS_ROUTES: "35,6"
+      # keep 6 running from 19/05 to 26/05 to get an entire continuous week's worth
 
   bus-data-collector-2: 
     build:
@@ -20,7 +21,7 @@ services:
     depends_on: 
       - db
     environment:
-      BUS_ROUTES: "452,328"
+      BUS_ROUTES: "277,267"
 
   db:
     image: postgres
