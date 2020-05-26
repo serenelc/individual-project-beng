@@ -2,9 +2,7 @@
 
 - Need to update the README with instructions that are valid
 - route 9 bus 14511 has its directions opposite to what it should be idk why, but all the othe rbuses seem to have the right direction of travel. 
-- Update diagram in final report
-- do some sort of api call that gets all the stops on a route in order both inbound and outbound
-
+- Change dataframe data structure in jupyter notebooks to match new database structures
 
 ## Overview
 
