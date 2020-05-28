@@ -11,7 +11,6 @@ services:
       - db
     environment:
       BUS_ROUTES: "52,6"
-      # keep 6 running from 19/05 to 26/05 to get an entire continuous week's worth
 
   bus-data-collector-2: 
     build:
