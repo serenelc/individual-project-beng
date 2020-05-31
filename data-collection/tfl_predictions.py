@@ -38,14 +38,45 @@ def main():
 
     stop_info = read_csv()
 
-    s = stop_info[0]
+    willesden_bus_garage = stop_info[0]
+    chesterton_road = stop_info[4]
+    north_end_road = stop_info[9]
+    all_souls_avn = stop_info[1]
+    florence_road = stop_info[11]
 
-    etas = get_expected_arrival_times(s.get("stop_id"), s.get("route_id"))
+    end_stops = stop_info[2:9] + [stop_info[10]] + [stop_info[12]]
+
+    etas = get_expected_arrival_times(chesterton_road.get("stop_id"), chesterton_road.get("route_id"))
 
     earliest_bus_to_leave = evaluate_bus_data(etas)
+    print("First bus to leave: ", earliest_bus_to_leave)
 
-    #now find this bus in the countdown response for the destination stop.
+    pred_arrival_time = find_corresponding_bus(earliest_bus_to_leave.get("vehicle_id"), end_stops[3])
+
+    if pred_arrival_time == 0:
+        print("corresponding vehicle not found")
+    else:
+        pred_jrny_time = pred_arrival_time - earliest_bus_to_leave.get("leave_time")
+        print("Predicted journey time: ", pred_jrny_time)
     
+
+def find_corresponding_bus(vehicle_id, end_stop):
+    etas = get_expected_arrival_times(end_stop.get("stop_id"), end_stop.get("route_id"))
+    print("Destination stop buses: ", etas)
+    
+    for i, bus_stop in enumerate(etas):
+        if i == 0:
+            continue
+
+        end_stop_vehicle_id = bus_stop[5]
+        if end_stop_vehicle_id == vehicle_id:
+            predicted_arrival_time = dt.datetime.fromtimestamp(int(bus_stop[6])/1000.0)
+            return predicted_arrival_time
+    
+    # corresponding bus not found => journey time is more than 30 minutes
+    # so this vehicle is not due to arrive at this bus stop for more than 30 minutes.
+    return 0
+
 
 def read_csv():
     stop_info = []
@@ -80,6 +111,9 @@ def read_csv():
 
 def evaluate_bus_data(bus_data):
 
+    earliest_bus_to_leave = 0
+    leave_time = dt.datetime.now() + dt.timedelta(hours = 3)
+
     if len(bus_data) <=1 :
         #i.e. not buses arriving at this stop in the next 30 minutes
         return -1
@@ -92,13 +126,18 @@ def evaluate_bus_data(bus_data):
         eta = dt.datetime.fromtimestamp(int(bus_stop[6])/1000.0)
         vehicle_id = bus_stop[5]
 
-        leave_time = {
+        bus = {
             "bus_stop_name": bus_stop_name,
             "leave_time": eta,
             "vehicle_id": vehicle_id
         }
+        print(bus)
 
-        return leave_time
+        if eta < leave_time:
+            leave_time = eta
+            earliest_bus_to_leave = bus
+
+    return earliest_bus_to_leave
 
 
 def get_expected_arrival_times(stop_code: str, route_id: str):
@@ -117,14 +156,17 @@ def get_expected_arrival_times(stop_code: str, route_id: str):
                 bus_information.append(line_info)
 
             return bus_information
+    
     except (HTTPError, URLError) as error:
         # Invalid stop code, so ignore error. 
         print("Invalid stop code")
         return bus_information
+    
     except http.client.RemoteDisconnected as disconnect:
         # remote end closed connection without response. Try again later.
         print("remote disconnected: ", disconnect)
         return bus_information
+    
     except timeout:
         print("timeout error when getting expected arrival times")
     comp_time = time.time() - start
