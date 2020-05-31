@@ -35,6 +35,7 @@ import urllib.request
 from urllib.error import HTTPError, URLError
 
 def main():
+    print("starting!")
 
     stop_info = read_csv()
 
@@ -44,25 +45,33 @@ def main():
     all_souls_avn = stop_info[1]
     florence_road = stop_info[11]
 
-    end_stops = stop_info[2:9] + [stop_info[10]] + [stop_info[12]]
+    start_stops = [willesden_bus_garage for i in range(0, 7)] + [chesterton_road, north_end_road, all_souls_avn, florence_road]
+    end_stops = stop_info[2:9] + [stop_info[5], stop_info[10], stop_info[12]]
 
-    etas = get_expected_arrival_times(chesterton_road.get("stop_id"), chesterton_road.get("route_id"))
+    for i, start_stop in enumerate(start_stops):
+        etas = get_expected_arrival_times(start_stop.get("stop_id"), start_stop.get("route_id"))
 
-    earliest_bus_to_leave = evaluate_bus_data(etas)
-    print("First bus to leave: ", earliest_bus_to_leave)
+        earliest_bus_to_leave = evaluate_bus_data(etas)
+        print("First bus to leave: ", earliest_bus_to_leave)
 
-    pred_arrival_time = find_corresponding_bus(earliest_bus_to_leave.get("vehicle_id"), end_stops[3])
+        now = dt.datetime.now()
+        pred_arrival_time = find_corresponding_bus(earliest_bus_to_leave.get("vehicle_id"), end_stops[i])
 
-    if pred_arrival_time == 0:
-        print("corresponding vehicle not found")
-    else:
-        pred_jrny_time = pred_arrival_time - earliest_bus_to_leave.get("leave_time")
-        print("Predicted journey time: ", pred_jrny_time)
-    
+        if pred_arrival_time == 0:
+            print("corresponding vehicle not found")
+        else:
+            pred_jrny_time = pred_arrival_time - earliest_bus_to_leave.get("leave_time")
+            print("Predicted journey time: ", pred_jrny_time)
+            item = {
+                "start_stop": start_stop.get("stop_name"),
+                "end_stop": end_stops[i].get("stop_name"),
+                "time_of_req": now,
+                "pred_jrny_time": pred_jrny_time
+            }
+
 
 def find_corresponding_bus(vehicle_id, end_stop):
     etas = get_expected_arrival_times(end_stop.get("stop_id"), end_stop.get("route_id"))
-    print("Destination stop buses: ", etas)
     
     for i, bus_stop in enumerate(etas):
         if i == 0:
@@ -131,7 +140,6 @@ def evaluate_bus_data(bus_data):
             "leave_time": eta,
             "vehicle_id": vehicle_id
         }
-        print(bus)
 
         if eta < leave_time:
             leave_time = eta
@@ -171,5 +179,6 @@ def get_expected_arrival_times(stop_code: str, route_id: str):
         print("timeout error when getting expected arrival times")
     comp_time = time.time() - start
     print("Get expected arrival times: ", comp_time)
+
 
 main()
