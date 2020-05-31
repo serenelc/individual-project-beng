@@ -12,17 +12,17 @@ TfL gives predicted arrival times, so in order to get predicted journey times I 
 at this request time.
 
 For these specific stops and routes
-1) 52: Chesterton Road -> Nottinghill Gate
-2) 52: Willesden Bus Garage -> Okehampton Road
-3) 52: Willesden Bus Garage -> Harrow Road / Kilburn Lane
-4) 52: Willesden Bus Garage -> Chesterton Road
-5) 52: Willesden Bus Garage -> Notting Hill Gate Station
-6) 52: Willesden Bus Garage -> Palace Gate
-7) 52: Willesden Bus Garage -> Knightsbridge Station / Harrods
-8) 52: Willesden Bus Garage -> Victoria Bus Station
-9) 9: North End Road -> Phillimore Gardens
-10) 52: All Souls Avenue -> Notting Hill Gate Station
-11) 69: Florence Road -> Star Lane
+1) 52: Chesterton Road -> Nottinghill Gate in
+2) 52: Willesden Bus Garage -> Okehampton Road in
+3) 52: Willesden Bus Garage -> Harrow Road / Kilburn Lane in 
+4) 52: Willesden Bus Garage -> Chesterton Road in
+5) 52: Willesden Bus Garage -> Notting Hill Gate Station in
+6) 52: Willesden Bus Garage -> Palace Gate in 
+7) 52: Willesden Bus Garage -> Knightsbridge Station / Harrods in
+8) 52: Willesden Bus Garage -> Victoria Bus Station in
+9) 9: North End Road -> Phillimore Gardens in
+10) 52: All Souls Avenue -> Notting Hill Gate Station in
+11) 69: Florence Road -> Star Lane out
 """
 
 import datetime as dt

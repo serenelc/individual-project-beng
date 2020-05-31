@@ -1,123 +1,90 @@
-stop_name,stop_id
-Whitton Road,490014638E2
-Chiswick Road,490005211E
-Watermans Centre,490006297B
-Gunnersbury Station,490G00094B
-Brent Lea,490004296W
-Iffley Road,490007239E
-Hammersmith Stn / H&C and Circle Lines,490000097T
-Ravenscourt Park Station,490011438E
-Watermans Centre,490006297W
-Stamford Brook Bus Garage,490012521E
-Hill View Road,490G00008247
-Trafalgar Road / Prince Of Wales,490013765N
-Market Place,490004292G
-Stamford Brook Bus Garage,490012521PP
-Lynton Close,490003580N
-Isleworth War Memorial,490008512TH
-London Road / Twickenham,490013870E
-Kew Bridge Station,490001167S
-Teesdale Gardens,490G00013181
-Ravenscourt Park,490015027F
-Goldhawk Road / Young's Corner,490007273M
-Trafalgar Road / Prince Of Wales,490013765S
-Woodstock Avenue,490009961N1
-Twickenham Rd / West Middlesex Hospital,490014493N
-Brent Lea,490G00004296
-Ivybridge,490G00008524
-Heath Road / Twickenham,490008007T
-Brentford County Court,490G00004289
-Ravenscourt Park,490G00012533
-Twickenham Rd / West Middlesex Hospital,490G00014503
-Teesdale Gardens,490013181S
-Clifton Gardens,490005423GG
-Chiswick Road,490005211W
-The Prince Albert / Twickenham,490013865N
-Isleworth Library,490014954TM
-Beech Avenue,490G00003804
-Isleworth Leisure Centre and Library,490008511N
-Ravenscourt Park Station,490G00188A
-Gunnersbury Station,490000094B
-Fulwell / Sixth Cross Road,490G00007064
-Goat Wharf,490G00007259
-Ravenscourt Park,490012533W
-Twickenham Green,490013869N
-Chiswick Lane,490013850OO
-Gunnersbury Station,490000094A
-Clifton Gardens,490G00005423
-Park Road,490004635TD
-Mandeville Road,490G00009538
-Chiswick Police Station,490G00005210
-Heath Road / Twickenham,490020202W
-Busch Corner,490015029E
-Lamington Street,490015588E
-Ivybridge,490008524N
-Goldhawk Road / Young's Corner,490G000535
-Mogden Lane,490009961S
-Lynton Close,490003580S
-Isleworth War Memorial,490G00008512
-Hill View Road,490008247E
-Brantwood Avenue,490004260S
-London Road / Twickenham,490013871F
-Brentford Fountain Leisure Centre,490004290Q
-Ravenscourt Park Underground Station,940GZZLURVP
-Hammersmith Bus Station,490007705F
-Twickenham Green,490G00013869
-Brent Lea,490004296E
-South Road / Fulwell,490012333E
-Dalling Road,490G00005937
-Isleworth War Memorial,490008512TJ
-Hill View Road,490008247N
-Busch Corner,490015029W
-Chertsey Road,490005102S
-Whitton Road,490014638E1
-Power Road,490010687J
-Hammersmith Town Hall,490G00007711
-Brentford County Court,490004289E
-Woodstock Avenue,490G00009969
-Crane Avenue,490005700N
-Syon Lane,490013141W
-Heath Road / Grove Avenue,490008009E
-Chiswick Police Station,490005210SS
-The Musical Museum,490008690W
-Fulwell / Sixth Cross Road,490007064F
-Heath Road / Grove Avenue,490008009W
-Worton Road,490G00014954
-Lamington Street,490G00015588
-Dalling Road,490005937E
-South Road / Fulwell,490G00012333
-Chiswick Police Station,490005210HH
-South Road / Fulwell,490012333EB
-Thorney Hedge Road,490010687K
-Ravenscourt Park Station,490011594W
-The Prince Albert / Twickenham,490013865S
-Turnham Green Church,490000048CV
-Kew Bridge Rail Station,910GKEWBDGE
-Hammersmith Bus Station,490007705C
-Crane Avenue,490005700S
-Goldhawk Road,490007272H
-Chiswick Lane,490013850RR
-London Museum Of Water and Steam,490008690E
-Market Place,490004292F
-Chiswick Lane,490G00013850
-Fulwell / Sixth Cross Road,490007064E
-Twickenham Green,490013869S
-Twickenham Rd / West Middlesex Hospital,490014493S
-Beech Avenue,490003804E
-Kew Bridge Station,490001167X
-Syon Lane,490013141E
-Goat Wharf,490007259W
-Mandeville Road,490009538S
-Worton Road,490014954TT
-Park Road,490G00019150
-Kings Mall Shopping Centre,490008801P
-The Musical Museum,490004293E
-Turnham Green Church,490013848DD
-Twickenham Station,490013861B
-Hammersmith Town Hall,490007711WA
-Kings Mall Shopping Centre,490G000625
-Brentford County Court,490004289D
-Kew Bridge Station,490G01167X
-Mandeville Road,490009538N
-Market Place,490G00004292
-Brentford Fountain Leisure Centre,490004290L
+stop_id,stop_name,direction
+490000048CV,Turnham Green Church,outbound
+490000094A,Gunnersbury Station,outbound
+490000094B,Gunnersbury Station,inbound
+490000097T,Hammersmith Stn / H&C and Circle Lines,inbound
+490001167S,Kew Bridge Station,outbound
+490001167X,Kew Bridge Station,inbound
+490003580N,Lynton Close,inbound
+490003580S,Lynton Close,outbound
+490003804E,Beech Avenue,inbound
+490004260S,Brantwood Avenue,outbound
+490004289D,Brentford County Court,inbound
+490004289E,Brentford County Court,outbound
+490004290L,Brentford Fountain Leisure Centre,outbound
+490004290Q,Brentford Fountain Leisure Centre,inbound
+490004292G,Market Place,
+490004293E,The Musical Museum,inbound
+490004296E,Brent Lea,inbound
+490004296W,Brent Lea,outbound
+490004635TD,Park Road,inbound
+490005102S,Chertsey Road,outbound
+490005210HH,Chiswick Police Station,inbound
+490005210SS,Chiswick Police Station,outbound
+490005211E,Chiswick Road,inbound
+490005211W,Chiswick Road,outbound
+490005423GG,Clifton Gardens,inbound
+490005700N,Crane Avenue,inbound
+490005700S,Crane Avenue,outbound
+490005937E,Dalling Road,inbound
+490006297B,Watermans Centre,outbound
+490006297W,Watermans Centre,inbound
+490007064E,Fulwell / Sixth Cross Road,inbound
+490007064F,Fulwell / Sixth Cross Road,outbound
+490007239E,Iffley Road,inbound
+490007259W,Goat Wharf,outbound
+490007272H,Goldhawk Road,outbound
+490007273M,Goldhawk Road / Young's Corner,inbound
+490007705C,Hammersmith Bus Station,outbound
+490007705F,Hammersmith Bus Station,inbound
+490007711WA,Hammersmith Town Hall,outbound
+490008007T,Heath Road / Twickenham,inbound
+490008009E,Heath Road / Grove Avenue,inbound
+490008009W,Heath Road / Grove Avenue,outbound
+490008247E,Hill View Road,outbound
+490008247N,Hill View Road,inbound
+490008511N,Isleworth Leisure Centre and Library,inbound
+490008512TH,Isleworth War Memorial,outbound
+490008512TJ,Isleworth War Memorial,inbound
+490008524N,Ivybridge,inbound
+490008690E,London Museum Of Water and Steam,inbound
+490008690W,The Musical Museum,outbound
+490008801P,Kings Mall Shopping Centre,outbound
+490009538N,Mandeville Road,inbound
+490009538S,Mandeville Road,outbound
+490009961N1,Woodstock Avenue,inbound
+490009961S,Mogden Lane,outbound
+490010687J,Power Road,outbound
+490010687K,Thorney Hedge Road,inbound
+490011438E,Ravenscourt Park Station,inbound
+490011594W,Ravenscourt Park Station,outbound
+490012333E,South Road / Fulwell,inbound
+490012333EB,South Road / Fulwell,outbound
+490012521E,Stamford Brook Bus Garage,inbound
+490012521PP,Stamford Brook Bus Garage,outbound
+490012533W,Ravenscourt Park,outbound
+490013141E,Syon Lane,inbound
+490013141W,Syon Lane,outbound
+490013181S,Teesdale Gardens,outbound
+490013765N,Trafalgar Road / Prince Of Wales,inbound
+490013765S,Trafalgar Road / Prince Of Wales,outbound
+490013848DD,Turnham Green Church,inbound
+490013850RR,Chiswick Lane,
+490013861B,Twickenham Station,inbound
+490013865N,The Prince Albert / Twickenham,inbound
+490013865S,The Prince Albert / Twickenham,outbound
+490013869N,Twickenham Green,inbound
+490013869S,Twickenham Green,outbound
+490013870E,London Road / Twickenham,inbound
+490013871F,London Road / Twickenham,outbound
+490014493N,Twickenham Rd / West Middlesex Hospital,inbound
+490014493S,Twickenham Rd / West Middlesex Hospital,outbound
+490014638E1,Whitton Road,outbound
+490014638E2,Whitton Road,inbound
+490014954TM,Isleworth Library,outbound
+490014954TT,Worton Road,inbound
+490015027F,Ravenscourt Park,inbound
+490015029E,Busch Corner,inbound
+490015029W,Busch Corner,outbound
+490015588E,Lamington Street,inbound
+490020202W,Heath Road / Twickenham,outbound

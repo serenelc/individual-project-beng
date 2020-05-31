@@ -1,106 +1,74 @@
-stop_name,stop_id
-Chelsea and Westminster Hospital,490005062HF
-Radipole Road,490011385W
-Green Park Station,490000093PE
-Chelsea Football Club,490005069E
-Green Park / Constitution Hill,490G00007492
-Lytton Grove,490012340N
-Putney Bridge Stn  / Gonville Street,490015157V
-Hortensia Road,490008380HC
-Chelsea Football Club,490005069W
-Victoria and Albert Museum,490G00004436
-Tottenham Court Road Underground Station,940GZZLUTCR
-Chelsea and Westminster Hospital,490G00005062
-Putney Heath / Green Man,490G00011285
-Trocadero / Haymarket,490011791K
-Old Church Street,490006514N
-Sth Kensington Stn  / Old Brompton Rd,490015173D
-Russell Square,490G00200H
-Putney Station,490001231B
-Hyde Park Corner Station,490000119T
-Onslow Square,490G00010603
-Russell Square,490000200E
-Putney Station,490001231E
-Putney Exchange,490011286M
-Brompton Square,490004437W
-Putney Hill / Green Man,490011285N
-Parsons Green Lane / Fulham Library,490G000699
-Munster Road,490010123W2
-Knightsbridge Station,490G00130KD
-Fulham Road / Beaufort Street,490G00003726
-Green Park / Constitution Hill,490007492E
-Old Park Lane / Hard Rock Cafe,490010574D
-Sth Kensington Stn  / Old Brompton Rd,490G000866
-St John's Avenue,490G00004634
-Hortensia Road,490G00008380
-Montague Street,490011816N
-South Kensington Station,490000212E
-Fulham Broadway Station,490000084M
-Hortensia Road,490008380HD
-Edith Grove,490G00006437
-Fulham High Street,490007051N
-Victoria and Albert Museum,490004436C
-Putney Bridge Stn  / Gonville Street,490G000536
-Montague Street,490G00011816
-Royal Brompton Hosp / Royal Marsden Hosp,490015421S
-Old Bond Street / Royal Academy,490G00010526
-Tottenham Court Road Station,490G00235E
-Fulham High Street / New Kings Road,490G00007051
-Harrods,490007841KB
-Lytton Grove,490009494S
-Knightsbridge Station  / Harrods,490000130KC
-Hyde Park Corner Station,490000119N
-Parsons Green Lane / Fulham Library,490010861T
-Green Park Station,490000093PB
-Bedford Place,490011815K
-Onslow Square,490010603S
-Hyde Park Corner,490G00119A
-Cambridge Circus,490004695D
-St Mary's Church / Putney Pier,490011278S
-Parsons Green Lane / Fulham Library,490010861V
-Piccadilly Circus,490000179B
-Russell Square Underground Station,940GZZLURSQ
-Putney Exchange,490011286L
-Edith Grove,490006437HB
-Edith Grove,490006437HE
-St Mary's Church / Putney Pier,490011278R
-Gerrard Place / Chinatown,490016425WA
-Onslow Square,490010603N
-Chelsea Village,490005075E
-Fulham Broadway Station,490000084L
-Old Bond Street / Royal Academy,490010526G
-Fulham Broadway,490008547E
-Victoria and Albert Museum,490004436F
-Chelsea Village,490G00005075
-Old Bond Street / Royal Academy,490011748H
-Gerrard Place / Chinatown,490G00016425
-Knightsbridge Underground Station,940GZZLUKNB
-Putney Heath / Green Man,490011285E2
-British Museum,490003794O
-Royal Brompton Hosp / Royal Marsden Hosp,490015421E
-Old Church Street,490006514S
-St John's Avenue,490001231N
-Trocadero / Haymarket,490G00011791
-Green Park Underground Station,940GZZLUGPK
-Fulham Palace Road,490007054W
-Tottenham Court Road Station,490000235W1
-Fulham High Street / New Kings Road,490007051S
-Putney Rail Station,910GPUTNEY
-Radipole Road,490011385E
-Fulham Palace Road,490007054E
-Piccadilly Circus,490000179S
-Putney Hill / Green Man,490G00011299
-British Museum,490004359OA
-Fulham Road / Beaufort Street,490003726E
-Munster Road,490010123E2
-Putney Bridge Stn  / Gonville Street,490015157T
-Fulham Broadway,490008547F
-Brompton Square,490004437E
-South Kensington Station,490000212S1
-Knightsbridge Station,490000130KD
-Dean Street / Chinatown,490006008W
-Putney Heath / Green Man,490011285S1
-Lytton Grove,490G00009494
-Chelsea and Westminster Hospital,490005062HA
-Fulham Road / Beaufort Street,490003726W2
-Denmark Street,490004695A
+stop_id,stop_name,direction
+490000084L,Fulham Broadway Station,outbound
+490000084M,Fulham Broadway Station,inbound
+490000093PB,Green Park Station,outbound
+490000093PE,Green Park Station,inbound
+490000119N,Hyde Park Corner Station,inbound
+490000119T,Hyde Park Corner Station,outbound
+490000130KC,Knightsbridge Station  / Harrods,inbound
+490000130KD,Knightsbridge Station,outbound
+490000179B,Piccadilly Circus,outbound
+490000179S,Piccadilly Circus,inbound
+490000212E,South Kensington Station,outbound
+490000212S1,South Kensington Station,inbound
+490000235W1,Tottenham Court Road Station,inbound
+490001231B,Putney Station,outbound
+490001231E,Putney Station,inbound
+490001231N,St John's Avenue,outbound
+490003726E,Fulham Road / Beaufort Street,outbound
+490003726W2,Fulham Road / Beaufort Street,inbound
+490003794O,British Museum,inbound
+490004359OA,British Museum,outbound
+490004436C,Victoria and Albert Museum,outbound
+490004436F,Victoria and Albert Museum,inbound
+490004437E,Brompton Square,outbound
+490004437W,Brompton Square,inbound
+490004695A,Denmark Street,outbound
+490004695D,Cambridge Circus,inbound
+490005062HA,Chelsea and Westminster Hospital,inbound
+490005062HF,Chelsea and Westminster Hospital,outbound
+490005069E,Chelsea Football Club,outbound
+490005069W,Chelsea Football Club,inbound
+490005075E,Chelsea Village,outbound
+490006008W,Dean Street / Chinatown,inbound
+490006437HB,Edith Grove,inbound
+490006437HE,Edith Grove,outbound
+490006514N,Old Church Street,outbound
+490006514S,Old Church Street,inbound
+490007051N,Fulham High Street,outbound
+490007051S,Fulham High Street / New Kings Road,inbound
+490007054E,Fulham Palace Road,outbound
+490007054W,Fulham Palace Road,inbound
+490007492E,Green Park / Constitution Hill,inbound
+490007841KB,Harrods,outbound
+490008380HC,Hortensia Road,inbound
+490008380HD,Hortensia Road,outbound
+490008547E,Fulham Broadway,outbound
+490008547F,Fulham Broadway,inbound
+490009494S,Lytton Grove,inbound
+490010123E2,Munster Road,outbound
+490010123W2,Munster Road,inbound
+490010526G,Old Bond Street / Royal Academy,inbound
+490010574D,Old Park Lane / Hard Rock Cafe,outbound
+490010603N,Onslow Square,outbound
+490010603S,Onslow Square,inbound
+490010861T,Parsons Green Lane / Fulham Library,outbound
+490010861V,Parsons Green Lane / Fulham Library,inbound
+490011278R,St Mary's Church / Putney Pier,inbound
+490011278S,St Mary's Church / Putney Pier,outbound
+490011285E2,Putney Heath / Green Man,outbound
+490011285N,Putney Hill / Green Man,outbound
+490011285S1,Putney Heath / Green Man,inbound
+490011286M,Putney Exchange,
+490011385E,Radipole Road,outbound
+490011385W,Radipole Road,inbound
+490011748H,Old Bond Street / Royal Academy,outbound
+490011791K,Trocadero / Haymarket,inbound
+490011816N,Montague Street,outbound
+490012340N,Lytton Grove,outbound
+490015157T,Putney Bridge Stn  / Gonville Street,inbound
+490015157V,Putney Bridge Stn  / Gonville Street,outbound
+490015173D,Sth Kensington Stn  / Old Brompton Rd,outbound
+490015421E,Royal Brompton Hosp / Royal Marsden Hosp,outbound
+490015421S,Royal Brompton Hosp / Royal Marsden Hosp,inbound
+490016425WA,Gerrard Place / Chinatown,outbound

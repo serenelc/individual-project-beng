@@ -1,140 +1,97 @@
-stop_name,stop_id
-West Hampstead Station,490001330N
-Lyndale Avenue,490015362N
-Llanvanor Road,490009232S
-York House Place / Kensington High St,490010536K
-Sheffield Terrace,490012055N
-Hobury Street / Worlds End,490005076E
-Hansel Road,490004444N
-Golders Green / Finchley Road,490007267GL
-Kilburn High Rd Stn  / Cambridge Avenue,490015243Y
-Childs Hill / Cricklewood Lane,490G00005160
-Chepstow Crescent,490G00005085
-Dunstan Road,490006262S
-Brunel Estate,490G00014404
-Redcliffe Square,490011479S
-Golders Green Underground Station,940GZZLUGGN
-Brunel Estate,490014404P
-Cromwell Road,490G00019786
-West End Green,490014431N
-Kilburn Park Station,490000127KA
-Great Western Road / Harrow Road,490G00018986
-Fortune Green,490006951S
-Quex Road,490011375K
-Quex Road,490011375L
-Westbourne Park Station,490000259B
-Rudolph Road,490G00012626
-Westbourne Park Station,490000259A
-Cambridge Road,490004444S
-St Stephens Gardens,490012948S
-Notting Hill Gate Station,490000167G
-Dennington Park Road,490006041D
-Earls Court Station,490G00064C
-Golders Green / Finchley Road,490G00007267
-Elgin Avenue / Chippenham Road,490006473N
-Carlton Vale,490012626S
-Earls Court Station,490000064A
-Gunter Grove,490G00007608
-Chippenham Gardens,490005186N2
-Kensington Church Street / Holland St,490G00008288
-Finchley Road,490006953N
-Earls Court Road / Pembroke Place,490005528V
-Golders Green Station,490015497GC
-Sheffield Terrace,490012055S
-West Cromwell Road,490014257E
-York House Place / Kensington High St,490G00010536
-Woodchurch Road,490G00014819
-Pembroke Road,490011943S
-Palace Gardens Terr / Notting Hill Gte,490G00019161
-Palace Gardens Terr / Notting Hill Gte,490000167K
-Kilburn High Road / Quex Road,490G000620
-Earls Court Road / Old Brompton Road,490G00015228
-Edith Grove / King's Road,490015066S
-Great Western Road / Harrow Road,490007861K
-Pembridge Villas,490005089D
-Chippenham Road / Shirland Road,490013297S2
-Pembroke Road,490010898F
-St Stephens Gardens,490012948N
-Chippenham Road / Shirland Road,490013297N1
-Chelsea Worlds End,490G00005087
-Fulham Road,490007055HL
-Westbourne Grove,490014402Z
-Kilburn High Road Rail Station,910GKLBRNHR
-Dennington Park Road,490006041F
-Phillimore Gardens,490010984T
-High Street Kensington Station,490000110E
-Cambridge Road,490G00004444
-Old Brompton Road,490014554N
-Rudolph Road,490012626N
-Earls Court Road / Old Brompton Road,490015228L
-Kilburn High Rd Stn  / Cambridge Avenue,490G000885
-West Hampstead Police Station,490014468S
-West Hampstead Police Station,490G00014468
-Nevern Place,490010187K
-West End Lane,490003068N
-Kilburn High Road Station,490G01170Q
-Lyndale Avenue,490G00009462
-Chepstow Crescent,490005085S
-Fortune Green,490G00006951
-Childs Hill / Cricklewood Lane,490005160S2
-Scarsdale Villas,490G00011943
-Notting Hill Gate Stn  / Pembridge Rd,490015039B
-Redcliffe Square,490G00011479
-Notting Hill Gate Stn  / Pembridge Rd,490G000848
-Chelsea Worlds End,490005087W
-West Hampstead Stn / Broadhurst Gdns,490G000160
-Golders Green / Finchley Road,490007267GM
-Kensington Church Street / Holland St,490008288H
-Shrewsbury Road / Brunel Estate,490008697N
-High Street Kensington Station,490000110A
-Kilburn Park Station,490G00127KB
-Notting Hill Gate Station,490015039C
-Kilburn Park Station,490000127KB
-Fortune Green Road,490006953S
-Edith Grove / Worlds End,490G00005076
-Fulham Road / Chelsea & Westminster Hosp,490007055HK
-Artesian Road,490014402A
-Limerston Street,490005076S
-Hendon Way,490008061S
-Gunter Grove,490007608N
-Dunstan Road,490G00006262
-West Hampstead Police Station,490014468N
-Shirland Road,490005186S1
-Phillimore Gardens,490G00010984
-St Stephens Gardens,490G00012948
-Kilburn Park Underground Station,940GZZLUKPK
-Phillimore Gardens,490010984U
-West End Green,490014431S
-Pembroke Place,490005528Q
-Golders Green Station,490000087B
-Chepstow Crescent,490005085N
-Cromwell Road,490006305H
-Woodchurch Road,490014819N
-West Hampstead Stn / Broadhurst Gdns,490012082A
-Earls Court Square,490010529B
-Kilburn High Rd Stn  / Cambridge Avenue,490015243Z
-Harrow Road,490007861W2
-Redcliffe Street,490011480N
-Kilburn High Road,490008710P
-West Cromwell Road,490G00014257
-Shirland Road,490G00005189
-Artesian Road,490G00019713
-Elgin Avenue / Harrow Road,490007861E
-Finchley Road,490G00006953
-Elgin Avenue / Chippenham Road,490006473W
-Woodchurch Road,490014819S
-Kilburn High Road / Quex Road,490008710M
-Edith Grove / Worlds End,490005076W
-Westbourne Park Underground Station,940GZZLUWSP
-Scarsdale Villas,490011943N
-Dunstan Road,490006262N
-Earls Court Station,490000064C
-West Hampstead Station,490000263S
-Fortune Green,490006951N
-Lyndale Avenue,490015362S
-Compayne Gardens,490012082B
-Childs Hill / Cricklewood Lane,490005160N
-Llanvanor Road,490009232N
-Westbourne Park Station,490G00259A
-Pembridge Villas / Westbourne Grove,490005089E
-Harrow Road,490007861C
+stop_id,stop_name,direction
+490000064A,Earls Court Station,outbound
+490000064C,Earls Court Station,inbound
+490000087B,Golders Green Station,inbound
+490000110A,High Street Kensington Station,inbound
+490000110E,High Street Kensington Station,outbound
+490000127KA,Kilburn Park Station,inbound
+490000127KB,Kilburn Park Station,outbound
+490000167G,Notting Hill Gate Station,inbound
+490000167K,Palace Gardens Terr / Notting Hill Gte,outbound
+490000259A,Westbourne Park Station,inbound
+490000259B,Westbourne Park Station,outbound
+490000263S,West Hampstead Station,outbound
+490001330N,West Hampstead Station,inbound
+490003068N,West End Lane,inbound
+490004444N,Hansel Road,inbound
+490004444S,Cambridge Road,outbound
+490005076E,Hobury Street / Worlds End,outbound
+490005076S,Limerston Street,outbound
+490005076W,Edith Grove / Worlds End,inbound
+490005085N,Chepstow Crescent,inbound
+490005085S,Chepstow Crescent,outbound
+490005089D,Pembridge Villas,
+490005089E,Pembridge Villas / Westbourne Grove,inbound
+490005160N,Childs Hill / Cricklewood Lane,inbound
+490005160S2,Childs Hill / Cricklewood Lane,outbound
+490005186N2,Chippenham Gardens,inbound
+490005186S1,Shirland Road,outbound
+490005528Q,Pembroke Place,inbound
+490005528V,Earls Court Road / Pembroke Place,outbound
+490006041D,Dennington Park Road,outbound
+490006041F,Dennington Park Road,inbound
+490006262N,Dunstan Road,inbound
+490006262S,Dunstan Road,outbound
+490006305H,Cromwell Road,outbound
+490006473N,Elgin Avenue / Chippenham Road,inbound
+490006473W,Elgin Avenue / Chippenham Road,outbound
+490006951N,Fortune Green,inbound
+490006951S,Fortune Green,outbound
+490006953N,Finchley Road,inbound
+490006953S,Fortune Green Road,outbound
+490007055HK,Fulham Road / Chelsea & Westminster Hosp,outbound
+490007055HL,Fulham Road,inbound
+490007267GL,Golders Green / Finchley Road,outbound
+490007267GM,Golders Green / Finchley Road,inbound
+490007608N,Gunter Grove,inbound
+490007861C,Harrow Road,inbound
+490007861E,Elgin Avenue / Harrow Road,inbound
+490007861K,Great Western Road / Harrow Road,outbound
+490007861W2,Harrow Road,outbound
+490008061S,Hendon Way,outbound
+490008288H,Kensington Church Street / Holland St,inbound
+490008710M,Kilburn High Road / Quex Road,
+490008710P,Kilburn High Road,inbound
+490009232N,Llanvanor Road,inbound
+490009232S,Llanvanor Road,outbound
+490010187K,Nevern Place,outbound
+490010529B,Earls Court Square,inbound
+490010536K,York House Place / Kensington High St,outbound
+490010898F,Pembroke Road,inbound
+490010984T,Phillimore Gardens,outbound
+490010984U,Phillimore Gardens,inbound
+490011375K,Quex Road,inbound
+490011375L,Quex Road,outbound
+490011479S,Redcliffe Square,outbound
+490011480N,Redcliffe Street,inbound
+490011943N,Scarsdale Villas,inbound
+490011943S,Pembroke Road,outbound
+490012055N,Sheffield Terrace,inbound
+490012055S,Sheffield Terrace,outbound
+490012082A,West Hampstead Stn / Broadhurst Gdns,inbound
+490012082B,Compayne Gardens,outbound
+490012626N,Rudolph Road,inbound
+490012626S,Carlton Vale,outbound
+490012948N,St Stephens Gardens,inbound
+490012948S,St Stephens Gardens,outbound
+490013297N1,Chippenham Road / Shirland Road,inbound
+490013297S2,Chippenham Road / Shirland Road,outbound
+490014257E,West Cromwell Road,inbound
+490014402A,Artesian Road,inbound
+490014402Z,Westbourne Grove,outbound
+490014404P,Brunel Estate,inbound
+490014431S,West End Green,
+490014468N,West Hampstead Police Station,inbound
+490014468S,West Hampstead Police Station,outbound
+490014554N,Old Brompton Road,inbound
+490014819N,Woodchurch Road,inbound
+490014819S,Woodchurch Road,outbound
+490015039B,Notting Hill Gate Stn  / Pembridge Rd,inbound
+490015039C,Notting Hill Gate Station,outbound
+490015066S,Edith Grove / King's Road,outbound
+490015228L,Earls Court Road / Old Brompton Road,outbound
+490015243Y,Kilburn High Rd Stn  / Cambridge Avenue,outbound
+490015243Z,Kilburn High Rd Stn  / Cambridge Avenue,inbound
+490015362N,Lyndale Avenue,inbound
+490015362S,Lyndale Avenue,outbound
+490015497GC,Golders Green Station,outbound

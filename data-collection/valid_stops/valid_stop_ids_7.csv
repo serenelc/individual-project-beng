@@ -1,92 +1,65 @@
-stop_name,stop_id
-Dalgarno Gardens,490005936E
-Selfridges,490011985E
-Oxford Gardens,490004699S
-Ladbroke Grove Station,490000131A
-East Acton Station  / Erconwald Street,490006211B
-St Charles Square,490012646N
-Paddington Station,490G01221H
-Sussex Gardens,490013046N
-Powis Gardens,490G00011158
-Cambridge Gardens / Ladbroke Grove,490004702L
-Cambridge Gardens / Ladbroke Grove,490004702K
-Ladbroke Grove Station,490000131B
-Marble Arch Station,490000144K
-Wulfstan Street,490014971D
-Paddington Stn / Eastbourne Terrace,490006321D
-Great Western Road,490G00007429
-St Stephens Gardens,490012948S
-Hammersmith Hospital,490007707E
-Portobello Road,490011137E1
-Powis Gardens,490011158E
-George Street,490G00007167
-Gloucester Terrace,490G00007252
-George Street,490007167V
-Oakworth Road,490G00015456
-Highlever Road,490G00008175
-St Charles Health & Wellbeing Centre,490012645S
-Bond Street Station,490G00025BW
-Oakworth Road,490015456N
-Latymer Upper School / Playing Fields,490014869W
-North Pole Road,490010398N
-Gloucester Terrace,490007252W
-Sussex Gardens,490G00015044
-Portobello Road,490011137W
-St Stephens Gardens,490012948N
-East Acton Station / Fitzneal Street,490000065C
-St Mary's Hospital,490012797N
-Marble Arch / Edgware Road,490000144E
-Long Drive,490009299N
-East Acton Station,490000065H
-Paddington Station,490001221F
-Westbourne Terrace,490014406W
-Bond Street Station,490000025BW
-Highlever Road,490008175W
-St Mary's Hospital,490G00012797
-Marble Arch Underground Station,940GZZLUMBA
-New Bond Street,490010531OS
-Oxford Gardens,490004699N
-Sussex Gardens,490015044Z
-North Pole Road / Scrubs Lane,490011962E
-Latymer Upper School / Playing Fields,490G00014869
-Ladbroke Grove Station,490G00131A
-Chepstow Road / Westbourne Grove,490014402E
-Porchester Terrace North,490G00011119
-Brunel Road,490015061O
-Porchester Terrace North,490011119L
-Wulfstan Street,490014971G
-Burwood Place,490007167N1
-East Acton Station / Fitzneal Street,490G000491
-Hammersmith Hospital,490007707F
-Shrewsbury Road / Brunel Estate,490008697N
-Dalgarno Gardens,490005936W
-The Fairway,490013349A
-Great Western Road,490007420M
-Artesian Road,490014402A
-Queensway,490G00011366
-North Pole Road,490011962W
-St Charles Square,490012646S
-Paddington Station,490001221H
-North Pole Road,490G00010398
-East Acton Underground Station,940GZZLUEAN
-Marble Arch Station,490000144O
-Bishops Bridge Road / Westbourne Terrace,490014406E1
-St Charles Health & Wellbeing Centre,490012645N1
-Caverswall Street,490G00004895
-Paddington Stn / Eastbourne Terrace,490G000450
-Westbourne Grove / Queensway,490011365G
-The Fairway,490G00013349
-Selfridges,490G000738
-Marble Arch / Edgware Road,490G00008450
-Queensway,490011365F
-Artesian Road,490G00019713
-Latymer Upper School / Playing Fields,490014869E
-Powis Gardens,490011158W
-Oxford Circus Stn  / Harewood Place,490000173OQ
-Highlever Road,490008175E
-St Charles Health & Wellbeing Centre,490G00012645
-Caverswall Street,490004895S
-Oxford Circus Station  / John Lewis,490015196OF
-Brunel Road,490004524W
-St Mary's Hospital,490012797P
-The Fairway,490013349M
+stop_id,stop_name,direction
+490000065C,East Acton Station / Fitzneal Street,outbound
+490000065H,East Acton Station,inbound
+490000131A,Ladbroke Grove Station,inbound
+490000131B,Ladbroke Grove Station,outbound
+490000144E,Marble Arch / Edgware Road,inbound
+490000144K,Marble Arch Station,outbound
+490000144O,Marble Arch Station,inbound
+490000173OQ,Oxford Circus Stn  / Harewood Place,inbound
+490001221F,Paddington Station,inbound
+490001221H,Paddington Station,outbound
+490004524W,Brunel Road,inbound
+490004699N,Oxford Gardens,inbound
+490004699S,Oxford Gardens,outbound
+490004702K,Cambridge Gardens / Ladbroke Grove,outbound
+490004702L,Cambridge Gardens / Ladbroke Grove,inbound
+490004895S,Caverswall Street,inbound
+490005936E,Dalgarno Gardens,outbound
+490005936W,Dalgarno Gardens,inbound
+490006211B,East Acton Station  / Erconwald Street,outbound
+490006321D,Paddington Stn / Eastbourne Terrace,inbound
+490007167N1,Burwood Place,inbound
+490007167V,George Street,outbound
+490007252W,Gloucester Terrace,inbound
+490007420M,Great Western Road,inbound
+490007707E,Hammersmith Hospital,outbound
+490007707F,Hammersmith Hospital,inbound
+490008175E,Highlever Road,outbound
+490008175W,Highlever Road,inbound
+490009299N,Long Drive,
+490010398N,North Pole Road,outbound
+490010531OS,New Bond Street,inbound
+490011119L,Porchester Terrace North,outbound
+490011137E1,Portobello Road,outbound
+490011137W,Portobello Road,inbound
+490011158E,Powis Gardens,outbound
+490011158W,Powis Gardens,inbound
+490011365F,Queensway,outbound
+490011365G,Westbourne Grove / Queensway,inbound
+490011962E,North Pole Road / Scrubs Lane,outbound
+490011962W,North Pole Road,inbound
+490011985E,Selfridges,outbound
+490012645N1,St Charles Health & Wellbeing Centre,inbound
+490012645S,St Charles Health & Wellbeing Centre,outbound
+490012646N,St Charles Square,inbound
+490012646S,St Charles Square,outbound
+490012797N,St Mary's Hospital,inbound
+490012797P,St Mary's Hospital,outbound
+490012948N,St Stephens Gardens,inbound
+490012948S,St Stephens Gardens,outbound
+490013046N,Sussex Gardens,outbound
+490013349A,The Fairway,outbound
+490013349M,The Fairway,inbound
+490014402A,Artesian Road,inbound
+490014402E,Chepstow Road / Westbourne Grove,outbound
+490014406E1,Bishops Bridge Road / Westbourne Terrace,outbound
+490014406W,Westbourne Terrace,inbound
+490014869E,Latymer Upper School / Playing Fields,outbound
+490014869W,Latymer Upper School / Playing Fields,inbound
+490014971D,Wulfstan Street,outbound
+490014971G,Wulfstan Street,inbound
+490015044Z,Sussex Gardens,inbound
+490015061O,Brunel Road,outbound
+490015196OF,Oxford Circus Station  / John Lewis,outbound
+490015456N,Oakworth Road,inbound

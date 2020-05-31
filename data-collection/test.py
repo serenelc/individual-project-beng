@@ -9,7 +9,7 @@ from pathlib import Path
 def write_to_csv(route, valid_stops):
 
     csv_name = "valid_stops/valid_stop_ids_" + route + ".csv"
-    csv_columns = ['stop_id', 'stop_name']
+    csv_columns = ['stop_id', 'stop_name', 'direction']
     try:
         with open(csv_name, 'w') as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames = csv_columns)
@@ -42,7 +42,7 @@ def get_stop_info(bus_route_id: str):
         
 
 def get_expected_arrival_times(stop_code: str, route_id: str):
-    url =  "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Stopcode2=" + stop_code + "&LineName=" + route_id + "&ReturnList=StopPointName"
+    url =  "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Stopcode2=" + stop_code + "&LineName=" + route_id + "&ReturnList=StopPointName,DirectionID"
     bus_information = []
 
     try:
@@ -55,6 +55,7 @@ def get_expected_arrival_times(stop_code: str, route_id: str):
                 line_info = list(line.split(","))
                 bus_information.append(line_info)
             return bus_information
+    
     except (HTTPError, URLError) as error:
         # Invalid bus ID, so ignore error
         print("Invalid ID: ", stop_code)
@@ -72,8 +73,17 @@ def get_valid_bus_stop_ids(bus_route):
     for i, bus_stop in enumerate(bus_stop_info):
         bus_stop_id = bus_stop.get("stop_id")
         expected_arrival_times = get_expected_arrival_times(bus_stop_id, bus_route)
-        if len(expected_arrival_times) == 0:
+        
+        if len(expected_arrival_times) <= 1:
             bus_stop_info.remove(bus_stop)
+        else:
+            direction = expected_arrival_times[1][2]
+            if direction == '2':
+                # inbound
+                bus_stop["direction"] = "inbound"
+            else:
+                # outbound
+                bus_stop["direction"] = "outbound"
 
     print("Valid stop id count: ", len(bus_stop_info))
     return bus_stop_info
@@ -81,8 +91,10 @@ def get_valid_bus_stop_ids(bus_route):
 
 def main():
     bus_routes = ["9", "452", "52", "328", "277", "267", "7", "6", "35", "37", "69", "14"]
+    bus_routes = ["452", "328", "277", "267", "7", "35", "37", "69", "14"]
 
-    valid_stops = get_valid_bus_stop_ids(bus_routes[7])
-    write_to_csv(bus_routes[7], valid_stops)
+    for i, route in enumerate(bus_routes):
+        valid_stops = get_valid_bus_stop_ids(bus_routes[i])
+        write_to_csv(bus_routes[i], valid_stops)
 
 main()

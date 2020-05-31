@@ -1,128 +1,61 @@
-stop_name,stop_id
-Vauxhall Bus Station,490000247G1
-Prince Of Wales Gate,490011198W
-York House Place / Kensington High St,490010536K
-Sheffield Terrace,490012055N
-St Charles Square,490008898F
-Barlby Road,490003619M
-Covent Garden Market East Side,490005678X
-Kilburn Lane / Harrow Road,490007860N
-Union Road,490G00013908
-Ladbroke Grove Station,490000131A
-Silverthorne Road,490012162E
-Knightsbridge Station  / Harrods,490000130KE
-Knightsbridge Barracks,490011822W
-Ladbroke Grove Station,490000131B
-Battersea Park / Chelsea Gate,490005064N
-Pont Street,490011097S
-Wandsworth Road Station,490010921S
-Ladbroke Grove Sainsbury's,490008897T
-Chesterton Road,490005139C
-Rutland Gardens,490G00011822
-Elgin Crescent,490G00006476
-Larkhall Park,490008978N1
-Union Road,490013908N
-Chesterton Road,490G00005139
-Portobello and Golborne Market,490G00003399
-St Charles Square,490008898E
-Sloane Square Station,490000206K
-Wilcox Road,490014679S
-Queenstown Road / Wandsworth Road,490014192N2
-Notting Hill Gate Station,490000167G
-Queenstown Road / Wandsworth Road,490G00014192
-Palace Gate,490G00010728
-Notting Hill Gate Station,490G00167G
-Exhibition Road,490006691W
-St Rule Street,490012940N
-Stanley Gardens,490012550N
-Harrow Road / Kilburn Lane,490007860S
-Sloane Square Stn  / Lower Sloane St,490000206M
-Royal Albert Hall,490011750W
-Silverthorne Road,490G00012161
-Battersea Park Rail Station,910GBATRSPK
-Queenstown Road / Wandsworth Road,490014192S
-Pont Street,490G00011097
-St Charles Square,490G00008898
-Sheffield Terrace,490012055S
-Sloane Street / Knightsbridge Station,490000130K2
-Sloane Square Stn  / Lower Sloane St,490G00011763
-Palace Gardens Terr / Notting Hill Gte,490G00019161
-Ladbroke Grove Sainsbury's,490008897U
-Palace Gardens Terr / Notting Hill Gte,490000167K
-Queenstown Road (Battersea) Rail Station,910GQTRDBAT
-Royal Hospital Road,490011763N
-Station Terrace,490G00012622
-Knightsbridge Station,490G00130K1
-Station Terrace,490012622S
-Battersea Park Station,490G01016A
-Kensington Palace,490011761M
-Chesterton Road,490005139D
-Queenstown Road Station,490001234S
-Sloane Square,490015175C
-Barlby Road,490G00003619
-Palace Gate,490010728E
-Battersea Park Station,490001016C
-Sopwith Way,490G00012235
-Lansdowne Green,490008969S
-Silverthorne Road,490012161S2
-Royal Hospital Chelsea,490005063N
-Prince Of Wales Gate,490G00011198
-Battersea Park / Chelsea Gate,490005064S
-Lister Hospital,490009205N
-Prince Of Wales Gate,490011198E
-Pont Street,490011097N
-Sopwith Way,490012235N
-Cedars Road,490011360W
-Kilburn Lane / Harrow Road,490G000044
-Kensal House,490004737S
-Harrow Road / Kilburn Lane,490G00007860
-Lansdowne Green,490008969N
-Queen's Gate,490011334E1
-Queenstown Road Station,490001234N
-Kensington Church Street / Holland St,490008288H
-Knightsbridge Station,490000130K1
-Prairie Street,490011163S
-Rutland Gardens,490011822E
-Notting Hill Gate Station,490015039C
-Kensal House,490004737R
-Sopwith Way,490012235S
-Blenheim Crescent,490004099N
-Royal Albert Hall,490011750E
-Ladbroke Road,490000167A
-Chepstow Villas,490012550S
-Silverthorne Road,490012162W
-Lister Hospital,490G00009205
-Knightsbridge Underground Station,940GZZLUKNB
-Royal Albert Hall,490G00011750
-Queenstown Road Station,490G01234S
-Union Road,490013908S
-Barlby Road,490003619N
-Prairie Street,490011163N
-Lister Hospital,490009205E
-Battersea Park Station,490001016D
-Lansdowne Green,490G00008969
-Banister Road,490003583S
-Larkhall Park,490008978N2
-Knightsbridge Station  / Harrods,490G000575
-Palace Gate,490010728W
-Covent Garden Market East Side,490005678N
-Silverthorne Road,490012161N
-The Chase,490014058N
-Wandsworth Road Station,490001310A
-Royal Hospital Chelsea,490011763S
-Banister Road,490003583N
-Notting Hill Gate Underground Station,940GZZLUNHG
-Vauxhall Bus Station,490000247H
-The Chase,490008921W
-Kensal Rise Station,490001161N
-Knightsbridge Station  / Harrods,490008875KH
-Portobello and Golborne Market,490006476N
-Vauxhall Bus Station,490G00020252
-Knightsbridge Barracks,490G00008875
-Sloane Street / Sloane Square Station,490015175A
-Kensington Palace,490011761N
-Wilcox Road,490014679N
-Westbury Street,490001310B
-Portobello and Golborne Market,490003399S
-Royal Hospital Chelsea,490G00005063
-Chepstow Villas,490G00019159
+stop_id,stop_name,direction
+490000130K2,Sloane Street / Knightsbridge Station,
+490000131A,Ladbroke Grove Station,
+490000131B,Ladbroke Grove Station,outbound
+490000167A,Ladbroke Road,inbound
+490000167G,Notting Hill Gate Station,inbound
+490000167K,Palace Gardens Terr / Notting Hill Gte,outbound
+490000206M,Sloane Square Stn  / Lower Sloane St,
+490000247H,Vauxhall Bus Station,
+490001016D,Battersea Park Station,
+490001161N,Kensal Rise Station,inbound
+490001234S,Queenstown Road Station,
+490001310B,Westbury Street,
+490003399S,Portobello and Golborne Market,outbound
+490003583N,Banister Road,inbound
+490003583S,Banister Road,outbound
+490003619M,Barlby Road,inbound
+490003619N,Barlby Road,outbound
+490004099N,Blenheim Crescent,inbound
+490004737R,Kensal House,inbound
+490004737S,Kensal House,outbound
+490005064N,Battersea Park / Chelsea Gate,
+490005139C,Chesterton Road,
+490005139D,Chesterton Road,inbound
+490005678X,Covent Garden Market East Side,
+490006476N,Portobello and Golborne Market,inbound
+490007860N,Kilburn Lane / Harrow Road,
+490007860S,Harrow Road / Kilburn Lane,outbound
+490008288H,Kensington Church Street / Holland St,inbound
+490008897T,Ladbroke Grove Sainsbury's,
+490008897U,Ladbroke Grove Sainsbury's,outbound
+490008898E,St Charles Square,outbound
+490008898F,St Charles Square,inbound
+490008969N,Lansdowne Green,
+490008978N1,Larkhall Park,
+490009205E,Lister Hospital,
+490010536K,York House Place / Kensington High St,
+490010728W,Palace Gate,
+490011097N,Pont Street,
+490011163N,Prairie Street,
+490011198E,Prince Of Wales Gate,
+490011334E1,Queen's Gate,
+490011750E,Royal Albert Hall,
+490011750W,Royal Albert Hall,inbound
+490011761M,Kensington Palace,outbound
+490011761N,Kensington Palace,inbound
+490011763S,Royal Hospital Chelsea,
+490011822W,Knightsbridge Barracks,
+490012055N,Sheffield Terrace,inbound
+490012055S,Sheffield Terrace,outbound
+490012161S2,Silverthorne Road,
+490012162W,Silverthorne Road,
+490012235S,Sopwith Way,
+490012550N,Stanley Gardens,inbound
+490012550S,Chepstow Villas,outbound
+490012622S,Station Terrace,outbound
+490013908N,Union Road,
+490014058N,The Chase,
+490014192S,Queenstown Road / Wandsworth Road,
+490014679S,Wilcox Road,
+490015039C,Notting Hill Gate Station,outbound

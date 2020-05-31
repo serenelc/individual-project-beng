@@ -1,126 +1,94 @@
-stop_name,stop_id
-Elephant & Castle Station,490000073S
-Inner London Crown Court,490003548B
-Camberwell Road / Albany Road,490G00003138
-Park Hill,490010776E
-Sisters Avenue,490012182E
-Hampton Street,490007739N
-Denmark Hill / Camberwell Green,490004687Q
-Loughborough Junction Station,490011090S
-Cedars Road,490004913E
-Belvedere Place,490003071E
-Primrose Street,490011187N
-Shoreditch High Street Rail Station,910GSHRDHST
-Bowyer Place,490G00004221
-Western Road,490G00014447
-Elephant & Castle Station,490000073R
-Shakespeare Road,490012036E
-Commercial Street / Worship Street,490G00005524
-Lambeth Town Hall,490008919A
-Brixton Station,490G00031N
-Medlar Street,490009784A
-Clapham Junction Station  / The Falcon,490G000462
-Wyndham Road,490014979N2
-Lilford Road,490G00009153
-Clapham Junction Station  / The Falcon,490005332T
-Park Hill,490010776W
-Shoreditch High Street Station,490G16266N
-Clapham Common Station,490000050E
-Sisters Avenue,490005330W
-Borough Station,490000026A
-Eccles Road,490006403E
-Brixton Station,490000031P
-Shakespeare Road,490G00012036
-Brixton Station,490000031T
-East Street,490G00006380
-Valmar Road,490014004X
-Loughborough Junction Station,490G01184A
-Camberwell Green,490015298E
-Pomfret Road,490G000707
-Clapham Common Underground Station,940GZZLUCPC
-Curtain Road,490005910ZA
-Liverpool Street Station,490000138F
-Northcote Road,490005333Z
-Bedford Road,490G00003796
-Liverpool Street Station,490000138K
-Belvedere Place,490003071W
-Solon Road,490012222W
-Union Street,490013910G
-Brixton Station Road,490G00014794
-Shoreditch,490G000744
-London Bridge,490000139M
-Liverpool Street Station,490G00138E
-Solon Road,490012222E
-Threadneedle Street,490009037N
-Valmar Road,490014004Y
-Shakespeare Road,490012036W
-Clapham Junction / The Northcote,490005333V
-Solon Road,490G00012222
-Eccles Road,490006403W
-Union Street,490G00013910
-Shoreditch,490012113S
-Clapham Common Station,490000050K
-East Street,490006380F
-Shoreditch High Street Station,490012113N
-Fenchurch Street,490000148U
-Bedford Road,490003796D
-Loughborough Junction Station,490001184A
-Commercial Street / Worship Street,490005524D
-Lilford Road,490009153E
-Bowyer Place,490004221N
-East Street,490006380G
-Bedford Road,490003796E
-Inner London Crown Court,490012354N
-Westmoreland Road,490014501J
-Moorland Road,490015389W
-Gresham Road / Brixton Police Station,490004361K
-Denmark Hill / Camberwell Green,490004687T
-Clapham Junction Station  / The Falcon,490005331E
-Lambeth Town Hall,490G000627
-Park Hill,490G00010776
-Southwark Street,490013910S
-Rookery Road,490011673E
-Forthbridge Road,490G00006945
-Elephant & Castle / Newington Causeway,490000073F
-Pomfret Road,490011090E
-Forthbridge Road,490006945N
-Caldecot Road,490004676H6
-Primrose Street,490012391S
-Rookery Road,490011673W
-Camberwell Road / Albany Road,490003138N
-Lambeth Town Hall,490008919V
-Clapham Junction Station  / Falcon Road,490G00009849
-Wormwood Street,490004043N2
-Camberwell Green,490G00015298
-Cedars Road,490004913W
-Larcom Street,490G00008975
-Long Road / Clapham Common,490015236M
-London Bridge,490G000922
-Monument Station,490009267E
-Caldecot Road,490009431H7
-Borough Station,490000026D
-Southwark Street,490G00019864
-Medlar Street,490009784C
-Elephant & Castle / Newington Causeway,490000073G
-Clapham Junction / The Northcote,490G00005333
-Brixton Station Road,490014794W
-Denmark Hill / Camberwell Green,490G00004687
-Fenchurch Street,490000148M
-Wormwood Street,490004043S
-Lilford Road,490009153W
-Western Road,490014447E
-Camberwell Road / Albany Road,490003138N2
-Bowyer Place,490004221S
-Larcom Street,490008975N
-Shoreditch Town Hall,490010585X
-London Bridge,490000139Y
-Brixton Station Road,490015389E
-Long Road / Clapham Common,490015236L
-Larcom Street,490008975A
-Union Street,490013910H
-Gresham Road / Brixton Police Station,490004361H
-Forthbridge Road,490006945W
-Clapham Junction Station  / Falcon Road,490009843G
-Westmoreland Road,490014501L
-Monument Station,490009267D
-Clapham Junction / The Northcote,490005333Y
+stop_id,stop_name,direction
+490000026A,Borough Station,inbound
+490000026D,Borough Station,outbound
+490000031N,Brixton Station,inbound
+490000031T,Brixton Station,outbound
+490000050E,Clapham Common Station,outbound
+490000050K,Clapham Common Station,inbound
+490000073F,Elephant & Castle / Newington Causeway,outbound
+490000073G,Elephant & Castle / Newington Causeway,inbound
+490000073R,Elephant & Castle Station,inbound
+490000073S,Elephant & Castle Station,outbound
+490000138F,Liverpool Street Station,outbound
+490000138K,Liverpool Street Station,inbound
+490000139Y,London Bridge,
+490000148M,Fenchurch Street,outbound
+490000148U,Fenchurch Street,inbound
+490001184A,Loughborough Junction Station,outbound
+490003071E,Belvedere Place,outbound
+490003071W,Belvedere Place,inbound
+490003138N,Camberwell Road / Albany Road,inbound
+490003138N2,Camberwell Road / Albany Road,outbound
+490003548B,Inner London Crown Court,inbound
+490003796D,Bedford Road,inbound
+490003796E,Bedford Road,outbound
+490004043N2,Wormwood Street,outbound
+490004043S,Wormwood Street,inbound
+490004221N,Bowyer Place,outbound
+490004221S,Bowyer Place,inbound
+490004361H,Gresham Road / Brixton Police Station,outbound
+490004361K,Gresham Road / Brixton Police Station,inbound
+490004676H6,Caldecot Road,inbound
+490004687Q,Denmark Hill / Camberwell Green,inbound
+490004687T,Denmark Hill / Camberwell Green,outbound
+490004913E,Cedars Road,outbound
+490004913W,Cedars Road,inbound
+490005330W,Sisters Avenue,inbound
+490005331E,Clapham Junction Station  / The Falcon,inbound
+490005332T,Clapham Junction Station  / The Falcon,outbound
+490005333V,Clapham Junction / The Northcote,inbound
+490005333Y,Clapham Junction / The Northcote,outbound
+490005333Z,Northcote Road,inbound
+490005524D,Commercial Street / Worship Street,inbound
+490005910ZA,Curtain Road,outbound
+490006380F,East Street,inbound
+490006380G,East Street,outbound
+490006403E,Eccles Road,outbound
+490006403W,Eccles Road,inbound
+490006945N,Forthbridge Road,outbound
+490006945W,Forthbridge Road,inbound
+490007739N,Hampton Street,outbound
+490008919A,Lambeth Town Hall,outbound
+490008919V,Lambeth Town Hall,inbound
+490008975A,Larcom Street,inbound
+490008975N,Larcom Street,outbound
+490009037N,Threadneedle Street,outbound
+490009153E,Lilford Road,outbound
+490009153W,Lilford Road,inbound
+490009267E,Monument Station,
+490009431H7,Caldecot Road,outbound
+490009784A,Medlar Street,inbound
+490009784C,Medlar Street,outbound
+490009843G,Clapham Junction Station  / Falcon Road,outbound
+490010585X,Shoreditch Town Hall,outbound
+490010776E,Park Hill,outbound
+490010776W,Park Hill,inbound
+490011090E,Pomfret Road,outbound
+490011090S,Loughborough Junction Station,inbound
+490011187N,Primrose Street,outbound
+490011673E,Rookery Road,outbound
+490011673W,Rookery Road,inbound
+490012036E,Shakespeare Road,outbound
+490012036W,Shakespeare Road,inbound
+490012113N,Shoreditch High Street Station,inbound
+490012113S,Shoreditch,outbound
+490012182E,Sisters Avenue,outbound
+490012222E,Solon Road,outbound
+490012222W,Solon Road,inbound
+490012354N,Inner London Crown Court,outbound
+490012391S,Primrose Street,inbound
+490013910G,Union Street,outbound
+490013910H,Union Street,inbound
+490013910S,Southwark Street,inbound
+490014004X,Valmar Road,inbound
+490014004Y,Valmar Road,outbound
+490014447E,Western Road,outbound
+490014501J,Westmoreland Road,inbound
+490014501L,Westmoreland Road,outbound
+490014794W,Brixton Station Road,inbound
+490014979N2,Wyndham Road,outbound
+490015236L,Long Road / Clapham Common,outbound
+490015236M,Long Road / Clapham Common,inbound
+490015298E,Camberwell Green,outbound
+490015389E,Brixton Station Road,outbound
+490015389W,Moorland Road,inbound

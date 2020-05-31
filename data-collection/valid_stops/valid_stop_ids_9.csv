@@ -1,76 +1,56 @@
-stop_id,stop_name
-490000093PB,Green Park Station
-490000093PE,Green Park Station
-490000110B,High Street Kensington Station
-490000110F,High Street Kensington Station
-490000119M,Hyde Park Corner Station
-490000119T,Hyde Park Corner Station
-490000130KE,Knightsbridge Station  / Harrods
-490000179B,Piccadilly Circus
-490000179S,Piccadilly Circus
-490003106E,Warwick Gardens
-490003106W,Warwick Gardens
-490003112J,Bedford Street
-490003193R,Aldwych / Somerset House
-490004455BA,Brook Green
-490004455BB,Brook Green
-490005528X,The Design Museum
-490005528Y,The Design Museum
-490006691W,Exhibition Road
-490007492E,Green Park / Constitution Hill
-490007704QA,Hammersmith Broadway
-490007705F,Hammersmith Bus Station
-490007705G,Hammersmith Bus Station
-490007960R,Haymarket / Jermyn Street
-490008287E,Holland Road
-490008652A,Kensington Olympia Station
-490008652C,Kensington Olympia Station
-490008875KH,Knightsbridge Station  / Harrods
-490008990J,Latymer Court
-490008990Q,Latymer Court
-490010357B,North End Road
-490010357F,North End Road
-490010526G,Old Bond Street / Royal Academy
-490010574C,Old Park Lane / Hard Rock Cafe
-490010728E,Palace Gate
-490010728W,Palace Gate
-490010984T,Phillimore Gardens
-490010984U,Phillimore Gardens
-490011198E,Prince Of Wales Gate
-490011198W,Prince Of Wales Gate
-490011334E1,Queen's Gate
-490011515Z,Regent Street / St James's
-490011748H,Old Bond Street / Royal Academy
-490011750E,Royal Albert Hall
-490011750W,Royal Albert Hall
-490011761M,Kensington Palace
-490011761N,Kensington Palace
-490011822E,Rutland Gardens
-490011822W,Knightsbridge Barracks
-490011938U,Savoy Street
-490012247A,Southampton Street / Covent Garden
-490013766E,Charing Cross Stn / Trafalgar Square
-490013766H,Charing Cross Station
-490013767B,Trafalgar Square
-490013767S,Trafalgar Square
-490019703E,Aldwych / Drury Lane
-490G00003112,Bedford Street
-490G00005528,The Design Museum
-490G00007492,Green Park / Constitution Hill
-490G00008875,Knightsbridge Barracks
-490G00010357,North End Road
-490G00010574,Old Park Lane / Hard Rock Cafe
-490G00010984,Phillimore Gardens
-490G00011516,Regent Street / St James's
-490G00011761,Kensington Palace
-490G00012247,Southampton Street / Covent Garden
-490G00019923,Queen's Gate
-490G000386,Aldwych / Somerset House
-490G000563,Hammersmith Broadway
-490G000575,Knightsbridge Station  / Harrods
-490G000804,Northumberland Avenue / Trafalgar Square
-490G00110R,High Street Kensington Station
-490G00119S,Hyde Park Corner
-490G08652C,Kensington Olympia Station
-940GZZLUHPC,Hyde Park Corner Underground Station
-940GZZLUPCC,Piccadilly Circus Underground Station
+stop_id,stop_name,direction
+490000093PB,Green Park Station,inbound
+490000093PE,Green Park Station,outbound
+490000110B,High Street Kensington Station,inbound
+490000110F,High Street Kensington Station,outbound
+490000119M,Hyde Park Corner Station,outbound
+490000119T,Hyde Park Corner Station,inbound
+490000130KE,Knightsbridge Station  / Harrods,outbound
+490000179B,Piccadilly Circus,inbound
+490000179S,Piccadilly Circus,outbound
+490003106E,Warwick Gardens,inbound
+490003106W,Warwick Gardens,outbound
+490003112J,Bedford Street,outbound
+490003193R,Aldwych / Somerset House,outbound
+490004455BA,Brook Green,outbound
+490004455BB,Brook Green,inbound
+490005528X,The Design Museum,outbound
+490005528Y,The Design Museum,inbound
+490006691W,Exhibition Road,outbound
+490007492E,Green Park / Constitution Hill,outbound
+490007704QA,Hammersmith Broadway,outbound
+490007705F,Hammersmith Bus Station,outbound
+490007705G,Hammersmith Bus Station,inbound
+490007960R,Haymarket / Jermyn Street,inbound
+490008287E,Holland Road,inbound
+490008652A,Kensington Olympia Station,inbound
+490008652C,Kensington Olympia Station,outbound
+490008875KH,Knightsbridge Station  / Harrods,inbound
+490008990J,Latymer Court,inbound
+490008990Q,Latymer Court,outbound
+490010357B,North End Road,outbound
+490010357F,North End Road,inbound
+490010526G,Old Bond Street / Royal Academy,outbound
+490010574C,Old Park Lane / Hard Rock Cafe,inbound
+490010728E,Palace Gate,inbound
+490010728W,Palace Gate,outbound
+490010984T,Phillimore Gardens,outbound
+490010984U,Phillimore Gardens,inbound
+490011198E,Prince Of Wales Gate,inbound
+490011198W,Prince Of Wales Gate,outbound
+490011334E1,Queen's Gate,inbound
+490011515Z,Regent Street / St James's,outbound
+490011748H,Old Bond Street / Royal Academy,inbound
+490011750E,Royal Albert Hall,inbound
+490011750W,Royal Albert Hall,outbound
+490011761M,Kensington Palace,inbound
+490011761N,Kensington Palace,outbound
+490011822E,Rutland Gardens,inbound
+490011822W,Knightsbridge Barracks,outbound
+490011938U,Savoy Street,outbound
+490012247A,Southampton Street / Covent Garden,inbound
+490013766E,Charing Cross Stn / Trafalgar Square,inbound
+490013766H,Charing Cross Station,outbound
+490013767B,Trafalgar Square,inbound
+490013767S,Trafalgar Square,outbound
+490019703E,Aldwych / Drury Lane,inbound

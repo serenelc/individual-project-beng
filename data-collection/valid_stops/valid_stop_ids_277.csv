@@ -1,121 +1,88 @@
-stop_name,stop_id
-St Paul's Way,490012881S
-Royal Oak Road,490010161E
-Eric Street,490G00006614
-Dalston Junction Station,490005945G
-Maconochies Road,490G00013564
-Mile End Station,490000146B
-Terrace Road,490G00014374
-Arnhem Wharf Primary School,490G00006092
-Sir John Mcdougal Gardens,490G00012181
-Canada Square South,490000038J
-Shore Road,490009645W
-Mile End Park Leisure Centre,490G00003783
-Barkantine Clinic / Hutchings Street,490003602N
-West India Avenue,490014483E
-Hackney Central / Mare Street,490009644G
-Arbery Road,490003352S
-Lichfield Road,490G00013517
-Harbinger School / Masthouse Ter. Pier,490007774N
-Mare Street / Well Street,490014373LC
-Limehouse Police Station,490009159S
-Mudchute Station,490002061N
-Holcroft Road,490008277W
-Greenwood Road,490010160E1
-Hackney Town Hall,490007626B
-Canary Wharf Station,490000038F
-Terrace Road,490014374N
-Moulins Road,490G00010068
-Roman Road,490011653S
-Barkantine Clinic / Hutchings Street,490003602S
-Millwall Park,490G000668
-Stannard Road,490012569E
-Arnhem Wharf Primary School,490006092S
-Shore Road,490009645E
-Isle Of Dogs Asda,490G00019912
-Dalston Junction Station,490001568N
-Royal Oak Road,490G00010161
-Mile End Underground Station,940GZZLUMED
-Westferry Station,490002083A
-Mile End Park Leisure Centre,490003783S
-Sir John Mcdougal Gardens,490012181N
-Crossharbour Asda,490008507N2
-Church Crescent,490007535S
-Harbinger School / Masthouse Ter. Pier,490G000570
-Victoria Park,490006025N
-Limehouse Police Station,490G00009159
-Arbery Road,490003352N
-Dalston Junction Station,490G06929C
-Penshurst Road,490012255S
-Dalston Lane / Dalston Junction Stn,490005945K
-Marsh Wall / Heron Quay,490005323N
-Cuba Street,490009545S
-Pixley Street,490011031S
-Pixley Street,490011031N
-Maconochies Road,490013550E
-Mile End Station,490G00146B
-Canary Wharf Station,490G00038F
-Westferry Station,490014459B
-Victoria Park Road,490011823S
-East India Dock Road,490004584N
-Eric Street,490006614S
-Mudchute DLR Station,940GZZDLMUD
-St Paul's Way,490012881N
-Royal Oak Road,490010161W
-St Barnabas Church,490012633S
-St Thomas's Square,490012462N
-St Edmund's School,490G00012438
-Forest Road,490006929D
-Holcroft Road,490G00019199
-Isle Of Dogs Asda,490008507S
-Pixley Street,490G00011031
-Mudchute Station,490002061S
-Mile End Station,490000146A
-Crews Street / The Space Theatre,490008757S
-Hackney Town Hall,490007626A
-Westferry Circus / Canary Wharf Pier,490014457B
-Marsh Wall / Heron Quay,490005323S
-Marsh Wall / Heron Quay,490G00005323
-Dalston Lane / Dalston Junction Stn,490G000481
-Byng Street,490009545N
-Canary Wharf Station,490000038G
-Holcroft Road,490008277E
-St Barnabas Church,490012633N
-Westferry Station,490G02083A
-St Edmund's School,490012438S
-Victoria Park Road,490G00011823
-West India Avenue,490G000827
-Crews Street,490008757N
-Salter Street,490011878N
-Victoria Park,490010554S1
-East India Dock Road,490004584S
-Eric Street,490006614N
-Mile End Station / Bow Road,490015151H
-Westferry Circus / Canary Wharf Pier,490G000825
-Sir John Mcdougal Gardens,490012181S
-Arnhem Wharf Primary School,490006092N
-Greenwood Road,490010160W
-St Edmund's School,490012438N
-West India Avenue,490014483D
-Terrace Road,490013198N
-Millwall Park,490009924S
-Harbinger School / Masthouse Ter. Pier,490007774S
-Church Crescent,490G00007535
-Stannard Road,490012569W
-St Barnabas Church,490G00012633
-Graham Road / Hackney Central,490009644E
-Moulins Road,490010068N
-Crews Street,490G00008757
-Victoria Park Road,490011823N
-Lichfield Road,490013517S
-Byng Street,490G00009548
-West India Avenue,490014483C
-East Ferry Road,490006345E
-Langbourne Place,490013550W
-Mile End Station / Mile End Road,490G000925
-Lichfield Road,490013517N
-Ackroyd Drive,490013846N
-Arbery Road,490G00003352
-Mudchute Station  / Spindrift Ave,490002061B
-Mile End Station / Mile End Road,490000146G
-Old Ford Road,490010554S2
+stop_id,stop_name,direction
+490000038F,Canary Wharf Station,inbound
+490000038G,Canary Wharf Station,inbound
+490000038J,Canada Square South,inbound
+490000146A,Mile End Station,outbound
+490000146B,Mile End Station,inbound
+490000146G,Mile End Station / Mile End Road,inbound
+490001568N,Dalston Junction Station,outbound
+490002061B,Mudchute Station  / Spindrift Ave,outbound
+490002061N,Mudchute Station,outbound
+490002061S,Mudchute Station,inbound
+490002083A,Westferry Station,outbound
+490003352N,Arbery Road,inbound
+490003352S,Arbery Road,outbound
+490003602N,Barkantine Clinic / Hutchings Street,inbound
+490003602S,Barkantine Clinic / Hutchings Street,outbound
+490003783S,Mile End Park Leisure Centre,outbound
+490004584N,East India Dock Road,inbound
+490004584S,East India Dock Road,outbound
+490005323N,Marsh Wall / Heron Quay,inbound
+490005323S,Marsh Wall / Heron Quay,outbound
+490005945G,Dalston Junction Station,inbound
+490005945K,Dalston Lane / Dalston Junction Stn,outbound
+490006025N,Victoria Park,inbound
+490006092N,Arnhem Wharf Primary School,inbound
+490006092S,Arnhem Wharf Primary School,outbound
+490006345E,East Ferry Road,outbound
+490006614N,Eric Street,inbound
+490006614S,Eric Street,outbound
+490006929D,Forest Road,inbound
+490007535S,Church Crescent,outbound
+490007626A,Hackney Town Hall,inbound
+490007626B,Hackney Town Hall,outbound
+490007774N,Harbinger School / Masthouse Ter. Pier,inbound
+490007774S,Harbinger School / Masthouse Ter. Pier,outbound
+490008277E,Holcroft Road,outbound
+490008277W,Holcroft Road,inbound
+490008507N2,Crossharbour Asda,inbound
+490008507S,Isle Of Dogs Asda,outbound
+490008757N,Crews Street,inbound
+490008757S,Crews Street / The Space Theatre,outbound
+490009159S,Limehouse Police Station,outbound
+490009545N,Byng Street,inbound
+490009545S,Cuba Street,outbound
+490009644E,Graham Road / Hackney Central,inbound
+490009644G,Hackney Central / Mare Street,outbound
+490009645E,Shore Road,outbound
+490009645W,Shore Road,inbound
+490009924S,Millwall Park,inbound
+490010068N,Moulins Road,inbound
+490010160E1,Greenwood Road,outbound
+490010160W,Greenwood Road,inbound
+490010161E,Royal Oak Road,outbound
+490010161W,Royal Oak Road,inbound
+490010554S1,Victoria Park,outbound
+490010554S2,Old Ford Road,inbound
+490011031N,Pixley Street,inbound
+490011031S,Pixley Street,outbound
+490011653S,Roman Road,outbound
+490011823N,Victoria Park Road,inbound
+490011823S,Victoria Park Road,outbound
+490011878N,Salter Street,inbound
+490012181N,Sir John Mcdougal Gardens,inbound
+490012181S,Sir John Mcdougal Gardens,outbound
+490012255S,Penshurst Road,outbound
+490012438N,St Edmund's School,inbound
+490012438S,St Edmund's School,outbound
+490012462N,St Thomas's Square,inbound
+490012569E,Stannard Road,outbound
+490012569W,Stannard Road,inbound
+490012633N,St Barnabas Church,inbound
+490012633S,St Barnabas Church,outbound
+490012881N,St Paul's Way,inbound
+490012881S,St Paul's Way,outbound
+490013198N,Terrace Road,outbound
+490013517N,Lichfield Road,inbound
+490013517S,Lichfield Road,outbound
+490013550E,Maconochies Road,outbound
+490013550W,Langbourne Place,inbound
+490013846N,Ackroyd Drive,inbound
+490014373LC,Mare Street / Well Street,inbound
+490014374N,Terrace Road,inbound
+490014457B,Westferry Circus / Canary Wharf Pier,inbound
+490014459B,Westferry Station,inbound
+490014483C,West India Avenue,inbound
+490014483D,West India Avenue,outbound
+490014483E,West India Avenue,inbound
+490015151H,Mile End Station / Bow Road,outbound
