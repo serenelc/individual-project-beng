@@ -59,7 +59,9 @@ def main():
         etas = get_expected_arrival_times(start_stop.get("stop_id"), start_stop.get("route_id"))
 
         earliest_bus_to_leave = evaluate_bus_data(etas)
-        # print("First bus to leave: ", earliest_bus_to_leave)
+
+        if earliest_bus_to_leave == 0 or earliest_bus_to_leave == -1:
+            continue
 
         now = dt.datetime.now()
         pred_arrival_time = find_corresponding_bus(earliest_bus_to_leave.get("vehicle_id"), end_stops[i])
@@ -94,35 +96,6 @@ def write_to_csv(items_to_write):
                 writer.writerow(data)
     except IOError:
         print("I/O error in loading information into csv file")
-
-
-# def write_to_db(items_to_write):
-
-#     for item in items_to_write:
-#         start_stop = item.get("start_stop")
-#         end_stop = item.get("end_stop")
-#         time_of_req = item.get("time_of_req")
-#         pred_jrny_time = item.get("pred_jrny_time")
-
-#         tuple_item = (start_stop, end_stop, time_of_req, pred_jrny_time)
-
-#         conn = None
-#         try:
-#             conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example", port="5432")
-#             cursor = conn.cursor()
-#             sql = ''.join(("INSERT INTO TfL_predictions (start_stop, end_stop, time_of_req, pred_jrny_time) ",
-#                     "VALUES (%s, %s, %s, %s) "
-#                     ))
-
-#             cursor.execute(sql, (tuple_item))
-#             conn.commit()
-#             cursor.close()
-
-#         except (Exception, psycopg2.DatabaseError) as error:
-#             print("Error in writing to db: ", error)
-#         finally:
-#             if conn is not None:
-#                 conn.close()
 
 
 def find_corresponding_bus(vehicle_id, end_stop):
