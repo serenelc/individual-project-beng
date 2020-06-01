@@ -39,8 +39,12 @@ from urllib.error import HTTPError, URLError
 def main():
     gmt = dt.timezone.utc
     req_time = dt.datetime.now(tz = gmt)
+    seconds = (req_time.replace(tzinfo=None) - req_time.min).seconds
+    rounding = 15 * 60
+    rounding = (seconds + (rounding/2)) // rounding * rounding
+    req_time = req_time + dt.timedelta(0, rounding - seconds, -req_time.microsecond)
 
-    print("starting!")
+    print("starting at ", req_time)
 
     stop_info = load_data()
 
@@ -199,11 +203,11 @@ def get_expected_arrival_times(stop_code: str, route_id: str):
     comp_time = time.time() - start
     print("Get expected arrival times: ", comp_time)
 
-schedule.every().minute.at(":33").do(main)
-schedule.every().minute.at(":15").do(main)
-schedule.every().minute.at(":15").do(main)
-schedule.every().minute.at(":30").do(main)
-schedule.every().minute.at(":45").do(main)
+
+schedule.every().hour.at(":00").do(main)
+schedule.every().hour.at(":15").do(main)
+schedule.every().hour.at(":30").do(main)
+schedule.every().hour.at(":45").do(main)
 
 while True:
     schedule.run_pending()
