@@ -199,10 +199,11 @@ def get_expected_arrival_times(stop_code: str, route_id: str):
     comp_time = time.time() - start
     print("Get expected arrival times: ", comp_time)
 
-
-main()
-
-schedule.every(15).minutes.do(main)
+schedule.every().minute.at(":33").do(main)
+schedule.every().minute.at(":15").do(main)
+schedule.every().minute.at(":15").do(main)
+schedule.every().minute.at(":30").do(main)
+schedule.every().minute.at(":45").do(main)
 
 while True:
     schedule.run_pending()
