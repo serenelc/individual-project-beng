@@ -31,11 +31,15 @@ from pathlib import Path
 from os import path
 import json
 import csv
-import psycopg2
+import schedule
+# import psycopg2
 import urllib.request
 from urllib.error import HTTPError, URLError
 
-def main(req_time):
+def main():
+    gmt = dt.timezone.utc
+    req_time = dt.datetime.now(tz = gmt)
+
     print("starting!")
 
     stop_info = load_data()
@@ -73,37 +77,53 @@ def main(req_time):
             }
             predictions.append(item)
 
-    print(predictions)
     # write_to_db(predictions)
+    write_to_csv(predictions)
+    print("Waiting 15 minutes")
 
 
-def write_to_db(items_to_write):
+def write_to_csv(items_to_write):
 
-    for item in items_to_write:
-        start_stop = item.get("start_stop")
-        end_stop = item.get("end_stop")
-        time_of_req = item.get("time_of_req")
-        pred_jrny_time = item.get("pred_jrny_time")
+    csv_columns = ['start_stop', 'end_stop', 'time_of_req', 'pred_jrny_time']
+    csv_file = 'tfl_predictions.csv'
 
-        tuple_item = (start_stop, end_stop, time_of_req, pred_jrny_time)
+    try:
+        with open(csv_file, 'a') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames = csv_columns)
+            writer.writeheader()
+            for data in items_to_write:
+                writer.writerow(data)
+    except IOError:
+        print("I/O error in loading information into csv file")
 
-        conn = None
-        try:
-            conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example", port="5432")
-            cursor = conn.cursor()
-            sql = ''.join(("INSERT INTO TfL_predictions (start_stop, end_stop, time_of_req, pred_jrny_time) ",
-                    "VALUES (%s, %s, %s, %s) "
-                    ))
 
-            cursor.execute(sql, (tuple_item))
-            conn.commit()
-            cursor.close()
+# def write_to_db(items_to_write):
 
-        except (Exception, psycopg2.DatabaseError) as error:
-            print("Error in writing to db: ", error)
-        finally:
-            if conn is not None:
-                conn.close()
+#     for item in items_to_write:
+#         start_stop = item.get("start_stop")
+#         end_stop = item.get("end_stop")
+#         time_of_req = item.get("time_of_req")
+#         pred_jrny_time = item.get("pred_jrny_time")
+
+#         tuple_item = (start_stop, end_stop, time_of_req, pred_jrny_time)
+
+#         conn = None
+#         try:
+#             conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example", port="5432")
+#             cursor = conn.cursor()
+#             sql = ''.join(("INSERT INTO TfL_predictions (start_stop, end_stop, time_of_req, pred_jrny_time) ",
+#                     "VALUES (%s, %s, %s, %s) "
+#                     ))
+
+#             cursor.execute(sql, (tuple_item))
+#             conn.commit()
+#             cursor.close()
+
+#         except (Exception, psycopg2.DatabaseError) as error:
+#             print("Error in writing to db: ", error)
+#         finally:
+#             if conn is not None:
+#                 conn.close()
 
 
 def find_corresponding_bus(vehicle_id, end_stop):
@@ -208,6 +228,10 @@ def get_expected_arrival_times(stop_code: str, route_id: str):
     print("Get expected arrival times: ", comp_time)
 
 
-gmt = dt.timezone.utc
-now = dt.datetime.now(tz = gmt)
-main(now)
+main()
+
+schedule.every(15).minutes.do(main)
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
