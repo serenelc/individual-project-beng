@@ -90,7 +90,6 @@ def write_to_csv(items_to_write):
     try:
         with open(csv_file, 'a') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames = csv_columns)
-            writer.writeheader()
             for data in items_to_write:
                 writer.writerow(data)
     except IOError:

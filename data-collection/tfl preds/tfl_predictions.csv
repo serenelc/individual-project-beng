@@ -3,3 +3,21 @@ Willesden Bus Garage,Okehampton Road,2020-06-01 05:29:59.584632+00:00,0:05:13
 Chesterton Road,Notting Hill Gate Station,2020-06-01 05:29:59.584632+00:00,0:03:49
 North End Road,Phillimore Gardens,2020-06-01 05:29:59.584632+00:00,0:03:10
 Florence Road,Star Lane,2020-06-01 05:29:59.584632+00:00,0:04:38
+Willesden Bus Garage,Okehampton Road,2020-06-01 05:45:12.048400+00:00,0:05:13
+Willesden Bus Garage,Harrow Road / Kilburn Lane,2020-06-01 05:45:12.048400+00:00,0:08:08
+Willesden Bus Garage,Chesterton Road,2020-06-01 05:45:12.048400+00:00,0:12:29
+Willesden Bus Garage,Notting Hill Gate Station,2020-06-01 05:45:12.048400+00:00,0:17:10
+Chesterton Road,Notting Hill Gate Station,2020-06-01 05:45:12.048400+00:00,0:04:47
+North End Road,Phillimore Gardens,2020-06-01 05:45:12.048400+00:00,0:03:53
+All Souls Avenue,Notting Hill Gate Station,2020-06-01 05:45:12.048400+00:00,0:11:45
+Florence Road,Star Lane,2020-06-01 05:45:12.048400+00:00,0:03:11
+start_stop,end_stop,time_of_req,pred_jrny_time
+Willesden Bus Garage,Okehampton Road,2020-06-01 06:00:26.034091+00:00,0:05:23
+Willesden Bus Garage,Harrow Road / Kilburn Lane,2020-06-01 06:00:26.034091+00:00,0:09:00
+Willesden Bus Garage,Chesterton Road,2020-06-01 06:00:26.034091+00:00,0:13:00
+Willesden Bus Garage,Notting Hill Gate Station,2020-06-01 06:00:26.034091+00:00,0:17:24
+Willesden Bus Garage,Palace Gate,2020-06-01 06:00:26.034091+00:00,0:23:42
+Chesterton Road,Notting Hill Gate Station,2020-06-01 06:00:26.034091+00:00,0:02:46
+North End Road,Phillimore Gardens,2020-06-01 06:00:26.034091+00:00,0:03:53
+All Souls Avenue,Notting Hill Gate Station,2020-06-01 06:00:26.034091+00:00,0:12:51
+Florence Road,Star Lane,2020-06-01 06:00:26.034091+00:00,0:01:19
