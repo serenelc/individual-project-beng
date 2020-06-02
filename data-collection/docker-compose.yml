@@ -10,7 +10,7 @@ services:
     depends_on: 
       - db
     environment:
-      BUS_ROUTES: "52,6"
+      BUS_ROUTES: "52,35"
 
   bus-data-collector-2: 
     build:
