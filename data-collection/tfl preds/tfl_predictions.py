@@ -32,7 +32,6 @@ from os import path
 import json
 import csv
 import schedule
-# import psycopg2
 import urllib.request
 from urllib.error import HTTPError, URLError
 

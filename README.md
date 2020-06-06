@@ -4,6 +4,14 @@
 - route 9 bus 14511 has its directions opposite to what it should be idk why, but all the othe rbuses seem to have the right direction of travel. 
 - Change dataframe data structure in jupyter notebooks to match new database structures
 
+### For the phone app
+
+1) I want to know what time the nearest bus on a particular route will arrive at a particular stop e.g. I want to know the nearest number 9 bus to arrive at Phillimore Gardens
+2) I got on a bus at a particular stop and I want to know what time I will arrive at a particular stop e.g. I got on bus 9 at Hammersmith Bus Station and I want to know what time I will arrive at Phillimore Gardens.
+So the request times is always going to be ‘now’, as in you can’t request a prediction in the future?
+More for (2) than (1), but perhaps you could combine the two into "from now, how long will it take me to get to stop X", which would include the waiting time.
+
+
 ## Overview
 
 Functions to do with data processing are in the data_collection.py file. Utility functions (e.g. writing to CSVs) are in the helper.py file.
