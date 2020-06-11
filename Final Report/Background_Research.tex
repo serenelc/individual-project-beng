@@ -2,19 +2,17 @@
 
 There are a number of models that can be used for bus arrival prediction, but there are four main models that are most widely used \cite{dynamic-gps}. They are as follows: 
 \begin{itemize}
-    \item \textbf{Historical average models}: Also known as simple forecasting, these models make use of historical bus arrival and travel times to predict the arrival time of buses. The algorithms tend to be fairly simple and are not dynamic in nature. On its own, performance could be fairly weak, due to the unreliability of traffic conditions and other factors that vary over time. 
+    \item \textbf{Historical average models}: Also known as simple forecasting, these models make use of historical bus arrival and travel times to predict the arrival time of buses. On its own, performance could be fairly weak, due to the unreliability of traffic conditions and other factors that vary over time. For example, Jeong and Rilett found that their historical model was outperformed by their artificial neural network model \cite{ann-prediction}.
     \item \textbf{Regression models}: These models are a form of predictive technique, which can be used to investigate the relationship between factors that affect bus arrival times (predictors) and bus arrival times (target) \cite{regression-techniques}. This technique will help to see which factors are more or less important. For example, Patnaik et al. used regression models to discover that "weather variables were not among the significant factors for estimating arrival times" \cite{apc-estimation}. 
-    \item \textbf{Kalman Filtering models}: The Kalman filter is one of the optimal solutions for tracking and data prediction tasks \cite{kalman-mit}. These models are a dynamic estimation technique that have been used fairly frequently in bus delay predictions.
-    \item \textbf{Machine Learning models}: These models have been widely used in research to try to improve public transportation. This project will look particularly at Artificial Neural Networks (ANNs), which are suited towards more complex and noisy data and finding non linear relationships between dependent and independent variables \cite{dynamic-gps}. 
+    \item \textbf{Kalman Filtering models}: The Kalman filter is one of the optimal solutions for tracking and data prediction tasks \cite{kalman-mit}. These models are a dynamic estimation technique that have been used fairly frequently in bus delay predictions. However, as Sun et al. found, these models are expensive to compute \cite{smart-public-transport}.
+    \item \textbf{Artificial Neural Network models}: These models have been widely used in research to try to improve public transportation. They are suited towards more complex and noisy data and finding non linear relationships between dependent and independent variables \cite{dynamic-gps}. 
 \end{itemize}
-
-I am not planning on exploring Kalman models any further as a model for predicting bus arrival times. This is because I think that if I include Kalman models, I will have insufficient time to properly refine all the models. I would rather have a smaller number of highly optimised models, rather than a larger number of very simple or unoptimised models.
 
 \subsection{Historical Average Models}
 \label{section:historical-avg-models-research}
 
 \subsubsection{Forecasting}
-Forecasting is an important aid to effective and efficient planning. Statistical forecasting typically refers to the use of statistics on historical data to project what could happen in the future \cite{what-is-forecasting}. The effectiveness of forecasting as a method depends on several factors including how well we understand the factors that contribute to an event, how much data is available and whether the forecasts can affect the thing we are trying to forecast \cite{forecasting-book}. A good forecast should capture the genuine patterns and relationships which exist in the historical data, but do not replicate past events that will not occur again. In the case of historical bus data, the data collected will be gathered at regular intervals over time, and therefore, can be seen as time series data. In this way, quantitative forecasting can be applied because it is reasonable to assume that some aspects of the past patterns will continue into the future.
+Forecasting is an important aid to effective and efficient planning. Statistical forecasting typically refers to the use of statistics on historical data to project what could happen in the future \cite{what-is-forecasting}. The effectiveness of forecasting as a method depends on several factors including: how well we understand the factors that contribute to an event, how much data is available and whether the forecasts can affect the thing we are trying to forecast \cite{forecasting-book}. A good forecast should capture the genuine patterns and relationships which exist in the historical data, but do not replicate past events that will not occur again. In the case of historical bus data, the data collected will be gathered at regular intervals over time, and therefore, can be seen as time series data. In this way, quantitative forecasting can be applied because it is reasonable to assume that some aspects of the past patterns will continue into the future.
 
 \subsubsection{Methods}
 
@@ -29,30 +27,57 @@ Some of the most common simple forecasting methods are listed below \cite{foreca
     \item \textbf{Drift Method}: This method is a variation of the naive method. The forecast values increase or decrease over time and the amount of change over time is called the drift. This drift is set to be the average change seen in the historical data. This method is equivalent to drawing a straight line between the first and last observations and extrapolating it into the future. 
 \end{itemize}
 
-It can be seen in Figure \ref{fig:forecasting} that both the \textit{mean} and \textit{naive} methods result in flat line forecasts, and therefore, would not be particularly suitable for bus arrival predictions because research has shown that for different time periods, the trends in delay times vary \cite{dynamic-gps}, \cite{ann-prediction}, \cite{smart-public-transport}. However, a slight variation on the mean and naive method that essentially combines the two methods, where the model takes the average of the last two or three bus travel times for each forecast, is much more likely to provide a better estimate. This is because this method will use historical results that should theoretically be in the same time period (or clustering) as the current time to be forecast. This method will also avoid going too far into the past and using data that may not be relevant. Figure \ref{fig:forecasting} also shows that the \textit{seasonal naive} method results in an oscillating prediction. Since there is reason to believe that historical data on bus delay times show an up and down trend, the seasonal naive method could also be an equally suitable model to use.
+Figure \ref{fig:forecasting} shows what the \textit{mean}, \textit{naive} and \textit{seasonal naive} methods look like when applied to quarterly beer production data. It can be seen that both the \textit{mean} and \textit{naive} methods result in flat line forecasts, and therefore, would not be particularly suitable for bus arrival predictions because research has shown that for different time periods, the trends in delay times vary \cite{dynamic-gps}, \cite{ann-prediction}, \cite{smart-public-transport}. However, a slight variation on the mean and naive method that essentially combines the two methods, where the model takes the average of the last two or three bus travel times for each forecast, is much more likely to provide a better estimate. This is because this method will use historical results that should theoretically be in the same time period as the current time to be forecast. This method will also avoid going too far into the past and using data that may not be relevant. Figure \ref{fig:forecasting} also shows that the \textit{seasonal naive} method results in an oscillating prediction. Since there is reason to believe that historical data on bus delay times show an up and down trend, the seasonal naive method could also be an equally suitable model to use.
 
 \begin{figure}[H]
 \begin{center}
     \includegraphics[width=\textwidth]{Images/forecasting-beer-prod.png}
-    \caption{Example of the mean, naive and seasonal naive methods applied to quarterly beer production data, original image from \cite{forecasting-book}}
+    \caption{Example of the mean, naive and seasonal naive methods, original image from \cite{forecasting-book}}
     \label{fig:forecasting}
 \end{center}
 \end{figure}
 
-\subsubsection{More Complex Methods?}
-
-Worth adding more complex methods? Or nah.
-
 \subsubsection{Measuring Success}
 
-Explained variance score, mse?
+A forecast may be greater than or less than the actual value. The difference between this predicted value and the actual value is called the forecast error. Equation \ref{eq:forecast-error} shows the forecast error for an individual forecast.
+
+\begin{equation}
+\label{eq:forecast-error}
+    forecast\ error_t = A_t - F_t
+\end{equation}
+
+\noindent where $A_t$ is the actual value and $F_t$ is the forecasted value. \\
+
+Measures to evaluate the performance of a forecasting method can be classified into those that look at direction and those that look at size of the error. The bias (Equation \ref{eq:forecast-bias}) is the most popular measure for evaluating the direction of the error, i.e. whether the predictions are over or under the actual values. The closer the bias is to zero, the better the model. If the bias is negative, this implies that the actual values are on average, smaller than the predicted value. Therefore, the forecasting model overestimates the actual values.
+
+\begin{equation}
+\label{eq:forecast-bias}
+    Bias = \frac{\sum(A_t-F_t)}{n}
+\end{equation}
+
+The size of the error could mean the amount of the error or the dispersion of the error or the relative magnitude of the error. One of the most popular measures of the size of the error is the mean squared error (MSE). The MSE (Equation \ref{eq:forecast-mse}) is the average of the sum of squares of the forecast errors and measures the amount of dispersion in the error. The smaller the value, the better.
+
+\begin{equation}
+\label{eq:forecast-mse}
+    MSE = \frac{\sum(A_t-F_t)^2}{n}
+\end{equation}
+
+Another common measure is the root mean squared error (RMSE), which is, as its name suggests, the square root of the MSE. However, neither the MSE nor the RMSE take into account the magnitude of the actual values. \\
+
+A measure of success that does attempt to take into account the effect of the magnitude of the actual values is the mean absolute error (MAE). The MAE (Equation \ref{eq:forecast-mae}) is the average of the absolute values of the errors. As with the RMSE and MSE, the smaller the value, the better.  
+
+\begin{equation}
+\label{eq:forecast-mae}
+    MAE = \frac{\sum\frac{|A_t-F_t|}{A_t}}{n}
+\end{equation}
+
 
 \subsection{Regression Models}
 \label{section:regression-models-research}
 
 Regression is a form of statistical modelling that investigates the relationship between a dependent (target) and independent (predictor) variable \cite{regression-techniques}. When performing statistical modelling, we observe some data $y$, known as the dependent variable, and interpret each data point as a realisation of some random variable $Y$ \cite{m2s2-notes}. A statistical model is a specification of the distribution of $Y$ up to an unknown parameter $\theta$. Often $y = (y_1, y_2, ..., y_n) \in \mathbb{R} ^ n$ is a vector and $Y = (Y_1, ..., Y_n)$ is a random vector. The distribution of $Y_1, ..., Y_n$ may depend on (non random or deterministic) quantities $x_1, ..., x_n$ known as covariates or predictors. 
 
-\subsubsection{Simple Linear Regression and Multiple Regression}
+\subsubsection{Linear Regression}
 
 In the simplest case, the regression model allows for a linear relationship between the observable variable $Y$ and a single predictor variable $x$ (Equation \ref{eq:lin-reg}): 
 
@@ -71,6 +96,8 @@ where $Y_t$ is the outcome or observable random variable, $x_t$ is the covariate
 \end{center}
 \end{figure}
 
+\subsubsection{Multiple Linear Regression}
+
 When there are two or more predictor variables, the model is called a multiple regression model. The general formulation in a linear model is shown in Equation \ref{eq:multi-regression}:
 
 \begin{equation}
@@ -80,7 +107,7 @@ When there are two or more predictor variables, the model is called a multiple r
 
 where $Y$ is an n-dimensional random vector (observable), $\mathbf{X} \in \mathbf{R} ^{n \times p}$ is a known matrix (often called the `design matrix'), $\beta \in \mathbf{R}^p$ is an unknown parameter and $\epsilon$ is an n-variate random vector (not observable) with $E(\epsilon) = \mathbf{0}$. The $\beta$ coefficients essentially measure the effect of each predictor after taking into account the effects of all the other predictors in the model. \\
 
-When we use a linear regression model, we make the following assumptions.
+When we use a linear or multiple regression model, we make the following assumptions.
 
 \begin{itemize}
     \item The model is a reasonable approximation to reality, that is, the relationship between the forecast variable and the predictor variable satisfies this linear equation.
@@ -93,30 +120,21 @@ When we use a linear regression model, we make the following assumptions.
     \item Each predictor $x$ is not a random variable.
 \end{itemize}
 
-\subsubsection{Ridge Regression? Piecewise Linear Regression?}
+\subsubsection{Piecewise Linear Regression}
 
-The data isn't particularly linear, so some other regression model?
+TODO
 
-\subsubsection{Least Squares Estimation}
+\subsubsection{Pearson Correlation Coefficient}
 
-Least squares estimation is a method of estimating parameters by minimising the squared discrepancies between observed data and their expected values \cite{least-squares-estimation}. Choose $\beta$ to minimise Equation \ref{eq:least-squares}:
-
-\begin{equation}
-    S(\beta) = \sum_{i=1}^n(Y_i - \sum_{j=1}^pX_{ij}\beta_j)^2 = (\mathbf{Y} - X\beta)^T(\mathbf{Y} - X\beta)
-    \label{eq:least-squares}
-\end{equation}
-
-where as before, $Y$ is an n-dimensional random vector, $\mathbf{X} \in \mathbf{R} ^{n \times p}$ is a known matrix and $\beta \in \mathbf{R}^p$ is an unknown parameter. We denote the the estimated value that gives the best fit to the data of $\beta$ by $\hat \beta$.
+TODO
 
 \subsubsection{Measuring Success}
 
-RMSE, MSE, R2-Score, MAE \\
-
-The standard error is the equal to the standard deviation, which would be obtained from repeatedly estimating the $\beta$ coefficients on similar data sets. This gives a measure of the uncertainty in the estimated $\beta$ coefficient. \\
+The standard error is equal to the standard deviation, which would be obtained from repeatedly estimating the $\beta$ coefficients on similar data sets. This gives a measure of the uncertainty in the estimated $\beta$ coefficient. \\
 
 The p-value is the probability of the estimated $\beta$ coefficient being as large as it is if there was no real relationship between the forecast variable and the corresponding predictor. This is particularly useful when studying the effect of each predictor, and can be used as another way of seeing which parameter to use in the models and which to discard. \\ 
 
-A common way to summarise how well a linear regression model fits the data is via the coefficient of determination (Equation \ref{eq:r-squared}:
+A common way to summarise how well a regression model fits the data is via the coefficient of determination (Equation \ref{eq:r-squared}:
 
 \begin{equation}
     R^2 = \frac{\sum(\hat y_t - \bar y)^2}{\sum(y_t - \bar y)^2}
@@ -126,18 +144,6 @@ A common way to summarise how well a linear regression model fits the data is vi
 where the summations are over all the observations, $\hat y_t$ are the predicted values, $y_t$ are the observed values and $R^2$ is bounded between 0 and 1. Although this is a way of measuring `goodness-of-fit', validating the performance of a model against a test set is much better than measuring the $R^2$ value on the training data \cite{forecasting-book}. \\
 
 The differences between the observed $y$ values and the corresponding fitted $\hat y$ values are known as residuals. To detect problems with a model, we can plot standardised residuals against some each of the predictor variables. We expect the residuals to be randomly scattered without showing any systematic pattern because a pattern would indicate a nonlinear relationship between the variables. If the model is correct then the resulting plot should just show `noise' with no distinct patterns. 
-
-\subsubsection{Outliers}
-
-An outlier is an observation that does not conform to the general pattern of the rest of the data. Observations that have a large influence on the estimated coefficients of a regression model are called influential observations. If an observation has been identified as a likely outlier, it is important to try and analyse why it is the case, as outliers can arise from incorrect data collection or can be an indication of the underlying model being unsuitable \cite{forecasting-book}, \cite{m2s2-notes}. Figure \ref{fig:outlier} is an example showing how an outlier can affect predictions. The red line is the regression line fitted to the data including the outliers, the black line is the regression line fitted to the data without the outlier. It can be seen that the gradient of the 2 lines are not the same and therefore, the models would give differing predictions.  
-
-\begin{figure}[H]
-\begin{center}
-    \includegraphics[width=\textwidth]{Images/outlier-analysis.png}
-    \caption{Example showing how an outlier can affect predictions, original image from \cite{forecasting-book}}
-    \label{fig:outlier}
-\end{center}
-\end{figure}
 
 \subsection{Kalman Filtering Models}
 \label{section:kalman-models-research}
@@ -151,7 +157,9 @@ The Kalman filtering algorithm starts in the prediction process and estimates th
     x_k = Fx_{k-1} + Bu_{k-1} + w_{k-1}
 \end{equation}
 
-where $F$ is the state transition matrix applied to the previous state vector $x_{k-1}$, $B$ is the control input matrix applied to the optional control vector $u_{k-1}$, and $w_{k-1}$ is the process noise vector that is assumed to be zero-mean Gaussian with covariance $Q$, i.e. $w_{k-1} \sim N(0, Q)$. The next stage is the measurement process (Equation \ref{eq:kalman-2}), which covers the calculation of the optimal Kalman gain, updating the a posteriori estimation state and the a posteriori error covariance. The measurement model describes the relationship between the state and the measurement at the current time step $k$ as:
+where $F$ is the state transition matrix applied to the previous state vector $x_{k-1}$, $B$ is the control input matrix applied to the optional control vector $u_{k-1}$, and $w_{k-1}$ is the process noise vector that is assumed to be zero-mean Gaussian with covariance $Q$, i.e. $w_{k-1} \sim N(0, Q)$. \\
+
+The next stage is the measurement process (Equation \ref{eq:kalman-2}), which covers the calculation of the optimal Kalman gain, updating the a posteriori estimation state and the a posteriori error covariance. The measurement model describes the relationship between the state and the measurement at the current time step $k$ as:
 
 \begin{equation}
 \label{eq:kalman-2}
@@ -164,8 +172,6 @@ The Kalman Filter provides estimates of $x_k$ given the initial estimate $x_0$, 
 
 \subsection{Machine Learning Models}
 \label{section:ml-models-research}
-
-Explore normal neural networks or other machine learning techniques before deciding immediately on ANNs.
 
 (Feed-forward) Artificial Neural Networks (ANNs) are a type of machine learning inspired by real world biological neurons. 
 
@@ -232,90 +238,21 @@ Fan and Gurmu used artificial neural networks (ANN) as one of their models, alon
 
 Another study that used ANNs was done by Jeong and Rilett. This study also found that the ANN model outperformed the historical average model and regression model that was investigated in the same study \cite{ann-prediction}. This ANN was also a fully connected multi-layer perceptron with a single hidden layer, and also used $tanh$ as the nonlinear activation function. It was hypothesized that this was because the ANN was able to identify the complex nonlinear relationship between bus travel time and the independent variables. 
 
-\subsection{Data Pre-processing: Clustering Analysis}
-
-Clustering is one of the most common techniques used to explore a set of data. It allows us to get an intuition about the structure of the data by trying to group `similar' data together into subgroups or clusters. There is a variety of different similarity measures such as euclidean-based distances or correlation-based distance \cite{k-means-towards-ds}. Clustering is an unsupervised learning method because there are no ground truth labels for which to compare the output of the clustering algorithm to.
-
-\subsubsection{K-means}
-K-Means is one of the most popular clustering algorithms. The k-means algorithms divides a set of $N$ samples $X$ into $K$ disjoint clusters $C$, each described by the mean $\mu_j$ of the samples in the cluster \cite{k-means-sklearn}. The k groups are defined by the means, commonly known as a centroid, and a point is considered to be in a particular cluster if it is closer to that cluster's centroid than any other centroid \cite{k-means-stanford-notes}. K-Means aims to choose the centroids that minimise the inertia or within-cluster sum-of-squares criterion (a measure of how internally coherent the clusters are) (Equation \ref{eq:wcss}): 
-
-\begin{equation}
-    \sum_{i=0}^nmin_{\mu_j\in C}(\vert\vert x_i - \mu_j \vert\vert)^2)
-    \label{eq:wcss}
-\end{equation}
-
-The algorithm has three steps:
-
-\begin{enumerate}
-    \item Choose the initial k centroids (generally randomly chosen).
-    \item Assign each sample to its nearest centroid.
-    \item Create new centroids by taking the mean value of all of the samples assigned to each previous centroid. Repeat step 2 and 3 until the centroids do not move significantly.
-\end{enumerate}
-
-An example of the algorithm in action is shown in Figure \ref{fig:k-means}. Training samples are shown as dots. Cluster centroids are shown as crosses. a) shows the original dataset. b) shows the random initial cluster centroids. c) - f) shows two iterations of k-means. In each iteration, the training samples are assigned to the closest cluster centroid. The cluster centroid is then recalculated to the mean of the points assigned to it.
-
-\begin{figure}[H]
-\begin{center}
-    \includegraphics[scale=0.8]{Images/k-means-in-action.png}
-    \caption{K-Means in action, original image from \cite{k-means-stanford-notes}}
-    \label{fig:k-means}
-\end{center}
-\end{figure}
-
-After a sufficient number of iterations, the results of the k-means algorithm will eventually converge. However, the algorithm will attempt to cluster data regardless of if it can be clustered or not. Therefore, K-means tends to perform more poorly on data that doesn't have a spherical shape. See Figure \ref{fig:k-means-complicated-shapes} for examples of k-means not performing well on complicated geometric shapes. 
-
-\begin{figure}[H]
-\begin{center}
-    \includegraphics[width=\textwidth]{Images/k-means-complicated-shapes.png}
-    \caption{K-Means performed on complicated geometric shapes, original image from \cite{k-means-towards-ds}}
-    \label{fig:k-means-complicated-shapes}
-\end{center}
-\end{figure}
-
-The k-means clustering algorithm uses a randomly generated seed to determine the starting centroids of the clusters. This inherent random nature of k-means can lead to the minimisation function getting stuck in a local minima. The `k-means++' initialisation scheme helps to mitigate this by initialising the centroids to be generally distant from each other, leading to provably better results than random initialisation. 
-
-\subsubsection{Other clustering algorithms}
-
-As a reader, based on the order you've presented this section in, I'd expect to see more than one clustering algorithm. Otherwise, there should be some evidence why you chose that particular algorithm.
-
-\subsubsection{Cluster Quality Measures}
-The two main methods of measuring the quality of a clustering are the \textit{Calinski-Harabasz} (CH) score and the \textit{Silhouette Coefficient} \cite{cluster-measures}.
-
-The CH score \cite{ch-score}, also known as the Variance Ratio Criterion, is defined as the ratio between the within-cluster variance and the between-cluster variance (Equation \ref{eq:ch}). For a set of data of size $N$, which has been clustered into $k$ clusters:
-
-\begin{equation}
-    CH = \frac{SS_B}{SS_W}\times\frac{N-k}{k-1}
-    \label{eq:ch}
-\end{equation}
- 
-Where $SS_B$ is the overall between cluster variance, $SS_W$ is the overall within cluster variance, k is the number of clusters and N is the number of observations (Equation \ref{eq:ssb}). 
-
-\begin{equation}
-    SS_B = \sum_{i=1}^kn_i\vert\vert m_i - m\vert\vert ^2
-    \label{eq:ssb}
-\end{equation}
-
-Where k is the number of clusters, $n_i$ is the number of observations in cluster $i$, $m_i$ is the centroid of cluster $i$, $m$ is the overall mean of the sample data, and $||m_i - m||$ is the $L^2$ norm (Euclidean distance) between the two vectors (Equation \ref{eq:ssw}).
-
-\begin{equation}
-    SS_W = \sum_{i=1}^k\sum_{x\in c_i} ||x-m_i|| ^ 2
-    \label{eq:ssw}
-\end{equation}
- 
-where $k$ is the number of clusters, $x$ is a data point, $c_i$ is the $i^{th}$ cluster, $m_i$ is the centroid of cluster $i$, and $||x-m_i||$ is the $L^2$ norm (Euclidean distance) between the two vectors. Well defined clusters have a large between cluster variance and a small within cluster variance. The higher the CH score, the better defined clusters the model has. \\
-
-The Silhouette Coefficient \cite{silhouette-score} measures how similar that point is to other points in its cluster. It is bound between -1 and 1, where a higher score indicates that point $i$ is well matched to its cluster. If many points have a low or negative silhouette value, then the clustering solution might have too many or too few clusters. The silhouette coefficient for a single sample $i$ is composed of two scores whose mean then gives the overall silhouette coefficient score for that sample (Equation \ref{eq:silhouette}). 
-
-\begin{equation}
-    s(i) = \frac{b(i) - a(i)}{max\{a(i), b(i)\}}
-    \label{eq:silhouette}
-\end{equation}
-
-where $a(i)$ is the average distance between data point $i$ and all other points in the same cluster and $b(i)$ is the average distance between data point $i$ and all other points in the next nearest cluster. Silhouette values can be used as a clustering evaluation criterion with any distance metric.
-
 \subsection{Data Pre-processing: Outlier Analysis}
 
 Talk about variance, standard deviation, Z-Score, what an outlier is.
+
+\subsubsection{Outliers}
+
+An outlier is an observation that does not conform to the general pattern of the rest of the data. Observations that have a large influence on the estimated coefficients of a regression model are called influential observations. If an observation has been identified as a likely outlier, it is important to try and analyse why it is the case, as outliers can arise from incorrect data collection or can be an indication of the underlying model being unsuitable \cite{forecasting-book}, \cite{m2s2-notes}. Figure \ref{fig:outlier} is an example showing how an outlier can affect predictions. The red line is the regression line fitted to the data including the outliers, the black line is the regression line fitted to the data without the outlier. It can be seen that the gradient of the 2 lines are not the same and therefore, the models would give differing predictions.  
+
+\begin{figure}[H]
+\begin{center}
+    \includegraphics[width=\textwidth]{Images/outlier-analysis.png}
+    \caption{Example showing how an outlier can affect predictions, original image from \cite{forecasting-book}}
+    \label{fig:outlier}
+\end{center}
+\end{figure}
 
 \subsection{Transport for London APIs}
 \label{section:tfl-api}
