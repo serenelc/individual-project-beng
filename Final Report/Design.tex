@@ -116,7 +116,7 @@ Graphs were also plotted to see the total number of buses arriving at bus stops 
 \end{center}
 \end{figure}
 
-For each route, two bus stops were chosen and the travel times of the bus were calculated. The z-score (Equation \ref{eqn:z-score}) was calculated for each journey time and used to measure whether a journey time was an outlier or not. A z-score of larger than 3 or smaller than -3 indicates an outlier TODO CITE. 
+For each route, two bus stops were chosen and the travel times of the bus were calculated. The z-score (Equation \ref{eqn:z-score}) was calculated for each journey time and used to measure whether a journey time was an outlier or not. A z-score of larger than 3 or smaller than -3 indicates an outlier \cite{significance-of-eda}. 
 
 \begin{equation}
     z = \frac{x_i - \mu}{\sigma}
@@ -155,7 +155,7 @@ The variance and standard deviation were also calculated. For the journey times 
 
 Based on the results as seen in Figure \ref{fig:variance-sd-6}, it is possible to conclude that there is indeed an upward trend in the variance and standard deviation for stops that are further apart. Therefore, predictions made for bus stops that are closer together are likely to be more accurate. 
 
-\subsubsection{Effect of time of day and time of week}
+\subsubsection{Effect of time of day and day of week}
 
 To see the effect of time of day on bus journey times, the times of day were split into eight sections: 00-03, 03-06, 06-09, 09-12, 12-15, 15-18, 18-21, 21-00. For each route two bus stops were chosen and the travel times of the bus were calculated and plotted, as in Figure \ref{fig:time-of-day-69} and Figure \ref{fig:time-of-day-52}. Figure \ref{fig:time-of-day-69} shows the travel times of buses from Florence Road to Star Lane on route 69, which are five stops apart. Figure \ref{fig:time-of-day-52} shows the travel times of buses from All Souls Avenue to Notting Hill Gate Station on route 52, which are 16 stops apart. The Figures also have the average journey time across all hours of the day plotted as a black dotted line. 
 
@@ -234,7 +234,7 @@ If the user gets on bus route X at stop A and requests the estimated arrival tim
 
 \item Looking back different numbers of buses: The historical model looks back at the last 2 buses, 5 buses, 10 buses and 15 buses.
 
-\end{enumerate}
+\end{enumerate} 
 
 \textbf{2) Calculate weighted average of recent journey times}: It is necessary to calculate the weighted average of the recent journey times because it is unlikely that the journey time of a bus 100 minutes before the request time will have as much of an effect on the current journey. Using grid search cross validation, the weights are tuned such that they give the optimal predictions. Let $t$ be the amount of time that a bus arrived at stop B before the request time. Let $n$ be the nth most recent bus to arrive at stop B before the request time. For example, $t = 10$ implies that the bus arrived at stop B 10 minutes before the request time and $n=1$ implies that bus was the most recent to arrive at stop B before the request time. The final weightings are as follows:
 
@@ -253,19 +253,21 @@ If the user gets on bus route X at stop A and requests the estimated arrival tim
 
 The model was evaluated by choosing random pairs of stops and routes and then making requests at thirty minute intervals from 2020/05/25 02:00:00 to 2020/06/08 23:59:59. The root mean squared error (RMSE) and the mean absolute absolute errors (MAE) were calculated and compared against each other. \\
 
-Initially, the eight sub-models were tested on pairs of stops that were five stops apart. Then, the best four of the sub-models were chosen by averaging their RMSE and MAE scores. These were run again using pairs of stops that were further apart to see how well the models generalised to stops that were further apart. As described in Section \ref{section:data-exploration}, the variance in the journey times of the stops increase as the gap between the stops increase. Therefore, the models perform best on stops that are closer together. So, the best overall model is the one that still maintains a good MAE and RMSE for larger gaps.
+Initially, the eight sub-models were tested on pairs of stops that were five stops apart. Then, the best two of the sub-models were chosen by averaging their RMSE and MAE scores. These were run again using pairs of stops that were further apart to see how well the models generalised to stops that were further apart. As described in Section \ref{section:data-exploration}, the variance in the journey times of the stops increase as the gap between the stops increase. Therefore, the models perform best on stops that are closer together. So, the best overall model is the one that still maintains a good MAE and RMSE for larger gaps.
 
 \subsubsection{Technology Choices}
 
 Python was chosen as the language to develop the models. This is due to the large amount of support for statistical modelling and because I have experience using Python in my Intro Data Science module.
 
-\subsection{Regression Models}
+\subsection{Regression + Interpolation Models}
 
-The regression model is actually a two part model that combines two models together to make a prediction. The first model is a regression model and the second model is one of three sub-models: weighted average model, line of best fit model and natural cubic spline model. \\
+The regression and interpolation model is a two part model that combines two models together to make a prediction. The first model is a regression model and the second model is one of three sub-models: weighted average model, linear regression model and natural cubic spline model. The two sub-models combined form a linear interpolation model. \\
 
 The hypothesis is that the journey time of a bus relies on both `global' conditions and `local' conditions. `Global' conditions in this case refers to factors such as the time of day or the day of the week that have a constant effect throughout history. `Local' conditions on the other hand refers to more recent journey data that could indicate an increase or decrease in journey time. For example, it is assumed that the general trend in travel conditions is more or less the same every weekend - this is a `global' condition. However, if on a particular weekend there is a car crash in the morning that causes journey times to increase, then for this particular weekend, the expected journey time would not be the same as with other weekends - this is a `local' condition. \\ 
 
-This is why a two part model was chosen; so that the first part, the regression model, could calculate the `global' prediction, and then the second part could calculate the `local' prediction. A weighted average of the two predictions is then used to calculate the overall prediction of a journey time. \\
+This is why a two part model was chosen; so that the first part, the regression model, could calculate the `global' prediction, and then the second part could calculate the `local' prediction. A linear interpolation of the two predictions is then used to calculate the overall prediction of a journey time. \\
+
+Before being able to choose the `global' conditions, it is necessary to explore the different possible features to see if they are correlated to each other or not. If the factors are dependent upon one another, then they cannot be used as separate covariates. 
 
 If the user gets on bus route X at stop A and requests the estimated arrival time at stop B, the algorithm by which this time is predicted is shown in Figure \ref{fig:overarch-combined-model}. \\
 
@@ -302,12 +304,12 @@ Figure \ref{fig:part1-regression-input} is an example of the data that is used t
 \end{center}
 \end{figure}
 
-In order to evaluate the quality of the regression model, requests are made from 20/04/2020 01:00:00 to 06/05/2020 23:59:59 at thirty minute intervals for a number of different pairs of stops of varying routes and gap sizes. The root mean squared error (RMSE), R2-score and mean absolute error (MAE) were then calculated and the results are shown below:  
+In order to evaluate the quality of the regression model, requests are made from 20/04/2020 01:00:00 to 08/06/2020 23:59:59 at thirty minute intervals for a number of different pairs of stops of varying routes and gap sizes. The root mean squared error (RMSE), R2-score and mean absolute error (MAE) were then calculated and the results are shown below:  
 
 \begin{itemize}
-    \item RMSE: 362.42 seconds (5sf)
-    \item R2-score: 0.85749 (5sf)
-    \item MAE: 234.43 seconds (5sf)
+    \item RMSE: 343.09 seconds (5sf)
+    \item R2-score: 0.86865 (5sf)
+    \item MAE: 224.58 seconds (5sf)
 \end{itemize}
 
 Since an R2-score of 1 means a perfect prediction and the R2-score is bounded between 0 and 1, a score of 0.85749 indicates that the model gives a fairly good prediction of the journey time. However, the MAE and RMSE score indicate that the predictions can be around 4 and 6 minutes off respectively, which in reality is not very good at all. This supports the hypothesis that recent data, i.e. the `local' conditions, need to also be taken into account as looking at these `global' factors alone does not provide an accurate enough prediction. \\
@@ -315,26 +317,26 @@ Since an R2-score of 1 means a perfect prediction and the R2-score is bounded be
 The model is pre-trained and therefore, for this step, the algorithm need only gather the required features and put them into Equation \ref{eq:part1-regression} to get $y_{pred1}$. The intercept and coefficient have already been pre-computed and are as follows:
 
 \begin{itemize}
-    \item Coefficients: [[ 7.41559049e+02 -3.06835264e+01  8.25661838e+13  7.82811260e+13
-   8.92405705e+13  1.24825435e+14  1.47477088e+14  1.75196319e+14
-   2.32248786e+14  2.39054839e+14  2.47074912e+14  2.52775351e+14
-   2.71316532e+14  2.78478555e+14  2.55958319e+14  2.55563310e+14
-   2.58311562e+14  2.72588843e+14  2.63883388e+14  2.31801018e+14
-   2.03206252e+14  1.51204243e+14  1.45957147e+14  1.30991333e+14
-   1.44032686e+14  1.04563110e+14]]
-   \item Intercept: [1029.17405407]
+    \item Coefficients: [[ 7.78320354e+02 -2.15578663e+01  5.73810236e+12  6.16413662e+12
+   6.90322104e+12  9.84142661e+12  1.12486687e+13  1.41533295e+13
+   1.78363604e+13  1.87106607e+13  1.92728119e+13  2.02578876e+13
+   2.12199016e+13  2.17152238e+13  2.01181975e+13  1.96601961e+13
+   2.00780471e+13  2.12757351e+13  2.06500324e+13  1.84661903e+13
+   1.53716651e+13  1.15428232e+13  1.10275325e+13  9.32177162e+12
+   1.05914818e+13  6.93639804e+12]]
+   \item Intercept: [1078.31645828]
 \end{itemize}
 
 This calculated $y_{pred1}$ is stored for further use in step 3). \\
 
-2) \textbf{Calculate `local' prediction}: The second part of the model predicts the journey time of a bus from stop A to stop B based on the `local' conditions, which in this case is the last 15 buses to travel from stop A to stop B. It was decided to look back 15 buses because based on the historical models as described in Section \ref{section:historical-model-design}, the model that looked back 15 buses performed the best. There are three different sub-models that were used: \\
+2) \textbf{Calculate `local' prediction}: The second part of the model predicts the journey time of a bus from stop A to stop B based on the `local' conditions, which in this case is the last 10 buses to travel from stop A to stop B. It was decided to look back 10 buses because based on the historical models as described in Section \ref{section:historical-model-design}, the model that looked back 10 buses performed the best. There are three different sub-models that were used: \\
 
 \begin{itemize}
     \item \textbf{Weighted Average}
     \begin{equation}
-        y_{pred2} = weighted\ average\ of\ last\ 15\ journeys
+        y_{pred2} = weighted\ average\ of\ last\ 10\ journeys
     \end{equation}
-    where the weights are the same as in Section \ref{section:historical-model-design}: up to 2 buses = 0.45, between 2 to 5 buses = 0.3, between 5 to 10 buses = 0.2, between 10 to 15 buses = 0.05. This makes this sub-model essentially the same model as the historical average model. A weighted average model is good for cancelling out rivalling effects or when the data is noisy. However, it does not indicate trends in the data. For example, as seen in Figure \ref{fig:weighted-avg-regression} if the last 15 journeys are decreasing in journey time, it might be assumed that at the current request time, the journey time would be even less, following the downward trend. However, the weighted average model is unable to provide such a prediction.
+    where the weights are the same as in Section \ref{section:historical-model-design}: up to 2 buses = 0.55, between 2 to 5 buses = 0.35, between 5 to 10 buses = 0.1. This makes this sub-model essentially the same model as the historical average model. A weighted average model is good for cancelling out rivalling effects or when the data is noisy. However, it does not indicate trends in the data. For example, as seen in Figure \ref{fig:weighted-avg-regression} if the last 10 journeys are decreasing in journey time, it might be assumed that at the current request time, the journey time would be even less, following the downward trend. However, the weighted average model is unable to provide such a prediction.
     
     \begin{figure}[H]
     \begin{center}
@@ -346,10 +348,10 @@ This calculated $y_{pred1}$ is stored for further use in step 3). \\
     
     \item \textbf{Linear Regression}
     \begin{equation}
-        y_{pred2} = linear\ regression\ based\ on\ last\ 15\ journeys
+        y_{pred2} = linear\ regression\ based\ on\ last\ 10\ journeys
     \end{equation}
     
-    If the y axis is the journey time and the x axis is the time since the request, then $y_{pred2}$ is the intercept with the y axis. It is undesirable to use a regression model with degree larger than 1 because at the extremes the values become very large or very small. Thus, the intercept, would also be very large or very small and not close enough to the desired predicted value. This is demonstrated in Figure \ref{fig:extreme-bestfit}, which shows the journey times of the last 15 journeys alongside the regression models. It could be inferred from the last 15 journey times that the bus journey time at the request time (i.e. at 0 on the x axis) would be somewhere in between 5 and 7 minutes. This is captured best with the model with degree = 1.
+    If the y axis is the journey time and the x axis is the time since the request, then $y_{pred2}$ is the intercept with the y axis. It is undesirable to use a regression model with degree larger than 1 because at the extremes the values become very large or very small. Thus, the intercept, would also be very large or very small and not close enough to the desired predicted value. This is demonstrated in Figure \ref{fig:extreme-bestfit}, which shows the journey times of the last 10 journeys alongside the regression models. It could be inferred from the last 10 journey times that the bus journey time at the request time (i.e. at 0 on the x axis) would be somewhere in between 5 and 7 minutes. This is captured best with the model with degree = 1.
     
     \begin{figure}[H]
     \begin{center}
@@ -361,16 +363,16 @@ This calculated $y_{pred1}$ is stored for further use in step 3). \\
     
     \item \textbf{Cubic Spline Interpolation}
     \begin{equation}
-        y_{pred2} = fit\ a\ cubic\ spline\ to\ the\ last\ 15\ journeys
+        y_{pred2} = fit\ a\ cubic\ spline\ to\ the\ last\ 10\ journeys
     \end{equation}
     
-    Similarly to the linear regression case, the y axis is the journey time, the x axis is the time since the request and the intercept is $y_{pred2}$. Cubic splines with three different types of boundary conditions were used: `not-a-knot', `clamped' and `natural'. Figure \ref{fig:extreme-bestfit} demonstrates that the 'not-a-knot' and 'clamped' conditions provide more extreme intercept values than the 'natural' condition.
+    Similarly to the linear regression case, the y axis is the journey time, the x axis is the time since the request and the intercept is $y_{pred2}$. Cubic splines with three different types of boundary conditions were used: `not-a-knot', `clamped' and `natural'. `not-a-knot' indicates that the first and second segment at a curve end are the same. `clamped' indicates that the first derivative at the curves' ends are zero. `natural' indicates that the second derivatives at the curves' ends are zero. Figure \ref{fig:three-bounary-conditions} demonstrates that the 'not-a-knot' and 'clamped' conditions provide more extreme intercept values than the 'natural' condition.
     
     \begin{figure}[H]
     \begin{center}
         \includegraphics[keepaspectratio, width=10cm]{Images/regression-cubicspline.png}
         \caption{Three Boundary Conditions}
-        \label{fig:extreme-bestfit}
+        \label{fig:three-bounary-conditions}
     \end{center}
     \end{figure}
 
@@ -378,7 +380,7 @@ This calculated $y_{pred1}$ is stored for further use in step 3). \\
 
 All three `local' models were used in the training process, but only the best performing one will be used in the mobile app. The input to all three models is simply the journey times of the most recent fifteen journeys from stop A to stop B and how long ago the bus arrived at stop B compared to the request time. Therefore, $y\_{pred2}$ can be calculated in such a manner and is stored for further use in step 3).\\
 
-\textbf{3) Calculate overall prediction using `global' and `local' prediction}: The last part of the model combines $y_{pred1}$ with $y_{pred2}$ to form Equation \ref{eq:regression-overall} for the overall prediction:
+\textbf{3) Calculate overall prediction using `global' and `local' prediction}: The last part of the model combines $y_{pred1}$ with $y_{pred2}$ to form Equation \ref{eq:regression-overall} for the overall prediction. This is essentially a linear interpolation model:
 
 \begin{equation}
 \label{eq:regression-overall}
@@ -395,9 +397,9 @@ Parameter tuning on $\alpha$ is performed on $y_{pred1}$ and all five $y_{pred2}
 
 \subsubsection{Model Evaluation}
 
-The overall model was evaluated in the same way part one of the model is evaluated: requests are made from 20/04/2020 01:00:00 to 06/05/20 23:59:59 at thirty minute intervals for a number of different pairs of stops of varying routes and gap sizes. The root mean squared errors (RMSE) and mean absolute errors (MAE) were calculated for the five possible models (due to the five possibilities for part two of the model) and compared against each other. \\
+The overall model was evaluated in the same way part one of the model is evaluated: requests are made from 25/05/2020 02:00:00 to 08/06/20 23:59:59 at thirty minute intervals for a number of different pairs of stops of varying routes and gap sizes. The root mean squared errors (RMSE) and mean absolute errors (MAE) were calculated for the five possible models (due to the five possibilities for part two of the model) and compared against each other. \\
 
-It should be noted that looking back at the last 15 buses was the best model out of all the historical average models and one of the `local' models is a weighted average historical model. Therefore, it is likely that the overall model that performs the best is the one that has the weighted average model as the `local' model. Furthermore, if the `local' models instead had chosen to look back at e.g. the last 10 buses or buses in the past two hours, it is possible that a different `local' model would lead to the best overall model.
+It should be noted that looking back at the last 10 buses was the best model out of all the historical average models and one of the `local' models is a weighted average historical model. Therefore, it is likely that the overall model that performs the best is the one that has the weighted average model as the `local' model. Furthermore, if the `local' models instead had chosen to look back at e.g. the last 5 buses or buses in the past two hours, it is possible that a different `local' model would lead to the best overall model.
 
 \subsubsection{Technology Choices}
 

@@ -199,7 +199,7 @@ A forecast may be greater than or less than the actual value. The difference bet
 
 \noindent where $A_t$ is the actual value and $F_t$ is the forecasted value. \\
 
-Measures to evaluate the performance of a forecasting method can be classified into those that look at direction and those that look at size of the error. The bias (Equation \ref{eq:forecast-bias}) is the most popular measure for evaluating the direction of the error, i.e. whether the predictions are over or under the actual values. The closer the bias is to zero, the better the model. If the bias is negative, this implies that the actual values are on average, smaller than the predicted value. Therefore, the forecasting model overestimates the actual values.
+Measures to evaluate the performance of a forecasting method can be classified into those that look at direction and those that look at size of the error. The bias (Equation \ref{eq:forecast-bias}) is the most popular measure for evaluating the direction of the error, i.e. whether the predictions are over or under the actual values. The closer the bias is to zero, the better the model. If the bias is negative, this implies that the actual values are on average, smaller than the predicted value. Therefore, the forecasting model overestimates the actual values. Let $n$ be the number of samples, then:
 
 \begin{equation}
 \label{eq:forecast-bias}
@@ -213,15 +213,21 @@ The size of the error could mean the amount of the error or the dispersion of th
     MSE = \frac{\sum(A_t-F_t)^2}{n}
 \end{equation}
 
-Another common measure is the root mean squared error (RMSE), which is, as its name suggests, the square root of the MSE. However, neither the MSE nor the RMSE take into account the magnitude of the actual values. \\
+Another common measure is the root mean squared error (RMSE), which is, as its name suggests, the square root of the MSE. The RMSE measures how spread out the residuals are, where the residuals are how far away from the regression line the data points are. More intuitively, the RMSE describes how concentrated the data is around the line of best fit. However, neither the MSE nor the RMSE take into account the magnitude of the actual values. \\
 
-A measure of success that does attempt to take into account the effect of the magnitude of the actual values is the mean absolute error (MAE). The MAE (Equation \ref{eq:forecast-mae}) is the average of the absolute values of the errors. As with the RMSE and MSE, the smaller the value, the better.  
+A measure of success that does attempt to take into account the effect of the magnitude of the actual values is the mean absolute error (MAE). The MAE (Equation \ref{eq:forecast-mae}) is the average of the absolute values of the errors. As with the RMSE and MSE, the smaller the value, the better.
 
 \begin{equation}
 \label{eq:forecast-mae}
     MAE = \frac{\sum|A_t-F_t|}{n}
 \end{equation}
 
+The RMSE is bounded by the MAE:
+
+\begin{itemize}
+    \item MAE $\leq$ RMSE: The RMSE will always be larger or equal to the MAE. If all of the errors have the same magnitude, then the two values are equal.
+    \item RMSE $\leq$ (MAE * $\sqrt{n}$): The difference between the RMSE and the MAE is greatest when all of the prediction error comes from a single test sample. This implies that as the sampel size increases, the RMSE tends to become increasingly larger than the MAE. 
+\end{itemize}
 
 \subsection{Regression Models}
 \label{section:regression-models-research}
@@ -301,14 +307,16 @@ A common way to summarise how well a regression model fits the data is via the c
 
 where the summations are over all the observations, $\hat y_t$ are the predicted values, $y_t$ are the observed values and $R^2$ is bounded between 0 and 1. Although this is a way of measuring `goodness-of-fit', validating the performance of a model against a test set is much better than measuring the $R^2$ value on the training data \cite{forecasting-book}. \\
 
-The differences between the observed $y$ values and the corresponding fitted $\hat y$ values are known as residuals. To detect problems with a model, we can plot standardised residuals against some each of the predictor variables. We expect the residuals to be randomly scattered without showing any systematic pattern because a pattern would indicate a nonlinear relationship between the variables. If the model is correct then the resulting plot should just show `noise' with no distinct patterns. 
+The differences between the observed $y$ values and the corresponding fitted $\hat y$ values are known as residuals. To detect problems with a model, we can plot standardised residuals against some each of the predictor variables. We expect the residuals to be randomly scattered without showing any systematic pattern because a pattern would indicate a nonlinear relationship between the variables. If the model is correct then the resulting plot should just show `noise' with no distinct patterns. \\
+
+As with the historical models, the mean absolute error (MAE) and the root mean squared error (RMSE) can also be used as measures of success.
 
 \subsection{Kalman Filtering Models}
 \label{section:kalman-models-research}
 
-Kalman filtering is a dynamic two-step algorithm that uses measurements observed over time to estimate some unknown variables \cite{kalman-korean}. The first part is the prediction process and the second part is the measurement process. The two processes are modelled by groups of equations in the state space model. Kalman filter models generally provide good predictions because they are able to optimally estimate the system's error covariance and recursively use the prediction to improve the system measurements \cite{kalman-malay}. In this case, the journey time of a future bus would be predicted based on the system's state in past time steps. \\
+Kalman filtering is a dynamic two-step algorithm that uses measurements observed over time to estimate some unknown variables \cite{kalman-korean}. The first part is the prediction process and the second part is the measurement process. The two processes are modelled by groups of equations in the state space model. Kalman filter models generally provide good predictions because they are able to optimally estimate the system's error covariance and recursively use the prediction to improve the system measurements \cite{kalman-malay}. In this case, the journey time of a future bus would be predicted based on the system's state in past time steps. Kalman Models also have great capabilities of filtering out noise.  \\
 
-Kalman filter models would be suitable for the task of estimating bus arrival times because unstable traffic conditions can be accommodated by their time dependent parameters \cite{dynamic-gps}. Furthermore, Kalman filter models are able to make predictions based purely on journey times, without the need for other traffic conditions. However, Kalman filter models struggle to handle abrupt changes between consecutive travel times. So, if there was a significant difference in travel times between the morning peak and late morning hours, the model is unable to filter the noise smoothly. \\
+Kalman filter models would be suitable for the task of estimating bus arrival times because unstable traffic conditions can be accommodated by their time dependent parameters \cite{dynamic-gps}. Furthermore, Kalman filter models are able to make predictions based purely on journey times, without the need for other traffic conditions. However, Kalman filter models struggle to handle abrupt changes between consecutive travel times. So, if there was a significant difference in travel times between the morning peak and late morning hours, the model is unable to filter the noise smoothly. 
 
 \subsection{Artificial Neural Network Models}
 \label{section:ml-models-research}
@@ -432,6 +440,10 @@ A special case of the cubic spline is the natural cubic spline, which must also 
      s''(x_0) = s''(x_j) = 0
 \end{equation}
 
+\subsubsection{Measuring Success}
+
+As with the historical models, the mean absolute error (MAE) and the root mean squared error (RMSE) can also be used as measures of success.
+
 \subsection{Exploratory Data Analysis}
 
 It is important to explore the dataset being used for a number of reasons including: extracting important variables, identifying outliers or human error and understanding the relationships (or lack of) between variables \cite{significance-of-eda}. \\
@@ -446,7 +458,7 @@ Observations that have a large influence on the estimated coefficients of a regr
 
 \begin{figure}[H]
 \begin{center}
-    \includegraphics[width=10cm]{Images/outlier-analysis.png}
+    \includegraphics[width=11cm]{Images/outlier-analysis.png}
     \caption{Example showing how an outlier can affect predictions, original image from \cite{forecasting-book}}
     \label{fig:outlier}
 \end{center}
@@ -456,7 +468,7 @@ Data points that fall outside 1.5 times of the interquartile range above the thi
 
 \begin{equation}
     \label{eq:z-score}
-    Z\-Score = \frac{Observation - Mean}{Standard Deviation}
+    Z Score = \frac{Observation - Mean}{Standard Deviation}
 \end{equation}
 
 The calculation rescales and centers the data and looks for data points which are too far from zero. Convention is that data points that give a z-score of greater than 3 or -3 are classed as outliers. 
