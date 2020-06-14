@@ -1,7 +1,7 @@
 import React, { memo, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-const PredictionPage = ({ navigation }) => {
+const PredictionPage = ({ navigation }, predTime) => {
   const [predicted_journey, setPred] = useState({ value: "", error: "" });
   const API_URL = ""
 
@@ -14,7 +14,7 @@ const PredictionPage = ({ navigation }) => {
   return (
     <View style={styles.container}>
         <Text style={styles.title}> 
-            The predicted journey time is: 
+            The predicted journey time is: {predTime}
         </Text>
 
         <TouchableOpacity onPress={_onBackPressed} style= {styles.button}>

@@ -1,6 +1,6 @@
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import {HomePage, Prediction Page} from './pages';
+import {HomePage, PredictionPage} from './pages';
 
 const Router = createStackNavigator(
   {
