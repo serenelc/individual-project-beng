@@ -257,7 +257,7 @@ Initially, the eight sub-models were tested on pairs of stops that were five sto
 
 \subsubsection{Technology Choices}
 
-Python was chosen as the language to develop the models. This is due to the large amount of support for statistical modelling and because I have experience using Python in my Intro Data Science module.
+Python was chosen as the language to develop the models. This is due to the large amount of support for statistical modelling and because I have experience using Python in my Department of Mathematics Methods for Data Science module.
 
 \subsection{Regression + Interpolation Models}
 
@@ -304,30 +304,7 @@ Figure \ref{fig:part1-regression-input} is an example of the data that is used t
 \end{center}
 \end{figure}
 
-In order to evaluate the quality of the regression model, requests are made from 20/04/2020 01:00:00 to 08/06/2020 23:59:59 at thirty minute intervals for a number of different pairs of stops of varying routes and gap sizes. The root mean squared error (RMSE), R2-score and mean absolute error (MAE) were then calculated and the results are shown below:  
-
-\begin{itemize}
-    \item RMSE: 343.09 seconds (5sf)
-    \item R2-score: 0.86865 (5sf)
-    \item MAE: 224.58 seconds (5sf)
-\end{itemize}
-
-Since an R2-score of 1 means a perfect prediction and the R2-score is bounded between 0 and 1, a score of 0.85749 indicates that the model gives a fairly good prediction of the journey time. However, the MAE and RMSE score indicate that the predictions can be around 4 and 6 minutes off respectively, which in reality is not very good at all. This supports the hypothesis that recent data, i.e. the `local' conditions, need to also be taken into account as looking at these `global' factors alone does not provide an accurate enough prediction. \\
-
-The model is pre-trained and therefore, for this step, the algorithm need only gather the required features and put them into Equation \ref{eq:part1-regression} to get $y_{pred1}$. The intercept and coefficient have already been pre-computed and are as follows:
-
-\begin{itemize}
-    \item Coefficients: [[ 7.78320354e+02 -2.15578663e+01  5.73810236e+12  6.16413662e+12
-   6.90322104e+12  9.84142661e+12  1.12486687e+13  1.41533295e+13
-   1.78363604e+13  1.87106607e+13  1.92728119e+13  2.02578876e+13
-   2.12199016e+13  2.17152238e+13  2.01181975e+13  1.96601961e+13
-   2.00780471e+13  2.12757351e+13  2.06500324e+13  1.84661903e+13
-   1.53716651e+13  1.15428232e+13  1.10275325e+13  9.32177162e+12
-   1.05914818e+13  6.93639804e+12]]
-   \item Intercept: [1078.31645828]
-\end{itemize}
-
-This calculated $y_{pred1}$ is stored for further use in step 3). \\
+The model is trained once on different pairs of stops of varying routes and gap sizes and then its intercept and coefficients are stored. When a request is made the algorithm need only gather the required features and put them into Equation \ref{eq:part1-regression} to get $y_{pred1}$, using the stored intercept and coefficient values. This calculated $y_{pred1}$ is stored for further use in step 3). \\
 
 2) \textbf{Calculate `local' prediction}: The second part of the model predicts the journey time of a bus from stop A to stop B based on the `local' conditions, which in this case is the last 10 buses to travel from stop A to stop B. It was decided to look back 10 buses because based on the historical models as described in Section \ref{section:historical-model-design}, the model that looked back 10 buses performed the best. There are three different sub-models that were used: \\
 
@@ -399,15 +376,19 @@ Parameter tuning on $\alpha$ is performed on $y_{pred1}$ and all five $y_{pred2}
 
 The overall model was evaluated in the same way part one of the model is evaluated: requests are made from 25/05/2020 02:00:00 to 08/06/20 23:59:59 at thirty minute intervals for a number of different pairs of stops of varying routes and gap sizes. The root mean squared errors (RMSE) and mean absolute errors (MAE) were calculated for the five possible models (due to the five possibilities for part two of the model) and compared against each other. \\
 
-It should be noted that looking back at the last 10 buses was the best model out of all the historical average models and one of the `local' models is a weighted average historical model. Therefore, it is likely that the overall model that performs the best is the one that has the weighted average model as the `local' model. Furthermore, if the `local' models instead had chosen to look back at e.g. the last 5 buses or buses in the past two hours, it is possible that a different `local' model would lead to the best overall model.
-
 \subsubsection{Technology Choices}
 
 As with the Historical Models, Python was the language used to develop the models. This was due to the large amount of built in help for regression and interpolation that comes with the \texttt{sklearn} library. 
 
-\subsection{Phone App}
+\subsection{Mobile App}
+
+The purpose of the mobile app is merely to provide a more user friendly way of presenting the models' results. Therefore, the design of it is very basic. The application allows the user to enter the start and end stops along with the bus route they intend to take and then is returned the predicted journey time. The assumption is that the user wants to make a journey at the time that they enter the information into the app, i.e. the predicted journey time will be for `now'. There is no capability for requesting journey times in the future since this application is not intended to be used like CityMapper or other travel apps.
 
 \subsubsection{Front End}
+
+The home page of the app provides text inputs for the user to input their start stop, end stop and bus route. Once the user presses `Go', this leads the user to another screen which displays the predicted journey time. On this second page, there is also a button that allows the user to return to the first page to request another prediction. \\
+
+The front end has been written using Expo, which is an open-source platform using Javascript and React to make native apps for Android, iOS and the web. Expo was chosen because for the Department of Computing Webapps group project in 2nd year, our webapp was built using React. Therefore, it was believed that some of this experience would carry over into mobile app development.
 
 \subsubsection{Back End}
 
