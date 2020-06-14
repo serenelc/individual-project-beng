@@ -6,7 +6,7 @@ const HomePage = ({ navigation }) => {
   const [from, setFrom] = useState({ value: "", error: "" });
   const [to, setTo] = useState({ value: "", error: "" });
   const [route, setRoute] = useState({ value: "", error: "" });
-  const API_URL = "http://localhost:5000/test"
+  const API_URL = "http://localhost:5000/"
 
   const busStopValidator = (stopName) => {
     if (!stopName || stopName.length <= 0) return 'Stop name cannot be empty.'

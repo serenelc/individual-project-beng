@@ -7,7 +7,7 @@ import numpy as np
 import pickle
 
 app = Flask(__name__)
-app.config.from_object(os.environ['APP_SETTINGS'])
+# app.config.from_object(os.environ['APP_SETTINGS'])
 model = Prediction()
 
 infile = open("pickles/part1_trained_vals",'rb')
@@ -20,6 +20,22 @@ infile.close()
 
 @app.route('/', methods=['GET', 'POST'])
 def init():
+    testObj = {
+        "success": True,
+        "time": "couldn't calculate predicted journey time"
+    }
+
+    if request.method == "POST":
+        # get url that the user has entered
+        try:
+            response = request.json
+            print("REQUEST : ", response)
+
+        except:
+            print("Unable to get URL. Please make sure it's valid and try again.")
+
+    return jsonify(testObj)
+
     print("Hello, world")
 
 
