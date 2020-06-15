@@ -19,29 +19,6 @@ infile = open("pickles/alpha",'rb')
 alpha = pickle.load(infile)
 infile.close()
 
-@app.route('/db', methods=['GET', 'POST'])
-def connectDb():
-    
-    if request.method == "POST":
-        # get url that the user has entered
-        try:
-            response = request.json
-
-            stop_a = response.get("from")
-            stop_b = response.get("to")
-            route = response.get("route")
-
-            a_journeys, b_journeys = model.get_recent_journeys_from_db(stop_a, stop_b, route)
-
-            print("STOP A JOURNEYS: ", a_journeys)
-            print("STOP B JOURNEYS: ", b_journeys)
-
-        except:
-            print("Unable to get URL. Please make sure it's valid and try again.")
-
-
-    return jsonify({"success": "Success!"})
-
 
 @app.route('/', methods=['GET', 'POST'])
 def init():
@@ -79,10 +56,15 @@ def predictTime():
             stop_b = response.get("to")
             route = response.get("route")
 
-            time_of_request = dt.datetime.now()
+            gmt = dt.timezone.utc
+
+            time_of_request = dt.datetime.now(tz=gmt)
             day_of_week, time_of_day = model.convert_given_global_data(time_of_request)
             dow = np.array([day_of_week])
             global_vals = np.append(dow, time_of_day[0])
+
+            print("day of week: ", dow)
+            print("time of day: ", time_of_day)
 
             start_stop, end_stop = model.get_recent_journeys_from_db(stop_a, stop_b, route)
             last_10_journeys = model.calc_journey_times(start_stop, end_stop)
@@ -92,20 +74,20 @@ def predictTime():
             part1_coeffs = part1_vals.get("coeffs")
             part1_pred = part1_intercept + np.multiply(part1_coeffs, global_vals)
 
-            # Do part 2 prediction
-            part2_pred = model.calc_part2_prediction(last_10_journeys)
+            print("Part 1 prediction: ", part1_pred)
 
-            # Get combined prediction
-            best_alpha = alpha.get("alpha")
-            y_pred = best_alpha * (part1_pred) + (1 - alpha) * (part2_pred)
+            # # Do part 2 prediction
+            # part2_pred = model.calc_part2_prediction(last_10_journeys)
+
+            # # Get combined prediction
+            # best_alpha = alpha.get("alpha")
+            # y_pred = best_alpha * (part1_pred) + (1 - alpha) * (part2_pred)
 
             # Send prediction back to front end
-            predObject = {
-                "success": True,
-                "time": y_pred
-            }
-
-            return jsonify(predObject)
+            # predObject = {
+            #     "success": True,
+            #     "time": y_pred
+            # }
 
         except:
             print("Unable to get URL. Please make sure it's valid and try again.")

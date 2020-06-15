@@ -64,7 +64,8 @@ class Prediction(object):
 
     def get_recent_journeys_from_db(self, start, end, route):
         
-        table_name = "bus_arrivals_" + str(route)   
+        table_name = "bus_arrivals_" + str(route) 
+        start_time = time.time()  
         results = {}
 
         conn = None
@@ -73,8 +74,8 @@ class Prediction(object):
             cursor = conn.cursor()
             sql = "SELECT *"
             sql += " FROM " + table_name
-            sql += " WHERE bus_stop_name = " + start
-            sql += " AND direction = 'inbound'"
+            sql += " WHERE bus_stop_name = '" + start
+            sql += "' AND direction = 'inbound'"
             sql += " ORDER BY time_of_arrival DESC"
             sql += " LIMIT 12"
             
@@ -83,8 +84,8 @@ class Prediction(object):
             
             sql = "SELECT *"
             sql += " FROM " + table_name
-            sql += " WHERE bus_stop_name = " + end
-            sql += " AND direction = 'inbound'"
+            sql += " WHERE bus_stop_name = '" + end
+            sql += "' AND direction = 'inbound'"
             sql += " ORDER BY time_of_arrival DESC"
             sql += " LIMIT 12"
             
@@ -110,46 +111,58 @@ class Prediction(object):
                 direction = bus[4]
                 eta = bus[2]
                 time_of_req = bus[3]
+                journey = bus[5]
 
                 vehicle_info = {
                                 "vehicle_id": vehicle_id,
                                 "bus_stop_name": bus_stop_name,
                                 "direction": direction,
                                 "expected_arrival": eta,
-                                "time_of_req": time_of_req
+                                "time_of_req": time_of_req,
+                                "journey": journey
                                 }
                 
-                stop_b.append(vehicle_info)
-                
+                stop_a.append(vehicle_info)
+
             for bus in results.get("end"):
                 vehicle_id = bus[0]
                 bus_stop_name = bus[1]
                 direction = bus[4]
                 eta = bus[2]
                 time_of_req = bus[3]
+                journey = bus[5]
 
                 vehicle_info = {
                                 "vehicle_id": vehicle_id,
                                 "bus_stop_name": bus_stop_name,
                                 "direction": direction,
                                 "expected_arrival": eta,
-                                "time_of_req": time_of_req
+                                "time_of_req": time_of_req,
+                                "journey": journey
                                 }
                 
-                stop_a.append(vehicle_info)
+                stop_b.append(vehicle_info)
 
-            comp_time = time.time() - start
+            comp_time = time.time() - start_time
             print("Get journeys: ", comp_time)
             return stop_a, stop_b
 
         
     def calc_journey_times(self, start_stop, end_stop):
         journey_times = []
-        for i, stop in enumerate(start_stop):
-            time_a = stop.get("expected_arrival")
-            time_b = end_stop[i].get("expected_arrival")
-            diff = time_b - time_a + dt.timedelta(seconds = 30)
-            journey_times.append(diff)
+        print("calculating journey times")
+        
+        for start in start_stop:
+            [vehicle,_,_,_] = start.get("vehicle_id").split("_")
+            time_a = start.get("expected_arrival")
+
+            for end in end_stop:
+                [end_vehicle,_,_,_] = end.get("vehicle_id").split("_")
+                if vehicle == end_vehicle:
+                    time_b = end.get("expected_arrival")
+                    diff = time_b - time_a + dt.timedelta(seconds = 30)
+                    print(diff)
+                    journey_times.append(diff)
             
         # sorted by most recent journey first
         return journey_times
