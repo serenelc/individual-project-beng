@@ -5,6 +5,7 @@ import os
 import datetime as dt
 import numpy as np
 import pickle
+import psycopg2
 
 app = Flask(__name__)
 # app.config.from_object(os.environ['APP_SETTINGS'])
@@ -17,6 +18,40 @@ infile.close()
 infile = open("pickles/alpha",'rb')
 alpha = pickle.load(infile)
 infile.close()
+
+@app.route('/db', methods=['GET', 'POST'])
+def connectDb():
+    table_name = "valid_stop_ids_52"   
+    results = []
+
+    conn = None
+    try:
+        print("CONNECTION ATTEMPT")
+
+        conn = psycopg2.connect(host="localhost", database="bus_predictions", user="serenechongtrakul", port="5432")
+        cursor = conn.cursor()
+        sql = "SELECT *"
+        sql += " FROM " + table_name
+        
+        cursor.execute(sql)
+        results = cursor.fetchall() #list of tuples (stop_id, stop_name)
+
+        print("CONNECTION MADE")
+        cursor.close()
+    
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error in getting recent journeys: ", error)
+    
+    finally:
+        
+        if conn is not None:
+            conn.close()
+
+        for bus in results:
+            print(bus)
+
+    return jsonify({"success": "Success!"})
+
 
 @app.route('/', methods=['GET', 'POST'])
 def init():

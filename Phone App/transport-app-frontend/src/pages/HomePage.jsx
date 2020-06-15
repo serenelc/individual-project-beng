@@ -50,6 +50,10 @@ const HomePage = ({ navigation }) => {
           const predTime = res['time']
           console.log("Navigate away!")
           
+          setFrom({ value: "", error: ""});
+          setTo({ value: "", error: ""});
+          setRoute({ value: "", error: ""});
+
           navigation.navigate("PredictionPage", {estTime: predTime});
 
         } else if (res['fromError']) {
@@ -111,10 +115,10 @@ const HomePage = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         margin: 16,
-        marginTop: 100
+        marginTop: 200
     },
     button: {
-        backgroundColor: "#99ff99",
+        backgroundColor: "#aecfb2",
         padding: 20,
         borderRadius: 5,
         marginTop: 20,

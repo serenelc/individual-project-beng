@@ -1,21 +1,23 @@
 import React, { memo } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-const PredictionPage = ({ route, navigation, estTime }) => {
+const PredictionPage = ({navigation}) => {
 
   const _onBackPressed = () => {
     navigation.navigate("HomePage");
   };
 
-  console.log(route)
-  console.log(estTime)
-//   const { estTime } = route.params;
-  console.log("On prediction page! ", estTime)
+
+  const params = navigation.state.params
+  const estTime = params['estTime']
 
   return (
     <View style={styles.container}>
         <Text style={styles.title}> 
-            The predicted journey time is: {estTime}
+            The predicted journey time is: 
+        </Text>
+        <Text style={styles.predText}>
+            {estTime}
         </Text>
 
         <TouchableOpacity onPress={_onBackPressed} style= {styles.button}>
@@ -30,10 +32,10 @@ const PredictionPage = ({ route, navigation, estTime }) => {
 const styles = StyleSheet.create({
     container: {
         margin: 16,
-        marginTop: 100
+        marginTop: 300
     },
     button: {
-        backgroundColor: "#99ff99",
+        backgroundColor: "#6fded8",
         padding: 20,
         borderRadius: 5,
         marginTop: 20,
@@ -49,12 +51,12 @@ const styles = StyleSheet.create({
         marginTop: 20,
         textAlignVertical: "center"
     },
-    predText: {
-        padding: 50,
-        backgroundColor: "#9966ff"
-    },
     title: {
         fontSize: 30
+    },
+    predText: {
+        fontSize: 30,
+        color: "#7a7d7d"
     }
 });
 
