@@ -61,10 +61,10 @@ def predictTime():
             time_of_request = dt.datetime.now(tz=gmt)
             day_of_week, time_of_day = model.convert_given_global_data(time_of_request)
             dow = np.array([day_of_week])
-            global_vals = np.append(dow, time_of_day[0])
+            gap = model.get_gap(stop_a, stop_b, route)
 
-            print("day of week: ", dow)
-            print("time of day: ", time_of_day)
+            global_vals = np.append(gap, dow)
+            global_vals = np.append(global_vals, time_of_day[0])
 
             start_stop, end_stop = model.get_recent_journeys_from_db(stop_a, stop_b, route)
             last_10_journeys = model.calc_journey_times(start_stop, end_stop)
@@ -72,25 +72,31 @@ def predictTime():
             # Do part 1 prediction
             part1_intercept = part1_vals.get("intercept")
             part1_coeffs = part1_vals.get("coeffs")
-            part1_pred = part1_intercept + np.multiply(part1_coeffs, global_vals)
 
+            multiplied = np.multiply(part1_coeffs, global_vals)
+            summed = np.sum(multiplied)
+
+            part1_pred = part1_intercept + summed
             print("Part 1 prediction: ", part1_pred)
 
-            # # Do part 2 prediction
-            # part2_pred = model.calc_part2_prediction(last_10_journeys)
+            # Do part 2 prediction
+            part2_pred = model.calc_part2_prediction(last_10_journeys)
+            print("Part 2 prediction: ", part2_pred)
 
-            # # Get combined prediction
-            # best_alpha = alpha.get("alpha")
-            # y_pred = best_alpha * (part1_pred) + (1 - alpha) * (part2_pred)
+            # Get combined prediction
+            best_alpha = alpha.get("alpha")
+            y_pred = best_alpha * (part1_pred) + (1 - best_alpha) * (part2_pred)
+
+            print("Overall prediction: ", y_pred)
 
             # Send prediction back to front end
-            # predObject = {
-            #     "success": True,
-            #     "time": y_pred
-            # }
+            testObject = {
+                "success": True,
+                "time": y_pred
+            }
 
         except:
-            print("Unable to get URL. Please make sure it's valid and try again.")
+            print("Error trying to calculate prediction")
 
     return jsonify(testObj)
 

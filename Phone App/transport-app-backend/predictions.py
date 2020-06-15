@@ -4,9 +4,28 @@ import numpy as np
 import psycopg2
 import time
 import math
+import urllib
 import pickle
+from urllib.error import HTTPError, URLError
+import json
+import http.client
 
 class Prediction(object):
+
+    def get_gap(self, stop_a, stop_b, route):
+        print("Finding gap size")
+
+        infile = open("pickles/stops_in_sequence",'rb')
+        stops_in_sequence = pickle.load(infile)
+        infile.close()
+
+        stops = stops_in_sequence.get(str(route))
+        index_a = stops.index(stop_a)
+        index_b = stops.index(stop_b)
+        gap = index_b - index_a
+
+        return np.array([gap])
+
 
     def convert_given_global_data(self, time_of_request):
         infile = open("pickles/one_hot_encoder",'rb')
@@ -28,13 +47,14 @@ class Prediction(object):
         return dow, tod
 
     def calc_part2_prediction(self, last_10_journeys):
+        recent_journeys = [x.total_seconds() for x in last_10_journeys]
 
         weights = {"2": 0.55, "5": 0.35, "10": 0.1}
 
         pred = 0
         sum_weights = 0
 
-        for j in range(0, 10):
+        for j in range(0, len(recent_journeys)):
             weight = 0
 
             if (j < 2):
@@ -46,7 +66,7 @@ class Prediction(object):
             elif (j < 15) & (j >= 10):
                 weight = weights["15"]
 
-            journey_time = last_10_journeys[j]
+            journey_time = recent_journeys[j]
 
             if math.isnan(journey_time):
                 continue
@@ -161,7 +181,6 @@ class Prediction(object):
                 if vehicle == end_vehicle:
                     time_b = end.get("expected_arrival")
                     diff = time_b - time_a + dt.timedelta(seconds = 30)
-                    print(diff)
                     journey_times.append(diff)
             
         # sorted by most recent journey first
