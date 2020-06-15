@@ -4,12 +4,15 @@ import os
 import json
 import psycopg2
 from utilities import Utilities
-from data-collection import Data_Collection
+from collector import Mobile_Collection
 from urllib.error import HTTPError, URLError
+
+# TODO: replace bus_stop_name with bus_stop_id in vehicle_id
+# Change the way its added to bus_arrivals to include trip
 
 def main(bus_route):
     helper = Utilities()
-    data = Data_Collection()
+    data = Mobile_Collection()
     
     # Get valid stops for this bus route
     valid_stops = helper.get_valid_stop_ids(bus_route)
@@ -28,8 +31,8 @@ def main(bus_route):
         start_1 = time.time()
         for bus_stop in valid_stops:
             # bus_stop is a tuple (stop_id, stop_name)
-            bus_stop_name = bus_stop[1]
-            new_arrival_info = data.get_expected_arrival_times(bus_stop_name, bus_route)
+            bus_stop_id = bus_stop[0]
+            new_arrival_info = data.get_expected_arrival_times(bus_stop_id, bus_route)
             new_bus_info.append(new_arrival_info)
         end = time.time() - start_1
         print("Get expected arrival times: ", end)
@@ -69,7 +72,7 @@ def main(bus_route):
 connected = False
 while not connected: 
     try:
-        conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example", port='5432')
+        conn = psycopg2.connect(host="localhost", database="bus_predictions", user="serenechongtrakul", port="5432")
     except Exception as e:
         print("Waiting for database to be connected: ", e)
     else:
@@ -77,7 +80,7 @@ while not connected:
         print("Connected!!")
 
 
-bus_routes = ["52", "9"]
+bus_routes = ["9"]
 while True:
     for route in bus_routes:
         main(route)

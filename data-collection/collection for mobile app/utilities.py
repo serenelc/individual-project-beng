@@ -38,7 +38,7 @@ class Utilities(object):
 
         conn = None
         try:
-            conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example", port="5432")
+            conn = psycopg2.connect(host="localhost", database="bus_predictions", user="serenechongtrakul", port="5432")
             cursor = conn.cursor()
             sql = "SELECT * FROM " + table_name 
             cursor.execute(sql)
@@ -64,37 +64,27 @@ class Utilities(object):
 
             for item in bus_info_to_write:
                 vehicle_id = item.get("vehicle_id")
-                [a, b, c, d, num_trip] = vehicle_id.split('_')
-                query_id = "'" + a + "\_" + b + "\_" + c + "\_" + d + "\_%'"
                 bus_stop_name = item.get("bus_stop_name")
                 direction = str(item.get("direction"))
                 eta = str(item.get("expected_arrival"))
                 time_of_req = str(item.get("time_of_req"))
+                journey = 0
 
-                # need to escape underscores and put queries in ''
-                sql_select = "SELECT vehicle_id FROM " + table_name + " WHERE vehicle_id LIKE " + query_id
+                sql_select = "SELECT vehicle_id FROM " + table_name + " WHERE vehicle_id LIKE '" + vehicle_id + "'"
 
                 conn = None
                 try:
-                    conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example", port="5432")
+                    conn = psycopg2.connect(host="localhost", database="bus_predictions", user="serenechongtrakul", port="5432")
                     cursor = conn.cursor()
 
                     cursor.execute(sql_select)
                     rows = cursor.fetchall()
                     if len(rows) > 0:
-                        trip_count = 0
-                        for row in rows:
-                            found_id = row[0]
-                            [a, b, c, d, num_trip] = found_id.split('_')
-                            if int(num_trip) > trip_count:
-                                trip_count = int(num_trip)
+                        journey = journey + len(rows) - 1
 
-                        new_trip_num = trip_count + 1
-                        vehicle_id = a + "_" + b + "_" + c + "_" + d + "_" + str(new_trip_num)
-
-                    tuple_item = (vehicle_id, bus_stop_name, direction, eta, time_of_req)
-                    sql_put = "INSERT INTO " + table_name + "(vehicle_id, bus_stop_name, direction, time_of_arrival, time_of_req) "
-                    sql_put = sql_put + "VALUES (%s, %s, %s, %s, %s)"
+                    tuple_item = (vehicle_id, bus_stop_name, direction, eta, time_of_req, journey)
+                    sql_put = "INSERT INTO " + table_name + "(vehicle_id, bus_stop_name, direction, time_of_arrival, time_of_req, journey) "
+                    sql_put = sql_put + "VALUES (%s, %s, %s, %s, %s, %s)"
 
                     cursor.execute(sql_put, (tuple_item))
 
@@ -127,7 +117,7 @@ class Utilities(object):
 
                 conn = None
                 try:
-                    conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example", port="5432")
+                    conn = psycopg2.connect(host="localhost", database="bus_predictions", user="serenechongtrakul", port="5432")
                     cursor = conn.cursor()
                     sql = ''.join(("INSERT INTO " + table_name + "(vehicle_id, bus_stop_name, direction, expected_arrival, time_of_req) ",
                             "VALUES (%s, %s, %s, %s, %s) ",
@@ -159,7 +149,7 @@ class Utilities(object):
             print("Number of arrived items to delete {}".format(len(arrived_items)))
             conn = None
             try:
-                conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example", port="5432")
+                conn = psycopg2.connect(host="localhost", database="bus_predictions", user="serenechongtrakul", port="5432")
                 cursor = conn.cursor()
                 for arrived in arrived_items:
                     vehicle_id = arrived.get("vehicle_id")
@@ -187,7 +177,7 @@ class Utilities(object):
 
         conn = None
         try:
-            conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example", port="5432")
+            conn = psycopg2.connect(host="localhost", database="bus_predictions", user="serenechongtrakul", port="5432")
             cursor = conn.cursor()
             sql = "SELECT * FROM " + table_name 
             cursor.execute(sql)

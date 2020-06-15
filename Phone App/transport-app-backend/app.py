@@ -21,34 +21,24 @@ infile.close()
 
 @app.route('/db', methods=['GET', 'POST'])
 def connectDb():
-    table_name = "valid_stop_ids_52"   
-    results = []
-
-    conn = None
-    try:
-        print("CONNECTION ATTEMPT")
-
-        conn = psycopg2.connect(host="localhost", database="bus_predictions", user="serenechongtrakul", port="5432")
-        cursor = conn.cursor()
-        sql = "SELECT *"
-        sql += " FROM " + table_name
-        
-        cursor.execute(sql)
-        results = cursor.fetchall() #list of tuples (stop_id, stop_name)
-
-        print("CONNECTION MADE")
-        cursor.close()
     
-    except (Exception, psycopg2.DatabaseError) as error:
-        print("Error in getting recent journeys: ", error)
-    
-    finally:
-        
-        if conn is not None:
-            conn.close()
+    if request.method == "POST":
+        # get url that the user has entered
+        try:
+            response = request.json
 
-        for bus in results:
-            print(bus)
+            stop_a = response.get("from")
+            stop_b = response.get("to")
+            route = response.get("route")
+
+            a_journeys, b_journeys = model.get_recent_journeys_from_db(stop_a, stop_b, route)
+
+            print("STOP A JOURNEYS: ", a_journeys)
+            print("STOP B JOURNEYS: ", b_journeys)
+
+        except:
+            print("Unable to get URL. Please make sure it's valid and try again.")
+
 
     return jsonify({"success": "Success!"})
 

@@ -64,19 +64,19 @@ class Prediction(object):
 
     def get_recent_journeys_from_db(self, start, end, route):
         
-        table_name = "bus_information_" + route   
+        table_name = "bus_arrivals_" + str(route)   
         results = {}
 
         conn = None
         try:
-            conn = psycopg2.connect(host="db", database="postgres", user="postgres", password="example", port="5432")
+            conn = psycopg2.connect(host="localhost", database="bus_predictions", user="serenechongtrakul", port="5432")
             cursor = conn.cursor()
             sql = "SELECT *"
             sql += " FROM " + table_name
             sql += " WHERE bus_stop_name = " + start
             sql += " AND direction = 'inbound'"
             sql += " ORDER BY time_of_arrival DESC"
-            sql += " LIMIT 10"
+            sql += " LIMIT 12"
             
             cursor.execute(sql)
             results["start"] = cursor.fetchall() #list of tuples (vehicle_id, bus_stop_name, expected_arrival, time_of_req, direction)
@@ -86,7 +86,7 @@ class Prediction(object):
             sql += " WHERE bus_stop_name = " + end
             sql += " AND direction = 'inbound'"
             sql += " ORDER BY time_of_arrival DESC"
-            sql += " LIMIT 10"
+            sql += " LIMIT 12"
             
             cursor.execute(sql)
             results["end"] = cursor.fetchall()
