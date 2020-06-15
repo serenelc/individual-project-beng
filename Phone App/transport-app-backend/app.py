@@ -36,11 +36,9 @@ def init():
 
     return jsonify(testObj)
 
-    print("Hello, world")
 
-
-@app.route('/test', methods=['GET', 'POST'])
-def testPost():
+@app.route('/predict', methods=['GET', 'POST'])
+def predictTime():
     testObj = {
         "success": True,
         "time": "couldn't calculate predicted journey time"
@@ -91,4 +89,4 @@ def testPost():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')

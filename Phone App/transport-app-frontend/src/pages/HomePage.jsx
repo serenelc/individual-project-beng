@@ -6,7 +6,7 @@ const HomePage = ({ navigation }) => {
   const [from, setFrom] = useState({ value: "", error: "" });
   const [to, setTo] = useState({ value: "", error: "" });
   const [route, setRoute] = useState({ value: "", error: "" });
-  const API_URL = "http://localhost:5000/"
+  const API_URL = "http://192.168.1.42:5000"
 
   const busStopValidator = (stopName) => {
     if (!stopName || stopName.length <= 0) return 'Stop name cannot be empty.'
@@ -45,12 +45,13 @@ const HomePage = ({ navigation }) => {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
 
         if (res['success']) {
           const predTime = res['time']
+          console.log("Navigate away!")
+          
+          navigation.navigate("PredictionPage", {estTime: predTime});
 
-          navigation.navigate("PredictionPage", {time: predTime});
         } else if (res['fromError']) {
           setFrom({ ...from, error: "Please enter a valid stop" });
         } else {
