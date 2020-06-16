@@ -19,9 +19,9 @@ Across the entire London transport system there are over 19,000 bus stops, 700 b
 
 The Countdown API provides real time predicted arrival times for buses in London. The expected arrival times are updated at the Countdown source every 30 seconds, so there is some room for error in regards to the inferred arrival time of the buses. This also means that there is no point in requesting information more frequently than every 30 seconds. \\
 
-Depending on the request, the response can be made up of 5 different array types: \textit{Stop, Prediction, Flexible, Message} and \textit{URA Version} arrays. The sequence of these arrays in the response is undefined except that the \textit{URA Version} array always appears first. For the purpose of this project, the arrays that are relevant and will be returned are the \textit{URA Version} array and the \textit{Prediction} array. \\
+Depending on the request, the response can be made up of 5 different array types: \texttt{Stop, Prediction, Flexible, Message} and \texttt{URA Version} arrays. The sequence of these arrays in the response is undefined except that the \texttt{URA Version} array always appears first. For the purpose of this project, the arrays that are relevant and will be returned are the \texttt{URA Version} array and the \texttt{Prediction} array. \\
 
-An example request where Countdown was called for bus route 9 and stop code 490010357F (commonly known as "North End Road") can be seen in Figure \ref{fig:countdown-req}. The following parameters are set: 
+An example request where Countdown was called for bus route 9 and stop code 490010357F (commonly known as \textsc{North End Road}) can be seen in Figure \ref{fig:countdown-req}. The following parameters are set: 
 \begin{itemize}
     \item stop code 2: the unique national identifier of the bus stop. Not to be confused with stop code 1 which is the public code for the bus stop displayed on the bus stop flag.
     \item line name: the route number displayed on the front of the bus.
@@ -35,20 +35,20 @@ An example request where Countdown was called for bus route 9 and stop code 4900
 \end{center}
 \end{figure}
 
-Figure \ref{fig:countdown-req} also demonstrates that users can choose what parameters Countdown should return in the response. For this project the following fields are set and returned in the \textit{Prediction} array: 
+Figure \ref{fig:countdown-req} also demonstrates that users can choose what parameters Countdown should return in the response. For this project the following fields are set and returned in the \texttt{Prediction} array: 
 \begin{itemize}
-    \item response type: this is returned by default and is always 1 for the \textit{Prediction} array.
-    \item stop name: name of the bus stop.
-    \item line name: the route number displayed on the front of the bus.
-    \item direction id: 1 = outbound or 2 = inbound.
-    \item destination text: the full length destination name of the trip the vehicle is on.
-    \item vehicle id: the unique identifier of the vehicle.
-    \item estimated arrival time: absolute time in UTC as per Unix epoch (in milliseconds).
-    \item expiry time: time at which the corresponding prediction is no longer valid and should no longer be used. In this case it is the estimated arrival time + 30 seconds. 
+    \item \texttt{response type}: this is returned by default and is always 1 for the \texttt{Prediction} array.
+    \item \texttt{stop name}: name of the bus stop.
+    \item \texttt{line name}: the route number displayed on the front of the bus.
+    \item \texttt{direction id}: 1 = outbound or 2 = inbound.
+    \item \texttt{destination text}: the full length destination name of the trip the vehicle is on.
+    \item \texttt{vehicle id}: the unique identifier of the vehicle.
+    \item \texttt{estimated arrival time}: absolute time in UTC as per Unix epoch (in milliseconds).
+    \item \texttt{expiry time}: time at which the corresponding prediction is no longer valid and should no longer be used. In this case it is the estimated arrival time + 30 seconds. 
 \end{itemize}
-The response also contains the timestamp that the response was processed in the \textit{URA Version} array. \\
+The response also contains the timestamp that the response was processed in the \texttt{URA Version} array. \\
 
-The Countdown API returns a JSON of the form \texttt{[[URA array],[Prediction Array]]}. An example response where Countdown was called for bus route 9 and stop code 490010357F (commonly known as "North End Road") is seen in Table \ref{table:ura-array-stopa} and Table \ref{table:prediction-array-stopa} (the JSON information has been displayed in a table for ease of reading). Countdown was called at: Friday 15th May at 07:02:06 (time A).
+The Countdown API returns a JSON of the form \texttt{[[URA array],[Prediction Array]]}. An example response where Countdown was called for bus route 9 and stop code 490010357F (commonly known as \textsc{North End Road}) is seen in Table \ref{table:ura-array-stopa} and Table \ref{table:prediction-array-stopa} (the JSON information has been displayed in a table for ease of reading). Countdown was called at: Friday 15th May at 07:02:06 (time A).
 
 \begin{table}[H]
     \centering
@@ -59,7 +59,7 @@ The Countdown API returns a JSON of the form \texttt{[[URA array],[Prediction Ar
            4  & "1.0" & May 15, 2020 07:02:06.913 \\
         \hline
         \end{tabular}
-    \caption{\textit{URA Version} Array Route 9 at North End Road at Time A}
+    \caption{\texttt{URA Version} Array Route 9 at \textsc{North End Road} at Time A}
     \label{table:ura-array-stopa}
 \end{table}
 
@@ -78,11 +78,11 @@ The Countdown API returns a JSON of the form \texttt{[[URA array],[Prediction Ar
             1 & End Road" & "9" & 2 & "Aldwych" & 15448 & 07:10:02 & 07:10:32 \\
         \hline
         \end{tabular}
-    \caption{\textit{Prediction Array} Route 9 at North End Road at Time A}
+    \caption{\texttt{Prediction Array} Route 9 at \textsc{North End Road} at Time A}
     \label{table:prediction-array-stopa}
 \end{table}
 
-When Countdown was called to give the expected arrival time on route 9 for "North End Road", it was also called at the same time to give the response for "Kensington Olympia Station". Table \ref{table:prediction-array-stopb} shows the \textit{Prediction Array} for bus route 9 and stop code 490008652A (commonly known as "Kensington Olympia Station"). Note that "Kensington Olympia Station" is the immediate station after "North End Road" in the 9 route to "Aldwych". Comparing Table \ref{table:prediction-array-stopa} and Table \ref{table:prediction-array-stopb}, it can be seen that the two same vehicles appear in both responses. This response can be interpreted visually as in Figure \ref{fig:countdown-response-timeA}.
+When Countdown was called to give the expected arrival time on route 9 for \textsc{North End Road}, it was also called at the same time to give the response for \textsc{Kensington Olympia Station}. Table \ref{table:prediction-array-stopb} shows the \texttt{Prediction Array} for bus route 9 and stop code 490008652A (commonly known as \textsc{Kensington Olympia Station}). Note that \textsc{Kensington Olympia Station} is the immediate station after \textsc{North End Road} in the 9 route to "Aldwych". Comparing Table \ref{table:prediction-array-stopa} and Table \ref{table:prediction-array-stopb}, it can be seen that the two same vehicles appear in both responses. This response can be interpreted visually as in Figure \ref{fig:countdown-response-timeA}.
 
 \begin{table}[H]
     \centering
@@ -99,11 +99,11 @@ When Countdown was called to give the expected arrival time on route 9 for "Nort
             1 & Olympia Station" & "9" & 2 & "Aldwych" & 15448 & 07:10:54 & 07:11:24 \\
         \hline
         \end{tabular}
-    \caption{\textit{Prediction Array} Route 9 at Kensington Olympia Station at Time A}
+    \caption{\texttt{Prediction Array} Route 9 at \textsc{Kensington Olympia Station} at Time A}
     \label{table:prediction-array-stopb}
 \end{table}
 
-When Countdown is called again at Friday 15th May at 07:02:43 (time B) for both "North End Road" and "Kensington Olympia Station", the new response can be seen visually interpreted in Figure \ref{fig:countdown-response-timeB}. It can be seen that bus 14510 has now arrived at and passed "North End Road" and is on its way to "Kensington Olympia Station". This is indicated by the JSON response shown in Table \ref{table:prediction-array-stopa-updated} where bus 14510 is no longer returned in the \textit{Prediction Array} for Route 9 at "North End Road".
+When Countdown is called again at Friday 15th May at 07:02:43 (time B) for both \textsc{North End Road} and \textsc{Kensington Olympia Station}, the new response can be seen visually interpreted in Figure \ref{fig:countdown-response-timeB}. It can be seen that bus 14510 has now arrived at and passed \textsc{North End Road} and is on its way to \textsc{Kensington Olympia Station}. This is indicated by the JSON response shown in Table \ref{table:prediction-array-stopa-updated} where bus 14510 is no longer returned in the \texttt{Prediction Array} for Route 9 at \textsc{North End Road}.
 
 \begin{table}[H]
     \centering
@@ -117,7 +117,7 @@ When Countdown is called again at Friday 15th May at 07:02:43 (time B) for both 
             1 & End Road" & "9" & 2 & "Aldwych" & 15448 & 07:10:02 & 07:10:32 \\
         \hline
         \end{tabular}
-    \caption{\textit{Prediction Array} Route 9 at North End Road at Time B}
+    \caption{\texttt{Prediction Array} Route 9 at \textsc{North End Road} at Time B}
     \label{table:prediction-array-stopa-updated}
 \end{table}
 
@@ -145,7 +145,7 @@ This API is called to give information on all bus stops for a particular route. 
 \texttt{https://api.tfl.gov.uk/line/bus\_route\_id/stoppoints}.
 \end{center}
 
-The response returns an array of stops. For each stop, information includes bus stop name, bus stop letter, all lines/routes serving that stop, facilities at the stop, including toilets, WiFi, phone number etc. and latitude and longitude. However, this API returns more stop ids than there actually are stops on a route. When put as parameters into the Countdown API call, some of the stop return estimated arrival times as expected, whereas others return HTTP errors. Therefore, it is useful to verify which stop ids are valid and which are invalid. 
+The response returns an array of stops. For each stop, information includes bus stop name, bus stop letter, all lines/routes serving that stop, facilities at the stop, including toilets, WiFi, phone number etc. and latitude and longitude. However, this API returns more stop IDs than there actually are stops on a route. When put as parameters into the Countdown API call, some of the stops return estimated arrival times as expected, whereas others return HTTP errors. A possible explanation for this could be differences in routing or bus stop additions/deletions over the years. Therefore, it is useful to verify which stop ids are valid and which are invalid. 
 
 \subsubsection{Stoppoints Sequence API}
 
@@ -178,7 +178,7 @@ Some of the most common simple forecasting methods are listed below \cite{foreca
     \item \textbf{Drift Method}: This method is a variation of the naive method. The forecast values increase or decrease over time and the amount of change over time is called the drift. This drift is set to be the average change seen in the historical data. This method is equivalent to drawing a straight line between the first and last observations and extrapolating it into the future. 
 \end{itemize}
 
-Figure \ref{fig:forecasting} shows what the \textit{mean}, \textit{naive} and \textit{seasonal naive} methods look like when applied to quarterly beer production data. It can be seen that both the \textit{mean} and \textit{naive} methods result in flat line forecasts, and therefore, would not be particularly suitable for bus arrival predictions because research has shown that for different time periods, the trends in delay times vary \cite{dynamic-gps}, \cite{ann-prediction}, \cite{smart-public-transport}. However, a slight variation on the mean and naive method that essentially combines the two methods, where the model takes the average of the last two or three bus travel times for each forecast, is much more likely to provide a better estimate. This is because this method will use historical results that should theoretically be in the same time period as the current time to be forecast. This method will also avoid going too far into the past and using data that may not be relevant. Figure \ref{fig:forecasting} also shows that the \textit{seasonal naive} method results in an oscillating prediction. Since there is reason to believe that historical data on bus delay times show an up and down trend, the seasonal naive method could also be an equally suitable model to use.
+Figure \ref{fig:forecasting} shows what the \textit{mean}, \textit{naive} and \textit{seasonal naive} methods look like when applied to quarterly beer production data. It can be seen that both the \textit{mean} and \textit{naive} methods result in flat line forecasts, and therefore, would not be particularly suitable for bus arrival predictions because research has shown that for different time periods, the trends in journey times vary \cite{dynamic-gps}, \cite{ann-prediction}, \cite{smart-public-transport}. However, a slight variation on the mean and naive method that essentially combines the two methods, where the model takes the average of the last two or three bus travel times for each forecast, is much more likely to provide a better estimate. This is because this method will use historical results that should theoretically be in the same time period as the current time to be forecast. This method will also avoid going too far into the past and using data that may not be relevant. Figure \ref{fig:forecasting} also shows that the \textit{seasonal naive} method results in an oscillating prediction. Since there is reason to believe that historical data on bus delay times show an up and down trend, the seasonal naive method could also be an equally suitable model to use.
 
 \begin{figure}[H]
 \begin{center}
@@ -194,10 +194,10 @@ A forecast may be greater than or less than the actual value. The difference bet
 
 \begin{equation}
 \label{eq:forecast-error}
-    forecast\ error_t = A_t - F_t
+    \mathrm{FE}_t = A_t - F_t
 \end{equation}
 
-\noindent where $A_t$ is the actual value and $F_t$ is the forecasted value. \\
+\noindent where FE$_t$ is the forecast error, $A_t$ is the actual value and $F_t$ is the forecasted value. \\
 
 Measures to evaluate the performance of a forecasting method can be classified into those that look at direction and those that look at size of the error. The bias (Equation \ref{eq:forecast-bias}) is the most popular measure for evaluating the direction of the error, i.e. whether the predictions are over or under the actual values. The closer the bias is to zero, the better the model. If the bias is negative, this implies that the actual values are on average, smaller than the predicted value. Therefore, the forecasting model overestimates the actual values. Let $n$ be the number of samples, then:
 
@@ -232,9 +232,9 @@ The RMSE is bounded by the MAE:
 \subsection{Regression Models}
 \label{section:regression-models-research}
 
-Regression is a form of statistical modelling that investigates the relationship between a dependent (target) and independent (predictor) variable \cite{regression-techniques}. When performing statistical modelling, we observe some data $y$, known as the dependent variable, and interpret each data point as a realisation of some random variable $Y$ \cite{m2s2-notes}. A statistical model is a specification of the distribution of $Y$ up to an unknown parameter $\theta$. Often $y = (y_1, y_2, ..., y_n) \in \mathbb{R} ^ n$ is a vector and $Y = (Y_1, ..., Y_n)$ is a random vector. The distribution of $Y_1, ..., Y_n$ may depend on (non random or deterministic) quantities $x_1, ..., x_n$ known as covariates or predictors. \\
+Regression is a form of statistical modelling that investigates the relationship between a dependent (target) and independent (predictor) variable \cite{regression-techniques}. When performing statistical modelling, we observe some data $y$, known as the dependent variable, and interpret each data point as a realisation of some random variable $Y$, following some probability distribution. A statistical model is a specification of the distribution of $Y$ up to an unknown parameter $\theta$. Often $y = (y_1, y_2, ..., y_n) \in \mathbb{R} ^ n$ is a vector and $Y = (Y_1, ..., Y_n)$ is a random vector. The distribution of $Y_1, ..., Y_n$ may depend on (non random or deterministic) quantities $x_1, ..., x_n$ known as covariates or predictors. \\
 
-Regression models are suitable when the variable that is trying to be predicted relies on a number of different independent factors. Since it is hypothesised that the journey time of a bus relies on many things such as weather conditions, time of day, traffic conditions and so on, this makes regression models a good choice to implement. Regression models also help to see which of these independent variables are statistically significant, and so can provide insight into which of the factors that are being considered are worth being explored further. However, the viability of regression models is limited by the hypothesis that many of the factors affecting bus journey times are in fact correlated to one another and not independent after all. 
+Regression models are suitable when the variable that is trying to be predicted relies on a number of different independent factors. This is a very important point to ensure since non-independence is a reason for sub-optimal predictions in linear models. Since it is hypothesised that the journey time of a bus relies on many things such as weather conditions, time of day, traffic conditions and so on, this makes regression models a good choice to implement. Regression models also help to see which of these independent variables are statistically significant, and so can provide insight into which of the factors that are being considered are worth being explored further. However, the viability of regression models is limited by the hypothesis that many of the factors affecting bus journey times are in fact correlated to one another and not independent after all. 
 
 \subsubsection{Linear Regression}
 
@@ -264,7 +264,7 @@ When there are two or more predictor variables, the model is called a multiple r
     \label{eq:multi-regression}
 \end{equation}
 
-where $Y$ is an n-dimensional random vector (observable), $\mathbf{X} \in \mathbf{R} ^{n \times p}$ is a known matrix (often called the `design matrix'), $\beta \in \mathbf{R}^p$ is an unknown parameter and $\epsilon$ is an n-variate random vector (not observable) with $E(\epsilon) = \mathbf{0}$. The $\beta$ coefficients essentially measure the effect of each predictor after taking into account the effects of all the other predictors in the model. \\
+where $Y$ is an n-dimensional random vector (observable), $\mathbf{X} \in \mathbb{R} ^{n \times p}$ is a known matrix (often called the `design matrix'), $\beta \in \mathbb{R}^p$ is an unknown parameter and $\epsilon$ is an n-variate random vector (not observable) with $E(\epsilon) = \mathbf{0}$. The $\beta$ coefficients essentially measure the effect of each predictor after taking into account the effects of all the other predictors in the model. \\
 
 When we use a linear or multiple regression model, we make the following assumptions.
 
@@ -281,7 +281,7 @@ When we use a linear or multiple regression model, we make the following assumpt
 
 \subsubsection{Pearson Correlation Coefficient}
 
-The Pearson correlation coefficient, commonly written simply as $\rho$ is the measure of the linear relationship between two variables \cite{correlation-coeff-journal}, \cite{correlation-coeff}. It is calculated as the covariance of the two variables divided by the product of the standard deviation of each data sample. In other words, it is the normalization of the covariance between the two variables. Given a pair of variables $(X, Y)$, the Pearson correlation coefficient follows Equation \ref{eq:correlation-coeff}.
+The Pearson correlation coefficient, commonly written simply as $\rho$ is the measure of the linear relationship between two variables \cite{correlation-coeff-journal}, \cite{correlation-coeff}. It is calculated as the covariance of the two variables divided by the product of the standard deviation of each data sample. In other words, it is the normalization of the covariance between the two variables. Given a pair of variables $(X, Y)$, the Pearson correlation coefficient follows Equation \ref{eq:correlation-coeff}:
 
 \begin{equation}
 \label{eq:correlation-coeff}
@@ -290,7 +290,7 @@ The Pearson correlation coefficient, commonly written simply as $\rho$ is the me
 
 where $cov$ is the covariance, $\sigma_X$ is the standard deviation of $X$ and $\sigma_Y$ is the standard deviation of $Y$. \\
 
-The coefficient is bounded between -1 and 1, where values near 0 indicate no correlation. Positive values indicate a positive correlation, where the larger X gets, the larger Y also gets. Negative values indicate a negative correlation, where as X increases, Y decreases.
+The coefficient is bounded between $-1$ and $1$, where values near $0$ indicate no correlation. Positive values indicate a positive correlation, where the larger $X$ gets, the larger $Y$ also gets. Negative values indicate a negative correlation, where as $X$ increases, $Y$ decreases.
 
 \subsubsection{Measuring Success}
 
@@ -323,7 +323,9 @@ Kalman filter models would be suitable for the task of estimating bus arrival ti
 
 (Feed-forward) Artificial Neural Networks (ANNs) are a type of machine learning inspired by real world biological neurons. \\
 
-ANNs have the ability to solve complex non-linear relationships and can capture subtle relationships between the data, even if the underlying relationships are unknown \cite{dynamic-gps}. Therefore, ANNs are a popular choice for bus prediction models because it can learn the non-linear correlations between bus travel times. If the ANN has enough neurons in the hidden layers, then it has very capable of arbitrary input-output matching \cite{intelligent-transport-systems}. However, this also implies that ANNs have a high potential for over-fitting and therefore, could struggle to generalise to data not given in the training process. Furthermore, the back propagation algorithm, which is the most used algorithm for transportation problems, has a long learning process. 
+ANNs have the ability to solve complex non-linear relationships and can capture subtle relationships between the data, even if the underlying relationships are unknown \cite{dynamic-gps}. Therefore, ANNs are a popular choice for bus prediction models because it can learn the non-linear correlations between bus travel times. If the ANN has enough neurons in the hidden layers, then it is very capable of arbitrary input-output matching \cite{intelligent-transport-systems}. However, this also implies that ANNs have a high potential for over-fitting and therefore, could struggle to generalise to data not given in the training process. This over-fitting is also what makes ANNs so resource intensive. Furthermore, the back propagation algorithm, which is the most used algorithm for transportation problems, has a long learning process. \\
+
+ANNs are also harder to interpret compared to historical models and regression models. For example, the coefficients gotten from the regression model describe the relative importance of each of the factors. However, the weights and biases gotten after training a neural network model are not as easy to understand intuitively. 
 
 \subsubsection{Perceptrons}
 
@@ -332,8 +334,8 @@ An ANN has a collection of nodes called artificial neurons, the most common type
 \begin{equation}
     output = 
     \begin{cases} 
-        0 if \sum_jw_jx_j \leqslant threshold \\
-        1 if \sum_jw_jx_j > threshold
+        0 \textrm{ if } \sum_jw_jx_j \leqslant \textrm{threshold} \\
+        1 \textrm{ if } \sum_jw_jx_j > \textrm{threshold}
     \end{cases}
     \label{eq:perceptron}
 \end{equation}
@@ -389,7 +391,7 @@ where $\alpha$ is the interpolation factor, varying from 0 to 1. The interpolate
 
 Polynomial interpolation models search for a polynomial that fits exactly with the given information about a real valued function $f$ of a single real variable $x$ \cite{intro-to-numerical-analysis-suli}, assuming that there is always a unique polynomial of degree at most $n-1$ passing through $n$ data points. The corresponding polynomial is called the Lagrange interpolation polynomial. If $f$ is differentiable, the corresponding polynomial, called the Hermite interpolation polynomial, may include values of the derivative of $f$ at some finite set of points. \\
 
-If the function values $f(x)$ are known for all x  in a closed interval of the real line, then the aim of polynomial interpolation is to approximate the function $f$ by a polynomial over this interval. However, if the function values $f(x)$ are only known for a finite set of points $x_0, ..., x_n$, then the aim of polynomial interpolation is to construct the unknown function $f$ by seeking a polynomial $p_n$. Where $p_n$ passes through the points with co-ordinates $(x_i, f(x_i)$ for $i = 0, ..., n$ on the $(x, y)$ plane \cite{intro-to-numerical-analysis-suli}. \\
+If the function values $f(x)$ are known for all $x$ in a closed interval of the real line, then the aim of polynomial interpolation is to approximate the function $f$ by a polynomial over this interval. However, if the function values $f(x)$ are only known for a finite set of points $x_0, ..., x_n$, then the aim of polynomial interpolation is to construct the unknown function $f$ by seeking a polynomial $p_n$. Where $p_n$ passes through the points with co-ordinates $(x_i, f(x_i)$ for $i = 0, ..., n$ on the $(x, y)$ plane \cite{intro-to-numerical-analysis-suli}. \\
 
 However, fitting a single polynomial to a large number of data points tends to lead to overfitting because the function oscillates between the data points \cite{intro-to-numerical-analysis-atkinson}. Piece-wise interpolation attempts to solve this issue. 
 
@@ -428,12 +430,12 @@ A particular example is a cubic spline. Consider the set $S$ of all functions $s
 
 \begin{equation}
 \label{eq:cubic-spline-b}
-    s\ is\ a\ cubic\ on\ [x_{j-1}, x_j],\ j=1,...J
+    s \textrm{ is a cubic on } [x_{j-1}, x_j],\ j=1,...,J
 \end{equation}
 
 Any element of $S$ is referred to as an interpolating cubic spline. There is more than 1 interpolating cubic spline that satisfies the conditions. Indeed there are $4J$  coefficients of cubic polynomials and only $J+1$ interpolating conditions and $3(J-1)$ continuity conditions. Since $s$ belongs to $C^2[a, b]$ this means that $s$, $s'$ and $s''$ are continuous at the internal knots $x_1, ..., x_{J-1}$ \cite{intro-to-numerical-analysis-suli}. \\
 
-A special case of the cubic spline is the natural cubic spline, which must also satisfy Equation \ref{eq:cubic-spline-c}. This condition means that the piece-wise cubic polynomial is twice continuously differentiable and has less tendency to osciltate between data points.
+A special case of the cubic spline is the natural cubic spline, which must also satisfy Equation \ref{eq:cubic-spline-c}. This condition means that the piece-wise cubic polynomial is twice continuously differentiable and has less tendency to osciltate between data points. The natural cubic spline is linear at the boundary subintervals, resulting in less boundary bias.
 
 \begin{equation}
     \label{eq:cubic-spline-c}
@@ -452,9 +454,9 @@ Descriptive statistic methods include looking at the mean, median, variance, int
 
 \subsubsection{Outliers}
 
-An outlier is an observation that is distant from all the other data points in a dataset. If an observation has been identified as a likely outlier, it is important to try and analyse why it is the case, as outliers can arise from incorrect data collection or can be an indication of the underlying model being unsuitable \cite{forecasting-book}, \cite{m2s2-notes}. Since the data used for the bus journey modelling is manually collected, there is room for human error and therefore, it is important to ensure the outliers are detected and removed accordingly. \\
+An outlier is an observation that is distant from all the other data points in a dataset. If an observation has been identified as a likely outlier, it is important to try and analyse why it is the case, as outliers can arise from incorrect data collection or can be an indication of the underlying model being unsuitable \cite{forecasting-book}. Since the data used for the bus journey modelling is manually collected, there is room for human error and therefore, it is important to ensure the outliers are detected and removed accordingly. \\
 
-Observations that have a large influence on the estimated coefficients of a regression model are called influential observations. Figure \ref{fig:outlier} is an example showing how an outlier can affect predictions. The red line is the regression line fitted to the data including the outliers, the black line is the regression line fitted to the data without the outlier. It can be seen that the gradient of the 2 lines are not the same and therefore, the models would give differing predictions.  
+Observations that have a large influence on the estimated coefficients of a regression model are called influential observations. They depend on the residual (the vertical distance) and the leverage (the horizontal distance). Figure \ref{fig:outlier} is an example showing how an outlier can affect predictions. The red line is the regression line fitted to the data including the outliers, the black line is the regression line fitted to the data without the outlier. It can be seen that the gradient of the 2 lines are not the same and therefore, the models would give differing predictions.  
 
 \begin{figure}[H]
 \begin{center}

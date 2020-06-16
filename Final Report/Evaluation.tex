@@ -8,9 +8,11 @@ So, is a model that predicts journeys that are consistently 3 minutes off better
 
 \subsection{Historical Model}
 
+For the training process, the models are first trained on journeys between stops of gap 5 before being trained on journeys between stops of all sizes. The sample set used for the gap of 5 initial model exploration was for all journeys between \textsc{Chesterton Road} and \textsc{Notting Hill Gate Station} on route 52. The amount of training data is approximately 3,000 entries. The sample set with all sizes of gaps used journey times for seven pairs of stops on route 52, amounting to approximately 18,000 entries. \\
+
 First consider the results for journeys between stops that are five apart. \\
 
-Figure \ref{fig:historical-past2hours} shows the predicted journey time versus the actual journey time versus TfL's own predicted journey time. This figure is for buses on route 52 for journeys between Chesterton Road to Notting Hill Gate Station, where the predictions have been found using the historical model that looks back at buses in the past two hours. 
+Figure \ref{fig:historical-past2hours} shows the predicted journey time versus the actual journey time versus TfL's own predicted journey time. This figure is for buses on route 52 for journeys between \textsc{Chesterton Road} to \textsc{Notting Hill Gate Station}, where the predictions have been found using the historical model that looks back at buses in the past two hours. 
 
 \begin{figure}[H]
 \begin{center}
@@ -34,7 +36,7 @@ Consider the model that looks back at journeys from the past 120 minutes. Figure
 
 Intuitively, it makes sense that the model that looks back at the last 15 minutes performs the worst out of the four sub-models presented above. This is because looking at only the past 15 minutes means the probability of overreacting to an event is much higher. In particular, Figure \ref{fig:historical-past2hours} demonstrates that the actual journey time ranges between 4 minutes to 10 minutes and so when the model looks back at the last 15 minutes, it will be looking at most at the last three buses. In the worst case, it would only look back at the last bus. This means that if there is something that causes only that particular bus to delay, the model will not realise that this is an anomalous journey time and so will predict a longer journey time when it should not have. \\
 
-Figure \ref{fig:historical-past2buses} shows the predicted journey time versus the actual journey time versus TfL's own predicted journey time. This figure is also for buses on route 52 for journeys between Chesterton Road to Notting Hill Gate Station. However, here the predictions have been found using the historical model that looks back at the last two buses to complete the journey.
+Figure \ref{fig:historical-past2buses} shows the predicted journey time versus the actual journey time versus TfL's own predicted journey time. This figure is also for buses on route 52 for journeys between \textsc{Chesterton Road} to \textsc{Notting Hill Gate Station}. However, here the predictions have been found using the historical model that looks back at the last two buses to complete the journey.
 
 \begin{figure}[H]
 \begin{center}
@@ -106,6 +108,8 @@ It can be seen that the two models have very similar results when looking at the
 
 \subsection{Regression + Interpolation Model}
 
+For the training process, all journeys between twenty-one pairs of stops over three routes were chosen. The pairs of stops were chosen such that there was variety in gap size and variety in time and area of travel, with one of the routes not going through Zone 1 and two of the routes being 24h routes. The sample set amounted to approximately 22,000 entries. \\
+
 Part 1 of the regression + interpolation model calculates the `global' prediction. The regression model was evaluated on requests made from 20/04/2020 01:00:00 to 08/06/2020 23:59:59 at thirty minute intervals for a number of different pairs of stops of varying routes and gap sizes. The root mean squared error (RMSE), R2-score and mean absolute error (MAE) were then calculated and the results are shown below:
 
 \begin{itemize}
@@ -114,7 +118,7 @@ Part 1 of the regression + interpolation model calculates the `global' predictio
     \item MAE: 224.58 seconds (5sf)
 \end{itemize}
 
-Since an R2-score of 1 means a perfect prediction and the R2-score is bounded between 0 and 1, a score of 0.85749 indicates that the model gives a fairly good prediction of the journey time. However, the MAE and RMSE score indicate that the predictions can be around 4 and 6 minutes off respectively, which doesn't seem too great. This supports the hypothesis that recent data, i.e. the `local' conditions, need to also be taken into account as looking at these `global' factors alone does not provide an accurate enough prediction. However, it should be noted that this result is for gaps of all sizes on a bus route, and so if the journey that is being made is normally around 40 minutes, an extra 4 - 6 minutes doesn't actually make much of a difference. 
+Since an R2-score of 1 means a perfect prediction and the R2-score is bounded between 0 and 1, a score of 0.85749 indicates that the model gives a fairly good prediction of the journey time. However, the MAE and RMSE score indicate that the predictions can be around 4 and 6 minutes off respectively, which doesn't seem too great. This supports the hypothesis that recent data, i.e. the `local' conditions, need to also be taken into account as looking at these `global' factors alone does not provide an accurate enough prediction. However, it should be noted that this result is for gaps of all sizes on a bus route, and so if the journey that is being made is normally around 40 minutes, an extra 4 - 6 minutes doesn't actually make much of a difference - this would be an extra 10 - 15\% journey time. 
 
 \begin{itemize}
     \item Coefficients: [[ 7.78320354e+02, -2.15578663e+01, 5.73810236e+12, 
@@ -145,7 +149,7 @@ Part 2 of the regression + interpolation model are the five different sub-models
 
 The combined regression + interpolation model that gives the final prediction result uses linear interpolation of $y_{pred1}$ from the `global' prediction and $y_{pred2}$ from the `local' prediction. The $\alpha$ parameter needs to be tuned and the resulting RMSE and MAE scores are seen in Figures \ref{fig:regression-part2weightedavg}, \ref{fig:regression-part2lineofbestfit} and \ref{fig:regression-part2cubicspline}. \\
 
-Figure \ref{fig:regression-part2weightedavg} shows how the RMSE and MAE changes for the combined model where the part 2 model is the weighted average model. $\alpha$ was initially varied from 0 to 1, however, results showed that the dip in the MAE and RMSE occurred closer to 0, and hence the values that it was varied over was changed to between 0 and 0.2. The optimal result comes at $\alpha$ = 0.094737 (5sf), giving a MAE of 157.69 (5sf) or $\alpha$ = 0.031579 (5sf), giving a RMSE of 267.87 (5sf). A value of $\alpha$ close to 0 implies that $y_{pred1}$ is not as important as $y_{pred2}$. In other words, this result says that the predicted journey time of a bus relies mostly on the journey times of the recent buses and does not rely as much on `global' factors such as the time of day or the day of the week.
+Figure \ref{fig:regression-part2weightedavg} shows how the RMSE and MAE changes for the combined model where the part 2 model is the weighted average model. A multi-stage grid search cross validation was performed to find the optimal $\alpha$. The initial range was twenty steps from 0 to 1, however, results showed that the dip in the MAE and RMSE occurred closer to 0, and hence the values that it was searched over was changed to twenty steps between 0 and 0.2. This is more efficient than searching 100 steps between 0 and 1, which is the number required to get the same resolution. The optimal result comes at $\alpha$ = 0.094737 (5sf), giving a MAE of 157.69 (5sf) or $\alpha$ = 0.031579 (5sf), giving a RMSE of 267.87 (5sf). A value of $\alpha$ close to 0 implies that $y_{pred1}$ is not as important as $y_{pred2}$. In other words, this result says that the predicted journey time of a bus relies mostly on the journey times of the recent buses and does not rely as much on `global' factors such as the time of day or the day of the week.
 
 \begin{figure}[H]
 \begin{center}
@@ -165,7 +169,7 @@ Figure \ref{fig:regression-part2lineofbestfit} shows how the RMSE and MAE change
 \end{center}
 \end{figure}
 
-Figure \ref{fig:regression-part2cubicspline} shows how the RMSE and MAE changes for the combined model where the part 2 model is the three different cubic spline sub-models. $\alpha$ was varied from 0 to 1, but it can be seen that the MAE and RMSE are significantly big (note the scaale of the y axis). Therefore, cubic spline sub-models are not suitable to be used as the part 2 prediction model. Due to the nature of cubic splines and interpolations of polynomials of degree greater than two, it makes sense that they do not provide the best results. In particular, when the last 10 journeys are further away from the time of request, the intercept of the cubic spline polynomial will be at an extreme value (for example in the case where a request is made at 05:30 and the last 10 journeys are from midnight or before).
+Figure \ref{fig:regression-part2cubicspline} shows how the RMSE and MAE changes for the combined model where the part 2 model is the three different cubic spline sub-models. $\alpha$ was varied from 0 to 1, but it can be seen that the MAE and RMSE are significantly big (note the scale of the y axis). Therefore, cubic spline sub-models are not suitable to be used as the part 2 prediction model. Due to the nature of cubic splines and interpolations of polynomials of degree greater than two, it makes sense that they do not provide the best results. In particular, when the last 10 journeys are further away from the time of request, the intercept of the cubic spline polynomial will be at an extreme value (for example in the case where a request is made at 05:30 and the last 10 journeys are from midnight or before).
 
 \begin{figure}[H]
 \begin{center}

@@ -36,7 +36,7 @@ Therefore, it is more computationally efficient to call the Stoppoints API for e
 
 \textbf{2) Update the estimated arrival time of a bus: } Countdown is called continuously every 30 seconds because as mentioned in Section \ref{section:tfl-api} the information is only updated at source every 30 seconds. If the new expected arrival time returned from the API call is the same as what the database already holds, there is no need to update the item. Otherwise, the database updates both the bus' expected arrival time and the time of the API request. \\
 
-Figure \ref{fig:more-accurate-closer-to-eta} shows two different expected arrival times for Dalgarno Gardens on bus route 7. The figure demonstrates how the predicted arrival time for the same vehicle changes the closer it gets to the actual arrival time. Therefore, data much be collected and updated continuously in order to get as accurate an inferred arrival time as possible.
+Figure \ref{fig:more-accurate-closer-to-eta} shows two different expected arrival times for \textsc{Dalgarno Gardens} on bus route 7. The figure demonstrates how the predicted arrival time for the same vehicle changes the closer it gets to the actual arrival time. Therefore, data much be collected and updated continuously in order to get as accurate an inferred arrival time as possible.
 
 \begin{figure}[H]
 \begin{center}
@@ -71,7 +71,7 @@ Figure \ref{fig:more-accurate-closer-to-eta} shows two different expected arriva
 \end{center}
 \end{figure}
 
-Recall the example Countdown responses in Section \ref{section:tfl-api} for buses arriving at North End Road on bus route 9. Figure \ref{fig:arrived-database} shows how the JSON information has been converted into strings and datetime objects. Specifically, bus \textit{14510} was predicted to arrive at \textit{1589526117000} in UNIX epoch time. This converts to \textit{07:01:57} as seen in the third row of Figure \ref{fig:arrived-database}. The vehicle\_id is a combination of the actual bus id, the stop id, the date of arrival, the direction and the journey number that the bus is on. This is necessary because a particular bus e.g. bus with id \textit{14510} will complete more than one full journey on its route. \\
+Recall the example Countdown responses in Section \ref{section:tfl-api} for buses arriving at \textsc{North End Road} on bus route 9. Figure \ref{fig:arrived-database} shows how the JSON information has been converted into strings and datetime objects. Specifically, bus \textit{14510} was predicted to arrive at \textit{1589526117000} in UNIX epoch time. This converts to \textit{07:01:57} as seen in the third row of Figure \ref{fig:arrived-database}. The vehicle\_id is a combination of the actual bus id, the stop id, the date of arrival, the direction and the journey number that the bus is on. This is necessary because a particular bus e.g. bus with id \textit{14510} will complete more than one full journey on its route. \\
 
 \begin{figure}[H]
 \begin{center}
@@ -96,17 +96,17 @@ The current data collection code has now changed to use a PostgreSQL database, w
 
 It is important to explore the dataset collected before building the models in order to understand it better. This could be by discovering patterns, spotting outliers or understanding relationships between variables. \\
 
-For each of the bus routes, graphs were plotted to show the total number of buses arriving at bus stops at different times of day. This helped to see the pattern of numbers of buses according to time of day. It was hypothesised that there would be more buses running during the day than during the night. This was supported by the graphs, for example, from Figure \ref{fig:spread-of-buses-over-day-6} it can be seen that for route 6 during the day, approximately between 0700-1700, there are many more buses on the road, compared to say 2100-0300. 
+For each of the bus routes, graphs were plotted to show the total number of buses arriving at all bus stops on a route at different times of day for data collected over a three and a half week period. An example can be seen in Figure \ref{fig:spread-of-buses-over-day-6}, which shows that over the three and a half weeks, a total of just under 1,200 buses arrived at all the stops on route 6. This helped to see the pattern of numbers of buses according to time of day. It was hypothesised that there would be more buses running during the day than during the night. This was supported by the graphs, for example, from Figure \ref{fig:spread-of-buses-over-day-6} it can be seen that for route 6 during the day, approximately between 0700-1700, there are many more buses on the road, compared to say 2100-0300. 
 
 \begin{figure}[H]
 \begin{center}
-    \includegraphics[keepaspectratio, width=15cm]{Images/exploration-spreadofbus6.png}
+    \includegraphics[keepaspectratio, width=15cm]{Images/exploration-timeofday6.png}
     \caption{Number of buses during the day for route 6}
     \label{fig:spread-of-buses-over-day-6}
 \end{center}
 \end{figure}
 
-Graphs were also plotted to see the total number of buses arriving at bus stops on different days of the week. It was hypothesised that there would be more buses running during weekdays compared to the weekend. However, it can be seen from Figure \ref{fig:spread-of-buses-over-week-6} that there did not seem to be a pattern indicating that the hypothesis was correct.
+Graphs were also plotted to see the total number of buses arriving at all bus stops on different days of the week for data collected over the same three and a half week period. An example can be seen in Figure \ref{fig:spread-of-buses-over-week-6}, which shows that a total of approximately 20,000 buses arrived at all stops on route 6. It was hypothesised that there would be more buses running during weekdays compared to the weekend. However, it can be seen from Figure \ref{fig:spread-of-buses-over-week-6} that there did not seem to be a pattern indicating that the hypothesis was correct.
 
 \begin{figure}[H]
 \begin{center}
@@ -123,7 +123,7 @@ For each route, two bus stops were chosen and the travel times of the bus were c
     \label{eqn:z-score}
 \end{equation}
 
-\noindent Where $x_i$ is a journey time, $\mu$ is the mean and $\sigma$ is the standard deviation. The number of occurrences of a travel time was plotted against the actual travel time, marking the outliers in a different colour. An example of this is seen in Figure \ref{fig:outlier-occurences-52} and Figure \ref{fig:outlier-occurences-9}. Figure \ref{fig:outlier-occurences-52} shows the travel times of bus route 52 between 'All Souls Avenue' and 'Nottinghill Gate Station', whilst Figure \ref{fig:outlier-occurences-9} shows the travel times of bus route 9 between 'North End Road' and 'Phillimore Gardens'. In both figures the outliers are marked in green.
+\noindent Where $x_i$ is a journey time, $\mu$ is the mean and $\sigma$ is the standard deviation. The number of occurrences of a travel time was plotted against the actual travel time, marking the outliers in a different colour. An example of this is seen in Figure \ref{fig:outlier-occurences-52} and Figure \ref{fig:outlier-occurences-9}. Figure \ref{fig:outlier-occurences-52} shows the travel times of bus route 52 between \textsc{All Souls Avenue} and \textsc{Nottinghill Gate Station}, whilst Figure \ref{fig:outlier-occurences-9} shows the travel times of bus route 9 between \textsc{North End Road} and \textsc{Phillimore Gardens}. In both figures the outliers are marked in green. In the figures below, `occurrences' refers to the number of times that a particular journey time was recorded.
 
 \begin{figure}[H]
 \begin{center}
@@ -143,7 +143,7 @@ For each route, two bus stops were chosen and the travel times of the bus were c
 
 The outliers that have been identified for each route were then removed from the dataset so that the models developed using the data would not be affected by them. \\
 
-The variance and standard deviation were also calculated. For the journey times for buses on route 52 between 'All Souls Avenue' and 'Nottinghill Gate Station', the standard deviation was 2.761 (3sf) and the variance was 7.624 (3sf). For the journey times for buses on route 9 between 'North End Road' and 'Phillimore Gardens', the standard deviation was 1.759 (3sf) and the variance was 3.095 (3sf). 'All Souls Avenue' and 'Nottinghill Gate Station' are 16 stops apart whilst 'North End Road' and 'Phillimore Gardens' are 5 stops apart. Therefore, it was hypothesised that the standard deviation and variance for journey times are lower for stops that are closer to each other. In order to confirm this, 'Aldwych / Somerset House' was chosen as the start stop and the variance and standard deviation of the journey times between the start stop and stops further away on route 6 were calculated. The results for between two stop away to twenty stops away can be seen in Figure \ref{fig:variance-sd-6}.
+The variance and standard deviation were also calculated. For the journey times for buses on route 52 between \textsc{All Souls Avenue} and \textsc{Nottinghill Gate Station}, the standard deviation was 2.761 (3sf) and the variance was 7.624 (3sf). For the journey times for buses on route 9 between \textsc{North End Road} and \textsc{Phillimore Gardens}, the standard deviation was 1.759 (3sf) and the variance was 3.095 (3sf). \textsc{All Souls Avenue} and \textsc{Nottinghill Gate Station} are 16 stops apart whilst \textsc{North End Road} and \textsc{Phillimore Gardens} are 5 stops apart. Therefore, it was hypothesised that the standard deviation and variance for journey times are lower for stops that are closer to each other. In order to confirm this, \textsc{Aldwych / Somerset House} was chosen as the start stop and the variance and standard deviation of the journey times between the start stop and stops further away on route 6 were calculated. The results for between two stop away to twenty stops away can be seen in Figure \ref{fig:variance-sd-6}.
 
 \begin{figure}[H]
 \begin{center}
@@ -153,11 +153,24 @@ The variance and standard deviation were also calculated. For the journey times 
 \end{center}
 \end{figure}
 
-Based on the results as seen in Figure \ref{fig:variance-sd-6}, it is possible to conclude that there is indeed an upward trend in the variance and standard deviation for stops that are further apart. Therefore, predictions made for bus stops that are closer together are likely to be more accurate. 
+Theoretically, the variance graph should follow a straight-line relationship with gap size. The deviation from this can be attributed to inconsistencies in stop gap size, meaning two stops that are five stops apart are not exactly the same distance in kilometres apart. Based on the results as seen in Figure \ref{fig:variance-sd-6}, it is possible to conclude that there is indeed an upward trend in the variance and standard deviation for stops that are further apart.Theoretically, the variance graph should follow a straight-line relationship with gap size. The deviation from this can be attributed to inconsistencies in stop gap size, meaning two stops that are five stops apart are not exactly the same distance in kilometres apart.  Therefore, predictions made for bus stops that are closer together are likely to be more accurate. 
 
 \subsubsection{Effect of time of day and day of week}
 
-To see the effect of time of day on bus journey times, the times of day were split into eight sections: 00-03, 03-06, 06-09, 09-12, 12-15, 15-18, 18-21, 21-00. For each route two bus stops were chosen and the travel times of the bus were calculated and plotted, as in Figure \ref{fig:time-of-day-69} and Figure \ref{fig:time-of-day-52}. Figure \ref{fig:time-of-day-69} shows the travel times of buses from Florence Road to Star Lane on route 69, which are five stops apart. Figure \ref{fig:time-of-day-52} shows the travel times of buses from All Souls Avenue to Notting Hill Gate Station on route 52, which are 16 stops apart. The Figures also have the average journey time across all hours of the day plotted as a black dotted line. 
+To see the effect of time of day on bus journey times, the times of day were split into eight sections: 00-03, 03-06, 06-09, 09-12, 12-15, 15-18, 18-21, 21-00. For each route two bus stops were chosen and the travel times of the bus were calculated and plotted, as in Figure \ref{fig:time-of-day-69} and Figure \ref{fig:time-of-day-52}. Figure \ref{fig:time-of-day-69} shows the travel times of buses from Florence Road to Star Lane on route 69, which are five stops apart. Figure \ref{fig:time-of-day-52} shows the travel times of buses from All Souls Avenue to Notting Hill Gate Station on route 52, which are 16 stops apart. The Figures also have the average journey time across all hours of the day plotted as a black dotted line. \\
+
+For Figure \ref{fig:time-of-day-69} the statistics are as follows (all units are in minutes and the numbers are to five significant figures):
+
+\begin{itemize}
+    \item \textbf{00-03}: standard deviation = 0.97508, mean = 3.0929
+    \item \textbf{03-06}: standard deviation = 0.85072, mean = 3.5386
+    \item \textbf{06-09}: standard deviation = 1.0559, mean = 3.9989
+    \item \textbf{09-12}: standard deviation = 0.91878, mean = 4.1066
+    \item \textbf{12-15}: standard deviation = 0.91933, mean = 4.36120
+    \item \textbf{15-18}: standard deviation = 1.1008, mean = 4.1694
+    \item \textbf{18-21}: standard deviation = 1.2570, mean = 3.8441
+    \item \textbf{21-00}: standard deviation = 1.0189, mean = 3.4616
+\end{itemize}
 
 \begin{figure}[H]
 \begin{center}
@@ -167,6 +180,19 @@ To see the effect of time of day on bus journey times, the times of day were spl
 \end{center}
 \end{figure}
 
+For Figure \ref{fig:time-of-day-52} the statistics are as follows (all units are in minutes and the numbers are to five significant figures):
+
+\begin{itemize}
+    \item \textbf{00-03}: standard deviation = 1.2467, mean = 12.567
+    \item \textbf{03-06}: standard deviation = 2.0847, mean = 12.698
+    \item \textbf{06-09}: standard deviation = 1.6443, mean = 14.644
+    \item \textbf{09-12}: standard deviation = 2.1843, mean = 15.995
+    \item \textbf{12-15}: standard deviation = 1.6768, mean = 17.386
+    \item \textbf{15-18}: standard deviation = 2.2638, mean = 16.500
+    \item \textbf{18-21}: standard deviation = 3.2022, mean = 14.707
+    \item \textbf{21-00}: standard deviation = 2.0572, mean = 12.800
+\end{itemize}
+
 \begin{figure}[H]
 \begin{center}
     \includegraphics[keepaspectratio, width=15cm]{Images/journey-grouped-by-time-of-day-52.png}
@@ -175,7 +201,7 @@ To see the effect of time of day on bus journey times, the times of day were spl
 \end{center}
 \end{figure}
 
-To see the effect of the day of week on bus journey times, the days of the week were split into weekdays versus weekends. As above, for each route two bus stops were chosen and the travel times calculated and plotted. An example can be seen in Figure \ref{fig:day-of-week6}, which shows the travel times for a bus on route 6 from Marble Arch to Church Street Market. It can be seen that there does not seem to be a marked difference between weekday versus weekend journey times. 
+To see the effect of the day of week on bus journey times, the days of the week were split into weekdays versus weekends. As above, for each route two bus stops were chosen and the travel times calculated and plotted. An example can be seen in Figure \ref{fig:day-of-week6}, which shows the travel times for a bus on route 6 from Marble Arch to Church Street Market. The overall average, weekday average and weekend average travel times are plotted horizontally. It can be seen that there does not seem to be a marked difference between weekday versus weekend journey times, with all three lines almost on top of each other.
 
 \begin{figure}[H]
 \begin{center}
@@ -187,7 +213,7 @@ To see the effect of the day of week on bus journey times, the days of the week 
 
 \subsubsection{Effect of COVID-19 lockdown}
 
-To see the effect of the lockdown in London on bus journey times, the journeys were split into journeys that occurred during lockdown and journeys that occurred prior or post lockdown. In this case, lockdown was considered to have begun from 24th March 2020 up to 31st May 2020, when the government began easing restrictions on travel \cite{lockdown-easing}. As before, pairs of bus stops were chosen and the travel times calculated and plotted. Figure \ref{fig:lockdown6} shows an example of travel times for a bus on route 6 from Marble Arch to Church Street Market. Due to the reduced number of vehicles on the road and the reduced number of passengers, it was hypothesised that journey times during the lockdown period would be less than journey times outside of this period. This is confirmed by the Figure \ref{fig:lockdown6}. 
+To see the effect of the lockdown in London on bus journey times, the journeys were split into journeys that occurred during lockdown and journeys that occurred prior or post lockdown. In this case, lockdown was considered to have begun from 24th March 2020 up to 31st May 2020, when the government began easing restrictions on travel \cite{lockdown-easing}. As before, pairs of bus stops were chosen and the travel times calculated and plotted. Figure \ref{fig:lockdown6} shows an example of travel times for a bus on route 6 from Marble Arch to Church Street Market. Due to the reduced number of vehicles on the road and the reduced number of passengers, it was hypothesised that journey times during the lockdown period would be less than journey times outside of this period. This is confirmed by the Figure \ref{fig:lockdown6}, which shows three horizontal dotted lines representing the overall average, pre/post lockdown and during lockdown average travel time. It can be seen that the purple line representing average travel time before or after lockdown is higher than the other two lines.
 
 \begin{figure}[H]
 \begin{center}
@@ -199,15 +225,15 @@ To see the effect of the lockdown in London on bus journey times, the journeys w
 
 \subsubsection{Conclusions}
 
-It was hypothesised that there would be a morning and afternoon peak where journey times would be longer. This is not so obvious in Figure \ref{fig:time-of-day-52} and Figure \ref{fig:time-of-day-69}, however, it can be seen that in the early morning and late night hours (approximately 2100 - 0300), the journey times are generally shorter than other times of day. Therefore, time of day was decided to be chosen to explore as a factor affecting bus journey times. \\
+It was hypothesised that there would be a morning and afternoon peak where journey times would be longer. This is not so obvious in Figure \ref{fig:time-of-day-52} and Figure \ref{fig:time-of-day-69}. This could be because the time of day was grouped into sets of three hours, which may be too sparse to show a pattern. However, it can be seen that in the early morning and late night hours (approximately 2100 - 0300), the journey times are generally shorter than other times of day. This makes sense because at these times there should be less traffic on the roads and fewer passengers boarding/disembarking. Therefore, time of day was decided to be chosen to explore as a factor affecting bus journey times. \\
 
 It was also hypothesised that although overall journey times would not be vastly different between weekdays and weekends, it was likely that the morning peak or afternoon peak would be at different times for the weekend compared to weekdays. For this reason, day of week was still chosen to be explored further as a factor affecting bus journey times. \\
 
-However, whether a journey was made during lockdown or not was not chosen as a factor to be explored further. This is because, data from June 2020 onwards will no longer count as being in the lockdown period. Therefore, predictions using recent data will have no recent data that qualify as during lockdown.
+However, whether a journey was made during lockdown or not was not chosen as a factor to be implemented in the models. This is because, data from June 2020 onward will no longer count as being in the lockdown period. Therefore, since predictions use recent data, none of the recent data will qualify as being during lockdown and so there isn't much point including it as a factor. 
 
 \subsubsection{Technology Choices}
 
-As with the previous section, Python was again chosen as the language to implement the data exploration code in. Furthermore, Jupyter Notebook was chosen to write and run the code in.  
+As with the previous section, Python was again chosen as the language to implement the data exploration code in. Furthermore, Jupyter Notebook was chosen to write and run the code in. This is because Jupyter Notebook is a great tool for data exploration and quick prototyping, enabled by its interactive kernels.
 
 \subsection{Historical Models}
 \label{section:historical-model-design}
@@ -236,7 +262,26 @@ If the user gets on bus route X at stop A and requests the estimated arrival tim
 
 \end{enumerate} 
 
-\textbf{2) Calculate weighted average of recent journey times}: It is necessary to calculate the weighted average of the recent journey times because it is unlikely that the journey time of a bus 100 minutes before the request time will have as much of an effect on the current journey. Using grid search cross validation, the weights are tuned such that they give the optimal predictions. Let $t$ be the amount of time that a bus arrived at stop B before the request time. Let $n$ be the nth most recent bus to arrive at stop B before the request time. For example, $t = 10$ implies that the bus arrived at stop B 10 minutes before the request time and $n=1$ implies that bus was the most recent to arrive at stop B before the request time. The final weightings are as follows:
+\textbf{2) Calculate weighted average of recent journey times}: It is hypothesised that more recent journeys are more important than ones not as close to the request time, therefore a weighted average is most suitable. To confirm this, different weightings were applied to the same model and the weightings that provided the best RMSE and MAE was chosen. \\ 
+
+For example, Figure \ref{fig:historical-weight-tuning} shows the RMSE and MAE of four sets of weights for the historical model that looks back at the last 5 buses. Let $t$ be the amount of time that a bus arrived at stop B before the request time. Let $n$ be the nth most recent bus to arrive at stop B before the request time. For example, $t = 10$ implies that the bus arrived at stop B 10 minutes before the request time and $n=1$ implies that bus was the most recent to arrive at stop B before the request time. The four models used were: 
+
+\begin{itemize}
+    \item $0 < t \leq 2: 0.5, 2 < t \leq 5: 0.5$, to equal weightings would.
+    \item $0 < t \leq 2: 0.85, 2 < t \leq 5: 0.15$, to model weightings heavily skewed towards recent journeys.
+    \item $0 < t \leq 2: 0.55, 2 < t \leq 5: 0.45$, to model weights slightly more skewed towards recent journeys.
+    \item $0 < t \leq 2: 0.35, 2 < t \leq 5: 0.65$, to model weightings skewed towards not as recent journeys
+\end{itemize}
+
+\begin{figure}[H]
+\begin{center}
+    \includegraphics[keepaspectratio, width=14cm]{Images/historical-weight-tuning.png}
+    \caption{Weight tuning}
+    \label{fig:historical-weight-tuning}
+\end{center}
+\end{figure}
+
+The final weightings as chosen from the weight tuning are as follows: 
 
 \begin{itemize}
     \item Weights for the past 15 minutes: $0 < t \leq 10: 0.65, 10 < t \leq 15: 0.35$
@@ -251,23 +296,23 @@ If the user gets on bus route X at stop A and requests the estimated arrival tim
 
 \subsubsection{Evaluating the model}
 
-The model was evaluated by choosing random pairs of stops and routes and then making requests at thirty minute intervals from 2020/05/25 02:00:00 to 2020/06/08 23:59:59. The root mean squared error (RMSE) and the mean absolute absolute errors (MAE) were calculated and compared against each other. \\
+The model was evaluated by choosing random pairs of stops and routes and then making requests at thirty minute intervals from 2020/05/25 02:00:00 to 2020/06/08 23:59:59. This constitutes new testing data outside of the training set. The root mean squared error (RMSE) and the mean absolute absolute errors (MAE) were calculated and compared against each other. \\
 
 Initially, the eight sub-models were tested on pairs of stops that were five stops apart. Then, the best two of the sub-models were chosen by averaging their RMSE and MAE scores. These were run again using pairs of stops that were further apart to see how well the models generalised to stops that were further apart. As described in Section \ref{section:data-exploration}, the variance in the journey times of the stops increase as the gap between the stops increase. Therefore, the models perform best on stops that are closer together. So, the best overall model is the one that still maintains a good MAE and RMSE for larger gaps.
 
 \subsubsection{Technology Choices}
 
-Python was chosen as the language to develop the models. This is due to the large amount of support for statistical modelling and because I have experience using Python in my Department of Mathematics Methods for Data Science module.
+Python was chosen as the language to develop the models. This is due to the large amount of support for statistical modelling (e.g. sklearn) and because I have experience using Python in my Methods for Data Science module in the Department of Mathematics.
 
 \subsection{Regression + Interpolation Models}
 
-The regression and interpolation model is a two part model that combines two models together to make a prediction. The first model is a regression model and the second model is one of three sub-models: weighted average model, linear regression model and natural cubic spline model. The two sub-models combined form a linear interpolation model. \\
+The regression and interpolation model is a two part model that combines two models together to make a prediction. The first model is a regression model on characterstics of the journey itself (such as time of day, day of week) and the second model is one of three sub-models based on recent journey times for those stops: weighted average model, line of best fit model and natural cubic spline model. The two sub-models combined form a linear interpolation model. \\
 
 The hypothesis is that the journey time of a bus relies on both `global' conditions and `local' conditions. `Global' conditions in this case refers to factors such as the time of day or the day of the week that have a constant effect throughout history. `Local' conditions on the other hand refers to more recent journey data that could indicate an increase or decrease in journey time. For example, it is assumed that the general trend in travel conditions is more or less the same every weekend - this is a `global' condition. However, if on a particular weekend there is a car crash in the morning that causes journey times to increase, then for this particular weekend, the expected journey time would not be the same as with other weekends - this is a `local' condition. \\ 
 
-This is why a two part model was chosen; so that the first part, the regression model, could calculate the `global' prediction, and then the second part could calculate the `local' prediction. A linear interpolation of the two predictions is then used to calculate the overall prediction of a journey time. \\
+This is why a two part model was chosen; so that the first part, the regression model, could calculate the `global' prediction, and then the second part could calculate the `local' prediction. A weighted average of the two predictions is then used to calculate the overall prediction of a journey time. \\
 
-Before being able to choose the `global' conditions, it is necessary to explore the different possible features to see if they are correlated to each other or not. If the factors are dependent upon one another, then they cannot be used as separate covariates. 
+Before being able to choose the `global' conditions, it is necessary to explore the different possible features to see if they are correlated to each other or not. If the factors are dependent upon one another, then it is sub-optimal to use them as separate covariates. 
 
 If the user gets on bus route X at stop A and requests the estimated arrival time at stop B, the algorithm by which this time is predicted is shown in Figure \ref{fig:overarch-combined-model}. \\
 
@@ -323,7 +368,7 @@ The model is trained once on different pairs of stops of varying routes and gap 
     \end{center}
     \end{figure}
     
-    \item \textbf{Linear Regression}
+    \item \textbf{Linear Regression or Line of best fit}
     \begin{equation}
         y_{pred2} = linear\ regression\ based\ on\ last\ 10\ journeys
     \end{equation}
@@ -370,11 +415,11 @@ where
     \item $\alpha$ is some coefficient that we are looking to find such that it minimises the validation root mean squared error (RMSE) and mean absolute error (MAE). 
 \end{itemize}
 
-Parameter tuning on $\alpha$ is performed on $y_{pred1}$ and all five $y_{pred2}$ values, with $\alpha$ varying from zero to one. Based on the hypothesis, it is assumed that the optimal value of $\alpha$ is achieved around the region of 0.5 because this would indicate that an equal contribution from the `global' and `local' models are required in order to get the overall predicted value.
+Parameter tuning on $\alpha$ is performed on $y_{pred1}$ and all five $y_{pred2}$ values, with $\alpha$ varying from zero to one. The optimal value of $\alpha$ will provide insight into the relative importance of the `global' vs `local' conditions. 
 
 \subsubsection{Model Evaluation}
 
-The overall model was evaluated in the same way part one of the model is evaluated: requests are made from 25/05/2020 02:00:00 to 08/06/20 23:59:59 at thirty minute intervals for a number of different pairs of stops of varying routes and gap sizes. The root mean squared errors (RMSE) and mean absolute errors (MAE) were calculated for the five possible models (due to the five possibilities for part two of the model) and compared against each other. \\
+The overall model was evaluated in the same way part one of the model is evaluated: requests are made from 25/05/2020 02:00:00 to 08/06/20 23:59:59 at thirty minute intervals for a number of different pairs of stops of varying routes and gap sizes. The root mean squared errors (RMSE) and mean absolute errors (MAE) were calculated for the five possible models (due to the five possibilities for part two of the model) and compared against each other.
 
 \subsubsection{Technology Choices}
 
@@ -382,14 +427,37 @@ As with the Historical Models, Python was the language used to develop the model
 
 \subsection{Mobile App}
 
-The purpose of the mobile app is merely to provide a more user friendly way of presenting the models' results. Therefore, the design of it is very basic. The application allows the user to enter the start and end stops along with the bus route they intend to take and then is returned the predicted journey time. The assumption is that the user wants to make a journey at the time that they enter the information into the app, i.e. the predicted journey time will be for `now'. There is no capability for requesting journey times in the future since this application is not intended to be used like CityMapper or other travel apps.
+The purpose of the mobile app is merely to provide a more user friendly way of presenting the models' results. Therefore, the design of it is very basic. The application allows the user to enter the start and end stops along with the bus route they intend to take and then is returned the predicted journey time. The assumption is that the user wants to make a journey at the time that they enter the information into the app, i.e. the predicted journey time will be for `now'. \\
+
+There is no capability for requesting journey times in the future. This is because predicting future journey times, such as in CityMapper, is a functionality that is outside the scope of this project, requiring more specialized, context-specific forecasting methods and potentially a whole new prediction framework. \\
+
+The mobile application implements the combined regression, interpolation, weighted average model. The only information required to be inputted by the user is the start stop, end stop and route. The other information required to actually perform the prediction can be found using these given values.
 
 \subsubsection{Front End}
 
-The home page of the app provides text inputs for the user to input their start stop, end stop and bus route. Once the user presses `Go', this leads the user to another screen which displays the predicted journey time. On this second page, there is also a button that allows the user to return to the first page to request another prediction. \\
+The home page of the app provides text inputs for the user to input their start stop, end stop and bus route. Once the user presses `Go', this leads the user to another screen which displays the predicted journey time. On this second page, there is also a button that allows the user to return to the first page to request another prediction. The entered start stop, end stop and route is sent to an endpoint using a POST request. The predicted journey time is fetched using a GET request from the same endpoint. \\
 
-The front end has been written using Expo, which is an open-source platform using Javascript and React to make native apps for Android, iOS and the web. Expo was chosen because for the Department of Computing Webapps group project in 2nd year, our webapp was built using React. Therefore, it was believed that some of this experience would carry over into mobile app development.
+Some error checking in the front end is provided. The start and end stops must not be left empty and the route entered must be a number. Other error checking, such as whether the given stops are valid stops or actually on the given route, is performed in the back end. This is because knowing this information is required anyway to perform the model calculations, so it makes sense to do it all in one go, rather than in multiple places. \\
+
+The front end has been written using Expo, which is an open-source platform using Javascript and React to make native apps for Android, iOS and the web. Expo was chosen because I had some prior experience using React for the 2nd year Webapps group project in the Department of Computing. Therefore, it was believed that some of this experience would carry over into mobile app development.
 
 \subsubsection{Back End}
+
+The prediction model requires the best $\alpha$ value, the part 1 coefficients, the part 1 intercept, the part 1 pre-processing scaler and the journey times of the last 10 journeys. The first four things listed have been pre-computed or pre-trained and so can just be imported using pickles.\\ 
+
+The journey times of the last 10 journeys needs to be gathered live, therefore, data must be constantly collected in the background. The same code used to perform the data collection for the model training and exploration is used to collect data and write it into a database. Since only the last 10 journeys ever need to be used, the database deletes any data that is older than six hours ago. This six hour leeway is in case requests are made early in the morning on a non 24 hour bus route. For example if a request is made at 05:50 and the first bus of the day is at 05:24, some of the last 10 journeys will be from around midnight. \\
+
+The JSON object returned from the back end is shown below. The `success' term tells the front end whether to navigate to the results page or not, the `time' term contains the predicted journey time and the `stopError' term indicates whether there was a problem with the inputted start or end stops e.g. if they are misspelled.
+
+\begin{lstlisting}
+    predObj = {
+                "success": True,
+                "time": predTime,
+                "stopError": False
+            }
+\end{lstlisting}
+
+
+Flask, which is a lightweight web framework for Python, was chosen as to implement the back end in. This was because all of the data collection and modelling had been done in Python and since there was some overlap in the code that had to be used in the mobile app (i.e. the data collection and the model prediction), it made sense to to choose a back end that was already in Python. This way, the code would not have to be rewritten. Furthermore, since pickling was required to get the pre trained values such as the part 1 intercept, and pickles are native to Python, it made sense to keep everything within the same language. A postgres database was chosen to hold the data for the mobile app. Again, this was chosen because the data collection code had already been written such that it wrote and read from a postgres database, therefore, it didn't seem prudent to change the code unnecessarily. \\
 
 \clearpage

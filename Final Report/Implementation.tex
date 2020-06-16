@@ -4,7 +4,7 @@
 
 There is no historical data for bus arrival times available online, so all the data that I will use to train and test my models has to be manually collected. \\
 
-The following bus routes were chosen to collect data from: 6, 7, 9, 14, 35, 37, 52, 69, 267, 277, 328, 452. Of these routes, the 6, 14, 37, 52 and 69 bus routes are twenty four hour bus routes and the 37, 69, 267 and 277 bus routes do not travel through Zone 1. This allows there to be variety in the travel routes, traffic conditions and times of travel and so the data collected is not heavily biased towards particular areas of London. There is also some overlap in stops between the bus routes, for example the 52 to Victoria and the 452 to Vauxhall have a 23 stop (and therefore, also route) overlap from "Station Terrace" to  "Knightsbridge Station /\ Harrods". This ensures information on journey times between stops doesn't rely on data from just one bus route. \\
+The following bus routes were chosen to collect data from: 6, 7, 9, 14, 35, 37, 52, 69, 267, 277, 328, 452. Of these routes, the 6, 14, 37, 52 and 69 bus routes are twenty four hour bus routes and the 37, 69, 267 and 277 bus routes do not travel through Zone 1. This allows there to be variety in the travel routes, traffic conditions and times of travel and so the data collected is not heavily biased towards particular areas of London. \\
 
 \textbf{1) Call Countdown API}: The JSON information returned from the Countdown call is converted into a list of dictionaries, where each dictionary represents a single vehicle. The format of each dictionary is as below:
 
@@ -18,7 +18,7 @@ The following bus routes were chosen to collect data from: 6, 7, 9, 14, 35, 37, 
             }
 \end{lstlisting}
 
-In the dictionary, the \texttt{vehicle\_id}, \texttt{bus\_stop\_id} and \texttt{direction} are strings and the \texttt{expected\_arrival} and \texttt{time\_of\_req} are Python \texttt{Datetime} objects. \\
+In the dictionary, the \texttt{vehicle\_id}, \texttt{bus\_stop\_id} and \texttt{direction} are strings and the \texttt{expected\_arrival} and \texttt{time\_of\_req} are Python \texttt{DateTime} objects. \\
 
 \textbf{2) Update the estimated arrival time of a bus}: For each of the dictionaries, check if the vehicle corresponds to one already in the \texttt{bus\_information\_route} table. If it already exists, then update its expected arrival time, otherwise, it is a new vehicle to track and so needs to be added to the table. \\
 
@@ -54,20 +54,6 @@ For each journey collected, the code looks at the time of arrival and converts t
 \end{center}
 \end{figure}
 
-Figure \ref{fig:regression-pairplot} shows a pair plot of the training data where the possible factors are plotted against each other alongside their Pearson correlation coefficient.
-
-\begin{figure}[H]
-\begin{center}
-    \includegraphics[keepaspectratio, width=12cm]{Images/regression-pairplot.png}
-    \caption{Feature Pairplot}
-    \label{fig:regression-pairplot}
-\end{center}
-\end{figure}
-
-It can be seen from Figure \ref{fig:regression-pairplot} that the correlation coefficients are very close to 0. This implies that these features are indeed independent of each other and can therefore be used together in multivariate regression. \\
-
-Figure \ref{fig:regression-pairplot} indicates that there was more data collected on weekdays versus weekends (as can be seen from the 2nd graph along the major diagonal - where 0 is the weekday and 1 is the weekend). From the top left graph it can be seen that for stops that are between 20 to 30 stops apart, there are gaps in the data collected. For example, it can be seen that approximately between 00:00 to 05:00 there is no data for journeys between stops that are 25 stops apart.\\
-
 \textbf{1) Calculate `global' prediction}: Before the data can be fed into a regression or interpolation model, the values must be encoded. So, using \texttt{sklearn}'s label encoder, the day of week and pre-lockdown are converted into categorical values. Based on Equation \ref{eq:part1-regression}, the time of day has to be one-hot encoded, so this is also done using \texttt{sklearn}. The result of this can be seen in Figure \ref{fig:regression-dataforregression}. 
 
 \begin{figure}[H]
@@ -84,14 +70,46 @@ The features are scaled and then fed into a linear regression model for training
 
 \begin{figure}[H]
 \begin{center}
-    \includegraphics[keepaspectratio, width=14cm]{Images/regression-datapart2.png}
+    \includegraphics[keepaspectratio, width=12cm]{Images/regression-datapart2.png}
     \caption{Data for part 2 sub-model}
     \label{fig:regression-part2}
 \end{center}
 \end{figure}
 
-\subsection{Phone App}
+\subsection{Mobile App}
 
-TODO 
+On front end, three \texttt{TextInput}s are used to allow the user to enter the start stop, end stop and route. On the press of the `Go' button, this sends a POST request to the \textit{predict} endpoint with the typed in information in one object stored in JSON format. The Home page is seen in Figure \ref{fig:mobile-home}.
+
+\begin{figure} [H]
+    \centering
+    \begin{subfigure}{.5\textwidth}
+      \centering
+      \includegraphics[width=.7\linewidth]{Images/mobile-home.png}
+      \caption{Blank Home Page}
+    \end{subfigure}%
+    \begin{subfigure}{.5\textwidth}
+      \centering
+      \includegraphics[width=.7\linewidth]{Images/mobile-type.png}
+      \caption{Typing in Home Page}
+    \end{subfigure}
+    \caption{Mobile Home Page}
+    \label{fig:mobile-home}
+\end{figure}
+
+On the back end, if the \textit{predict} endpoint detects a POST request, it gets the information out of the JSON object. \\
+
+The parameters required to do the part 1 prediction are the gap size, the day of week as a binary encoding and the time of day as a one hot encoding. Since it is assumed that the request time is the time the user entered the information into the app, a \texttt{datetime.datetime.now()} object is used to find the day of week and time of day. The found day of week and time of day are then encoded accordingly. TfL's Stoppoints Sequence API is used to find a list of the stops in sequence for the given route. Then, the gap size is found by subtracting the indexes of the start point from the end point. If the entered start or end stop cannot be found in the list of stops in sequences, this indicates that the user has entered a stop that either has been misspelled or is not on the given route. Therefore, the `stopError' term in the JSON object is set to \texttt{True}. Using the encoded time of day and day of week and found gap size, the information is scaled and multiplied to the pickled part 1 coefficients. Finally, this number is added to the pickled part 1 intercept to obtained the part 1 prediction. \\
+
+To calculate the part 2 prediction, the only information needed is the journey times of the last 10 buses. The database is queried for the last 10 buses to arrive at the two given stops and then their arrival times are deducted to give the journey times. The weighted average is then found, using the same weights as from the model training. \\
+
+To get the overall prediction, the pickled alpha value is used as per Equation \ref{eq:regression-overall}. The `time' term in the JSON object is then set to this value and the object is returned to the end point. On the front end, this is received as the response and then passed as a parameter to the prediction page to be displayed. The prediction page is shown in Figure \ref{fig:mobile-predict-page}.
+
+\begin{figure}[H]
+\begin{center}
+    \includegraphics[keepaspectratio, width=5cm]{Images/mobile-predict.png}
+    \caption{Prediction Page}
+    \label{fig:mobile-predict-page}
+\end{center}
+\end{figure}
 
 \clearpage
