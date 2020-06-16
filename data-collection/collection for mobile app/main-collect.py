@@ -7,9 +7,6 @@ from utilities import Utilities
 from collector import Mobile_Collection
 from urllib.error import HTTPError, URLError
 
-# TODO: replace bus_stop_name with bus_stop_id in vehicle_id
-# Change the way its added to bus_arrivals to include trip
-
 def main(bus_route):
     helper = Utilities()
     data = Mobile_Collection()
@@ -80,7 +77,7 @@ while not connected:
         print("Connected!!")
 
 
-bus_routes = ["9"]
+bus_routes = ["52"]
 while True:
     for route in bus_routes:
         main(route)

@@ -19,6 +19,10 @@ infile = open("pickles/alpha",'rb')
 alpha = pickle.load(infile)
 infile.close()
 
+infile = open("pickles/part1_scaler",'rb')
+part1_scaler = pickle.load(infile)
+infile.close()
+
 
 @app.route('/', methods=['GET', 'POST'])
 def init():
@@ -65,6 +69,9 @@ def predictTime():
 
             global_vals = np.append(gap, dow)
             global_vals = np.append(global_vals, time_of_day[0])
+            global_vals = global_vals.reshape(1, -1)
+            scaler = part1_scaler.get("scaler")
+            transformed = scaler.transform(global_vals)[0]
 
             start_stop, end_stop = model.get_recent_journeys_from_db(stop_a, stop_b, route)
             last_10_journeys = model.calc_journey_times(start_stop, end_stop)
@@ -73,7 +80,7 @@ def predictTime():
             part1_intercept = part1_vals.get("intercept")
             part1_coeffs = part1_vals.get("coeffs")
 
-            multiplied = np.multiply(part1_coeffs, global_vals)
+            multiplied = np.multiply(part1_coeffs, transformed)
             summed = np.sum(multiplied)
 
             part1_pred = part1_intercept + summed
@@ -94,6 +101,7 @@ def predictTime():
                 "success": True,
                 "time": y_pred
             }
+            return jsonify(testObj)
 
         except:
             print("Error trying to calculate prediction")
