@@ -116,6 +116,7 @@ class Prediction(object):
         
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error in getting recent journeys: ", error)
+            return [], []
         
         finally:
             

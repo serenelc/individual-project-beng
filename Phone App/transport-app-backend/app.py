@@ -47,7 +47,8 @@ def init():
 def predictTime():
     testObj = {
         "success": True,
-        "time": "couldn't calculate predicted journey time"
+        "time": "couldn't calculate predicted journey time",
+        "fromError": False
     }
 
     if request.method == "POST":
@@ -74,6 +75,11 @@ def predictTime():
             transformed = scaler.transform(global_vals)[0]
 
             start_stop, end_stop = model.get_recent_journeys_from_db(stop_a, stop_b, route)
+            if len(start_stop == 0):
+                print("Invalid stops given")
+                testObj["fromError"] = True
+                testObj["success"] = False 
+
             last_10_journeys = model.calc_journey_times(start_stop, end_stop)
 
             # Do part 1 prediction
@@ -97,10 +103,7 @@ def predictTime():
             print("Overall prediction: ", y_pred)
 
             # Send prediction back to front end
-            testObject = {
-                "success": True,
-                "time": y_pred
-            }
+            testObj["time"] = y_pred
             return jsonify(testObj)
 
         except:

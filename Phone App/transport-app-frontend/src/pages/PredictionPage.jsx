@@ -10,6 +10,7 @@ const PredictionPage = ({navigation}) => {
 
   const params = navigation.state.params
   const estTime = params['estTime']
+  const estTimeMinutes = (parseFloat(estTime) / 60).toFixed(2)
 
   return (
     <View style={styles.container}>
@@ -17,7 +18,7 @@ const PredictionPage = ({navigation}) => {
             The predicted journey time is: 
         </Text>
         <Text style={styles.predText}>
-            {estTime}
+            {estTimeMinutes} minutes
         </Text>
 
         <TouchableOpacity onPress={_onBackPressed} style= {styles.button}>
