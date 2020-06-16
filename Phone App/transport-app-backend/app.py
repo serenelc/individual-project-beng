@@ -67,20 +67,24 @@ def predictTime():
             day_of_week, time_of_day = model.convert_given_global_data(time_of_request)
             dow = np.array([day_of_week])
             gap = model.get_gap(stop_a, stop_b, route)
+            print("Found gap, day of week and time of day")
 
             global_vals = np.append(gap, dow)
             global_vals = np.append(global_vals, time_of_day[0])
             global_vals = global_vals.reshape(1, -1)
             scaler = part1_scaler.get("scaler")
             transformed = scaler.transform(global_vals)[0]
+            print("Scaled data")
 
             start_stop, end_stop = model.get_recent_journeys_from_db(stop_a, stop_b, route)
-            if len(start_stop == 0):
+
+            if len(start_stop) == 0:
                 print("Invalid stops given")
                 testObj["fromError"] = True
                 testObj["success"] = False 
 
             last_10_journeys = model.calc_journey_times(start_stop, end_stop)
+            print("Found last 10 journeys")
 
             # Do part 1 prediction
             part1_intercept = part1_vals.get("intercept")
