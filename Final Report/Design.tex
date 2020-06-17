@@ -427,7 +427,7 @@ As with the Historical Models, Python was the language used to develop the model
 
 \subsection{Mobile App}
 
-The purpose of the mobile app is merely to provide a more user friendly way of presenting the models' results. Therefore, the design of it is very basic. The application allows the user to enter the start and end stops along with the bus route they intend to take and then is returned the predicted journey time. The assumption is that the user wants to make a journey at the time that they enter the information into the app, i.e. the predicted journey time will be for `now'. \\
+The purpose of the mobile app is merely to provide a more user friendly way of presenting the models' results. Therefore, the design of it is very basic. The application allows the user to enter the start and end stops along with the bus route they intend to take and then is returned the predicted journey time. The TfL Countdown prediction is also returned alongside. The assumption is that the user wants to make a journey at the time that they enter the information into the app, i.e. the predicted journey time will be for `now'. \\
 
 There is no capability for requesting journey times in the future. This is because predicting future journey times, such as in CityMapper, is a functionality that is outside the scope of this project, requiring more specialized, context-specific forecasting methods and potentially a whole new prediction framework. \\
 
@@ -447,13 +447,16 @@ The prediction model requires the best $\alpha$ value, the part 1 coefficients, 
 
 The journey times of the last 10 journeys needs to be gathered live, therefore, data must be constantly collected in the background. The same code used to perform the data collection for the model training and exploration is used to collect data and write it into a database. Since only the last 10 journeys ever need to be used, the database deletes any data that is older than six hours ago. This six hour leeway is in case requests are made early in the morning on a non 24 hour bus route. For example if a request is made at 05:50 and the first bus of the day is at 05:24, some of the last 10 journeys will be from around midnight. \\
 
+Since the journey times are predicted live, it is not possible to return the actual travel time. The TfL prediction is also found in order to provide some frame of reference. \\
+
 The JSON object returned from the back end is shown below. The `success' term tells the front end whether to navigate to the results page or not, the `time' term contains the predicted journey time and the `stopError' term indicates whether there was a problem with the inputted start or end stops e.g. if they are misspelled.
 
 \begin{lstlisting}
     predObj = {
                 "success": True,
                 "time": predTime,
-                "stopError": False
+                "stopError": False,
+                "tflTime": estTflTime
             }
 \end{lstlisting}
 

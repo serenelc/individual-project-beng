@@ -98,6 +98,8 @@ On front end, three \texttt{TextInput}s are used to allow the user to enter the 
 
 On the back end, if the \textit{predict} endpoint detects a POST request, it gets the information out of the JSON object. \\
 
+To calculate the TfL prediction, the bus stop ids for the inputted start and end stops are found. Using this, requests are made simultaneously to the Countdown API. The vehicle id of the earliest bus to leave the start stop is noted and its match is searched for in the response for the end stop. The difference between the two predicted arrival times is set as the TfL predicted journey time in the JSON object. \\
+
 The parameters required to do the part 1 prediction are the gap size, the day of week as a binary encoding and the time of day as a one hot encoding. Since it is assumed that the request time is the time the user entered the information into the app, a \texttt{datetime.datetime.now()} object is used to find the day of week and time of day. The found day of week and time of day are then encoded accordingly. TfL's Stoppoints Sequence API is used to find a list of the stops in sequence for the given route. Then, the gap size is found by subtracting the indexes of the start point from the end point. If the entered start or end stop cannot be found in the list of stops in sequences, this indicates that the user has entered a stop that either has been misspelled or is not on the given route. Therefore, the `stopError' term in the JSON object is set to \texttt{True}. Using the encoded time of day and day of week and found gap size, the information is scaled and multiplied to the pickled part 1 coefficients. Finally, this number is added to the pickled part 1 intercept to obtained the part 1 prediction. \\
 
 To calculate the part 2 prediction, the only information needed is the journey times of the last 10 buses. The database is queried for the last 10 buses to arrive at the two given stops and then their arrival times are deducted to give the journey times. The weighted average is then found, using the same weights as from the model training. \\
@@ -106,7 +108,7 @@ To get the overall prediction, the pickled alpha value is used as per Equation \
 
 \begin{figure}[H]
 \begin{center}
-    \includegraphics[keepaspectratio, width=5cm]{Images/mobile-predict.png}
+    \includegraphics[keepaspectratio, width=5cm]{Images/mobile-predict.PNG}
     \caption{Prediction Page}
     \label{fig:mobile-predict-page}
 \end{center}
