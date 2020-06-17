@@ -1,8 +1,11 @@
+## Overview
+
+Read the Final Report for an indepth discussion of this project.
+
+
 ## TO DO
 
 - Need to update the README with instructions that are valid
-- route 9 bus 14511 has its directions opposite to what it should be idk why, but all the othe rbuses seem to have the right direction of travel. 
-- Change dataframe data structure in jupyter notebooks to match new database structures
 
 ### For the phone app
 
@@ -10,11 +13,6 @@
 2) I got on a bus at a particular stop and I want to know what time I will arrive at a particular stop e.g. I got on bus 9 at Hammersmith Bus Station and I want to know what time I will arrive at Phillimore Gardens.
 So the request times is always going to be ‘now’, as in you can’t request a prediction in the future?
 More for (2) than (1), but perhaps you could combine the two into "from now, how long will it take me to get to stop X", which would include the waiting time.
-
-
-## Overview
-
-Functions to do with data processing are in the data_collection.py file. Utility functions (e.g. writing to CSVs) are in the helper.py file.
 
 
 ### Timetable
@@ -32,10 +30,6 @@ Mon - Friday/Monday - Thursday
 - 6: 24 hours
 - 14: 24 hours
 
-### Objective
 
-The code should concurrently run the data collection functions for 5-10 bus routes for a minimum of a month, 24 hours a day. The code calls the APIs every 30 seconds because that is how often the information gets updated at the source, so there is no point calling the API anymore often. Each bus route should store the arrival information in its own CSV file for each 24 hour day. A new CSV file should be made for each new day, starting at 00:00. 
 
-### What the code does
 
-Read the Latex Final Report
