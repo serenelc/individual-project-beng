@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, jsonify
 from predictions import Prediction
+from tfl_pred import TfL
 import requests
 import os
 import datetime as dt
@@ -10,6 +11,7 @@ import psycopg2
 app = Flask(__name__)
 # app.config.from_object(os.environ['APP_SETTINGS'])
 model = Prediction()
+tfl = TfL()
 
 infile = open("pickles/part1_trained_vals",'rb')
 part1_vals = pickle.load(infile)
@@ -27,15 +29,35 @@ infile.close()
 @app.route('/', methods=['GET', 'POST'])
 def init():
     testObj = {
-        "success": True,
         "time": "couldn't calculate predicted journey time"
+    }
+
+    storedStops = {
+        "Willesden Bus Garage": "490014687E",
+        "Okehampton Road": "490010521S",
+        "Notting Hill Gate Station": "490015039C",
+        "North End Road": "490010357F",
+        "Phillimore Gardens": "490010984U",
+        "Piccadilly Circus": "490000179B"
     }
 
     if request.method == "POST":
         # get url that the user has entered
         try:
             response = request.json
-            print("REQUEST : ", response)
+            stop_a = response.get("from")
+            stop_b = response.get("to")
+            route = response.get("route")
+
+            if (stop_a in storedStops.keys()) and (stop_b in storedStops.keys()):
+                a_id = storedStops.get(stop_a)
+                b_id = storedStops.get(stop_b)
+
+                print(a_id, b_id)
+                tflPredTime = tfl.tfl_predict(a_id, b_id, route)
+
+                print(tflPredTime)
+                testObj["time"] = tflPredTime
 
         except:
             print("Unable to get URL. Please make sure it's valid and try again.")

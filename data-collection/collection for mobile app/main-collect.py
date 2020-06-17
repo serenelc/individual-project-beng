@@ -77,7 +77,7 @@ while not connected:
         print("Connected!!")
 
 
-bus_routes = ["52"]
+bus_routes = ["9"]
 while True:
     for route in bus_routes:
         main(route)
