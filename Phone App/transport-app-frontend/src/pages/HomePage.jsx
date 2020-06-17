@@ -48,13 +48,14 @@ const HomePage = ({ navigation }) => {
 
         if (res['success']) {
           const predTime = res['time']
+          const tflTime = res['tflTime']
           console.log("Navigate away!")
           
           setFrom({ value: "", error: ""});
           setTo({ value: "", error: ""});
           setRoute({ value: "", error: ""});
 
-          navigation.navigate("PredictionPage", {estTime: predTime});
+          navigation.navigate("PredictionPage", {estTime: predTime, tflPred: tflTime});
 
         } else if (res['fromError']) {
           setFrom({ ...from, error: "Please enter a valid stop" });

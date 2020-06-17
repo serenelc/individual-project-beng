@@ -61,18 +61,17 @@ def evaluate_bus_data(bus_data):
             leave_time = eta_aware
             earliest_bus_to_leave = bus
 
-    print("earliest bus to leave: ", earliest_bus_to_leave)
+    # print("earliest bus to leave: ", earliest_bus_to_leave)
     return earliest_bus_to_leave
 
 
 def get_expected_arrival_times(stop_code, route_id):
     url =  "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Stopcode2=" + stop_code + "&LineName=" + str(route_id) + "&ReturnList=StopPointName,LineName,DestinationText,EstimatedTime,ExpireTime,VehicleID,DirectionID"
-    print(url)
+    # print(url)
     bus_information = []
 
     try:
         with urllib.request.urlopen(url) as api:
-            print("Getting tfl info")
             data = api.read().decode()
             for line in data.splitlines():
                 line = line[1:]
@@ -109,9 +108,9 @@ class TfL(object):
 
         if pred_arrival_time == 0:
             print("corresponding vehicle not found")
-            return "unable to get prediction"
+            return False
         
         else:
             pred_jrny_time = pred_arrival_time - earliest_bus_to_leave.get("leave_time")
-            print("Predicted journey time: ", pred_jrny_time.total_seconds())
+            # print("Predicted journey time: ", pred_jrny_time.total_seconds())
             return str(pred_jrny_time.total_seconds())

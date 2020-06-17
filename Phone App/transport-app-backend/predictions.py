@@ -47,8 +47,12 @@ class Prediction(object):
         return dow, tod
 
     def calc_part2_prediction(self, last_10_journeys):
+        last_10_journeys = last_10_journeys[:10]
+        print(last_10_journeys)
+
         recent_journeys = [x.total_seconds() for x in last_10_journeys]
 
+        print(recent_journeys)
         weights = {"2": 0.55, "5": 0.35, "10": 0.1}
 
         pred = 0
@@ -182,6 +186,10 @@ class Prediction(object):
                 if vehicle == end_vehicle:
                     time_b = end.get("expected_arrival")
                     diff = time_b - time_a + dt.timedelta(seconds = 30)
+
+                    if diff.total_seconds() < 0:
+                        continue
+
                     journey_times.append(diff)
             
         # sorted by most recent journey first

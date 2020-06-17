@@ -10,7 +10,14 @@ const PredictionPage = ({navigation}) => {
 
   const params = navigation.state.params
   const estTime = params['estTime']
+  const estTfl = params['tflPred']
+  console.log(estTime, estTfl)
   const estTimeMinutes = (parseFloat(estTime) / 60).toFixed(2)
+  let estTflMinutes = "unknown"
+
+  if ((typeof estTfl) != Boolean) {
+      estTflMinutes = (parseFloat(estTfl) / 60).toFixed(2)
+  }
 
   return (
     <View style={styles.container}>
@@ -19,6 +26,12 @@ const PredictionPage = ({navigation}) => {
         </Text>
         <Text style={styles.predText}>
             {estTimeMinutes} minutes
+        </Text>
+        <Text style={styles.title}> 
+            The TfL predicted journey time is: 
+        </Text>
+        <Text style={styles.predText}>
+            {estTflMinutes} minutes
         </Text>
 
         <TouchableOpacity onPress={_onBackPressed} style= {styles.button}>

@@ -32,15 +32,6 @@ def init():
         "time": "couldn't calculate predicted journey time"
     }
 
-    storedStops = {
-        "Willesden Bus Garage": "490014687E",
-        "Okehampton Road": "490010521S",
-        "Notting Hill Gate Station": "490015039C",
-        "North End Road": "490010357F",
-        "Phillimore Gardens": "490010984U",
-        "Piccadilly Circus": "490000179B"
-    }
-
     if request.method == "POST":
         # get url that the user has entered
         try:
@@ -70,7 +61,17 @@ def predictTime():
     testObj = {
         "success": True,
         "time": "couldn't calculate predicted journey time",
+        "tflTime": False,
         "fromError": False
+    }
+
+    storedStops = {
+        "Willesden Bus Garage": "490014687E",
+        "Okehampton Road": "490010521S",
+        "Notting Hill Gate Station": "490015039C",
+        "North End Road": "490010357F",
+        "Phillimore Gardens": "490010984U",
+        "Piccadilly Circus": "490000179B"
     }
 
     if request.method == "POST":
@@ -127,6 +128,16 @@ def predictTime():
             y_pred = best_alpha * (part1_pred) + (1 - best_alpha) * (part2_pred)
 
             print("Overall prediction: ", y_pred)
+
+            # Try to get TfL prediction
+            if (stop_a in storedStops.keys()) and (stop_b in storedStops.keys()):
+                a_id = storedStops.get(stop_a)
+                b_id = storedStops.get(stop_b)
+
+                tflPredTime = tfl.tfl_predict(a_id, b_id, route)
+
+                print(tflPredTime)
+                testObj["tflTime"] = tflPredTime
 
             # Send prediction back to front end
             testObj["time"] = y_pred
