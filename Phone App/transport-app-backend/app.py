@@ -9,7 +9,6 @@ import pickle
 import psycopg2
 
 app = Flask(__name__)
-# app.config.from_object(os.environ['APP_SETTINGS'])
 model = Prediction()
 tfl = TfL()
 
@@ -28,6 +27,15 @@ infile.close()
 
 @app.route('/', methods=['GET', 'POST'])
 def init():
+    storedStops = {
+        "Willesden Bus Garage": "490014687E",
+        "Okehampton Road": "490010521S",
+        "Notting Hill Gate Station": "490015039C",
+        "North End Road": "490010357F",
+        "Phillimore Gardens": "490010984U",
+        "Piccadilly Circus": "490000179B"
+    }
+
     testObj = {
         "time": "couldn't calculate predicted journey time"
     }
@@ -71,6 +79,7 @@ def predictTime():
         "Notting Hill Gate Station": "490015039C",
         "North End Road": "490010357F",
         "Phillimore Gardens": "490010984U",
+        "Hyde Park Corner Station": "490000119T",
         "Piccadilly Circus": "490000179B"
     }
 
@@ -134,9 +143,10 @@ def predictTime():
                 a_id = storedStops.get(stop_a)
                 b_id = storedStops.get(stop_b)
 
+                print("before TfL predict")
                 tflPredTime = tfl.tfl_predict(a_id, b_id, route)
 
-                print(tflPredTime)
+                print("TfL predicted time: ", tflPredTime)
                 testObj["tflTime"] = tflPredTime
 
             # Send prediction back to front end
