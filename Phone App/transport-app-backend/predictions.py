@@ -94,7 +94,7 @@ class Prediction(object):
 
         conn = None
         try:
-            conn = psycopg2.connect(host="localhost", database="bus_predictions", user="serenechongtrakul", port="5432")
+            conn = psycopg2.connect(host="localhost", database="bus_predictions", user="postgres", password='example', port="5432")
             cursor = conn.cursor()
             sql = "SELECT *"
             sql += " FROM " + table_name
@@ -104,7 +104,7 @@ class Prediction(object):
             sql += " LIMIT 12"
             
             cursor.execute(sql)
-            results["start"] = cursor.fetchall() #list of tuples (vehicle_id, bus_stop_name, expected_arrival, time_of_req, direction)
+            results["start"] = cursor.fetchall()
             
             sql = "SELECT *"
             sql += " FROM " + table_name

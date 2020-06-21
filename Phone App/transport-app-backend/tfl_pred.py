@@ -67,7 +67,7 @@ def evaluate_bus_data(bus_data):
 
 def get_expected_arrival_times(stop_code, route_id):
     url =  "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?Stopcode2=" + stop_code + "&LineName=" + str(route_id) + "&ReturnList=StopPointName,LineName,DestinationText,EstimatedTime,ExpireTime,VehicleID,DirectionID"
-    print(url)
+    # print(url)
     bus_information = []
 
     try:

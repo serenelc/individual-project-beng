@@ -69,7 +69,7 @@ def main(bus_route):
 connected = False
 while not connected: 
     try:
-        conn = psycopg2.connect(host="localhost", database="bus_predictions", user="serenechongtrakul", port="5432")
+        conn = psycopg2.connect(host="localhost", database="bus_predictions", user="postgres", password='example', port="5432")
     except Exception as e:
         print("Waiting for database to be connected: ", e)
     else:
@@ -77,7 +77,7 @@ while not connected:
         print("Connected!!")
 
 
-bus_routes = ["9", "52"]
+bus_routes = ["52"]
 while True:
     for route in bus_routes:
         main(route)
