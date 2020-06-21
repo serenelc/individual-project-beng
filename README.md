@@ -2,18 +2,7 @@
 
 Read the Final Report for an indepth discussion of this project.
 
-
-## TO DO
-
-- Need to update the README with instructions that are valid
-
-### For the phone app
-
-1) I want to know what time the nearest bus on a particular route will arrive at a particular stop e.g. I want to know the nearest number 9 bus to arrive at Phillimore Gardens
-2) I got on a bus at a particular stop and I want to know what time I will arrive at a particular stop e.g. I got on bus 9 at Hammersmith Bus Station and I want to know what time I will arrive at Phillimore Gardens.
-So the request times is always going to be ‘now’, as in you can’t request a prediction in the future?
-More for (2) than (1), but perhaps you could combine the two into "from now, how long will it take me to get to stop X", which would include the waiting time.
-
+This project developed historical and regression models to attempt to predict bus journey times in London. A basic mobile app was also developed to show the results of the models.
 
 ### Timetable
 Mon - Friday/Monday - Thursday
