@@ -137,6 +137,8 @@ def predictTime():
             y_pred = best_alpha * (part1_pred) + (1 - best_alpha) * (part2_pred)
 
             print("Overall prediction: ", y_pred)
+            # Send prediction back to front end
+            testObj["time"] = y_pred
 
             # Try to get TfL prediction
             if (stop_a in storedStops.keys()) and (stop_b in storedStops.keys()):
@@ -149,8 +151,6 @@ def predictTime():
                 print("TfL predicted time: ", tflPredTime)
                 testObj["tflTime"] = tflPredTime
 
-            # Send prediction back to front end
-            testObj["time"] = y_pred
             return jsonify(testObj)
 
         except:

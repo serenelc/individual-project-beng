@@ -13,7 +13,6 @@ gmt = dt.timezone.utc
 def find_corresponding_bus(vehicle_id, end_stop, route):
 
     etas = get_expected_arrival_times(end_stop, route)
-
     for i, bus_stop in enumerate(etas):
         if i == 0:
             continue
@@ -103,6 +102,10 @@ class TfL(object):
         etas = get_expected_arrival_times(start_stop, route)
 
         earliest_bus_to_leave = evaluate_bus_data(etas)
+
+        if earliest_bus_to_leave == -1:
+            print("No buses due in the next 30 minutes")
+            return False
 
         pred_arrival_time = find_corresponding_bus(earliest_bus_to_leave.get("vehicle_id"), end_stop, route)
 

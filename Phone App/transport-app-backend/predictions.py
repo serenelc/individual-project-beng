@@ -187,7 +187,7 @@ class Prediction(object):
                     time_b = end.get("expected_arrival")
                     diff = time_b - time_a + dt.timedelta(seconds = 30)
 
-                    if diff.total_seconds() < 0:
+                    if (diff.total_seconds() < 0) or (diff.total_seconds() > 2000):
                         continue
 
                     journey_times.append(diff)
